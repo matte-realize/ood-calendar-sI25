@@ -1,15 +1,13 @@
 package Model;
 
-import java.time.LocalTime;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 public class Event implements EventInterface {
   private String subject;
-  private LocalDate startDate;
-  private LocalDate endDate;
-  private LocalTime startTime;
-  private LocalTime endTime;
-  private String description;
+  private LocalDateTime startDateTime;
+  private Optional<LocalDateTime> endDateTime;
+  private Optional<String> description;
   private Location location;
   private Status status;
 
