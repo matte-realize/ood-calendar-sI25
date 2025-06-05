@@ -19,6 +19,7 @@ public abstract class AbstractCalendarTest {
   @Before
   public void setup() {
     calendar = new Calendar();
+
     EventInterface allDayEvent = calendar.createEvent(
             "Wedding",
             LocalDateTime.of(2025, 6, 10, 0, 0),

@@ -79,6 +79,7 @@ public class CalendarCreationTest {
             start,
             end,
             repeatDays,
+            0,
             "Varsity practice",
             Location.PHYSICAL,
             Status.PUBLIC
@@ -95,7 +96,7 @@ public class CalendarCreationTest {
   }
 
   @Test
-  public void testCreateWeeklySeriesOnMultipleDays() {
+  public void testCreateWeeklySeriesOnMultipleDaysWithWeekEnd() {
     String subject = "Team Meeting";
     LocalDateTime start = LocalDateTime.of(2025, 6, 2, 10, 0);
     LocalDateTime end = LocalDateTime.of(2025, 6, 16, 10, 0);
@@ -105,6 +106,7 @@ public class CalendarCreationTest {
             start,
             end,
             repeatDays,
+            0,
             "Meeting with team",
             Location.ONLINE,
             Status.PRIVATE

@@ -44,6 +44,7 @@ public interface CalendarInterface {
                                 LocalDateTime start,
                                 LocalDateTime end,
                                 List<DayOfWeek> repeatDays,
+                                Integer occurrences,
                                 String description,
                                 Location location,
                                 Status status

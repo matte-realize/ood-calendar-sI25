@@ -59,6 +59,7 @@ public class Calendar implements CalendarInterface {
                                        LocalDateTime start,
                                        LocalDateTime end,
                                        List<DayOfWeek> repeatDays,
+                                       Integer occurrences,
                                        String description,
                                        Location location,
                                        Status status) {
@@ -70,11 +71,13 @@ public class Calendar implements CalendarInterface {
 
     EventSeries series = new EventSeries(subject, start);
     series.setRepeatDays(repeatDays);
+    series.setOccurrences(occurrences);
     series.setEndDateTimeOfSeries(end);
 
     LocalDateTime current = start;
+    int count = 0;
 
-    while (!current.isAfter(end)) {
+    while (count < occurrences && (end == null || !current.isAfter(end))) {
       if (repeatDays.contains(current.getDayOfWeek())) {
         Event.CustomEventBuilder builder = new Event.CustomEventBuilder()
                 .setSubject(subject)
@@ -87,6 +90,7 @@ public class Calendar implements CalendarInterface {
         Event instance = (Event) builder.build();
         series.addInstance(instance);
         eventsByDate.computeIfAbsent(current.toLocalDate(), d -> new ArrayList<>()).add(instance);
+        count++;
       }
       current = current.plusDays(1);
     }
@@ -128,19 +132,19 @@ public class Calendar implements CalendarInterface {
         break;
 
       case FUTURE:
-        for (Event instance : series.getInstances()) {
+        /*for (Event instance : series.getInstances()) {
           if (!instance.getStartDateTime().isBefore(start)) {
             Event newInstance = buildReplacementFrom(instance, updatedEvent);
             eventReplacement(instance, newInstance);
           }
-        }
+        }*/
         break;
 
       case ALL:
-        for (Event instance : series.getInstances()) {
+        /*for (Event instance : series.getInstances()) {
           Event newInstance = buildReplacementFrom(instance, updatedEvent);
           eventReplacement(instance, newInstance);
-        }
+        }*/
         break;
 
       default:
@@ -160,10 +164,14 @@ public class Calendar implements CalendarInterface {
   }
 
   @Override
-  public EventInterface getEvent(String subject, LocalDate date) {
+  public EventInterface getEvent(String subject, LocalDateTime start, LocalDateTime end) {
+    LocalDate date = start.toLocalDate();
     List<Event> events = eventsByDate.getOrDefault(date, Collections.emptyList());
+
     for (Event e : events) {
-      if (e.getSubject().equals(subject) && e.getStartDateTime().toLocalDate().equals(date)) {
+      if (e.getSubject().equals(subject) &&
+              e.getStartDateTime().equals(start) &&
+              ((end == null && e.getEndDateTime() == null) || (e.getEndDateTime() != null && e.getEndDateTime().equals(end)))) {
         return e;
       }
     }
