@@ -14,14 +14,25 @@ import java.util.List;
  */
 public interface CalendarInterface {
   /**
-   * Creates a single event within the date for the calendar.
+   * Creates a single event within the calendar and is not part
+   * of a series.
+   *
+   * @param subject     the subject provided that uniquely identifies an event.
+   * @param start       the starting time for the event.
+   * @param end         the end time for the event.
+   * @param description the description provide to describe the event.
+   * @param location    the location of the event.
+   * @param status      the status of the event.
+   * @return returns an event based on the arguments provided.
+   * @throws IllegalArgumentException based on the conditions where the event could
+   *                                  not be created.
    */
   Event createEvent(String subject,
-                             LocalDateTime start,
-                             LocalDateTime end,
-                             String description,
-                             Location location,
-                             Status status
+                    LocalDateTime start,
+                    LocalDateTime end,
+                    String description,
+                    Location location,
+                    Status status
   ) throws IllegalArgumentException;
 
   /**
@@ -33,7 +44,6 @@ public interface CalendarInterface {
                                 LocalDateTime start,
                                 LocalDateTime end,
                                 List<DayOfWeek> repeatDays,
-                                int occurrences,
                                 String description,
                                 Location location,
                                 Status status
@@ -51,13 +61,17 @@ public interface CalendarInterface {
 
   /**
    * Gets the events based on the input of a given date.
+   *
    * @param start the date that is input to display all the events.
    * @return a list based on what events are occurring on that day.
    */
-  EventInterface getEvent(String subject, LocalDate start);
+  EventInterface getEvent(String subject,
+                          LocalDateTime start,
+                          LocalDateTime end);
 
   /**
    * Gets the event series based on the input of a given timestamp.
+   *
    * @return
    */
   List<Event> getEventSeries();

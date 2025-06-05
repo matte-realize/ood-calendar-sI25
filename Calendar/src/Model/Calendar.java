@@ -9,6 +9,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Calendar model class that implements the CalenderInterface in order to provide functions
+ * for the controller's interaction to create events or event series as well as edit events
+ * or even series.
+ */
 public class Calendar implements CalendarInterface {
   private final Map<LocalDate, List<Event>> independentEvents = new HashMap<>();
   private final Map<LocalDate, List<Event>> eventsByDate = new HashMap<>();
@@ -54,7 +59,6 @@ public class Calendar implements CalendarInterface {
                                        LocalDateTime start,
                                        LocalDateTime end,
                                        List<DayOfWeek> repeatDays,
-                                       int occurrences,
                                        String description,
                                        Location location,
                                        Status status) {
@@ -66,13 +70,11 @@ public class Calendar implements CalendarInterface {
 
     EventSeries series = new EventSeries(subject, start);
     series.setRepeatDays(repeatDays);
-    series.setOccurrences(occurrences);
     series.setEndDateTimeOfSeries(end);
 
     LocalDateTime current = start;
-    int count = 0;
 
-    while (count < occurrences && (end == null || !current.isAfter(end))) {
+    while (!current.isAfter(end)) {
       if (repeatDays.contains(current.getDayOfWeek())) {
         Event.CustomEventBuilder builder = new Event.CustomEventBuilder()
                 .setSubject(subject)
@@ -85,7 +87,6 @@ public class Calendar implements CalendarInterface {
         Event instance = (Event) builder.build();
         series.addInstance(instance);
         eventsByDate.computeIfAbsent(current.toLocalDate(), d -> new ArrayList<>()).add(instance);
-        count++;
       }
       current = current.plusDays(1);
     }
@@ -127,22 +128,21 @@ public class Calendar implements CalendarInterface {
         break;
 
       case FUTURE:
-        for (int i = 0; i < series.getInstances().size(); i++) {
-          Event instance = series.getInstances().get(i);
+        for (Event instance : series.getInstances()) {
           if (!instance.getStartDateTime().isBefore(start)) {
-            eventReplacement(instance, updatedEvent);
-            series.getInstances().set(i, (Event) updatedEvent);
+            Event newInstance = buildReplacementFrom(instance, updatedEvent);
+            eventReplacement(instance, newInstance);
           }
         }
         break;
 
       case ALL:
-        for (int i = 0; i < series.getInstances().size(); i++) {
-          Event instance = series.getInstances().get(i);
-          eventReplacement(instance, updatedEvent);
-          series.getInstances().set(i, (Event) updatedEvent);
+        for (Event instance : series.getInstances()) {
+          Event newInstance = buildReplacementFrom(instance, updatedEvent);
+          eventReplacement(instance, newInstance);
         }
         break;
+
       default:
         throw new IllegalArgumentException("Unsupported edit mode: " + mode);
     }
@@ -175,7 +175,7 @@ public class Calendar implements CalendarInterface {
     return List.of();
   }
 
-  public void baseExceptions(String subject, LocalDateTime start) throws IllegalArgumentException {
+  private void baseExceptions(String subject, LocalDateTime start) throws IllegalArgumentException {
     if (subject == null || subject.isEmpty()) {
       throw new IllegalArgumentException("Subject must contain a string!");
     }
