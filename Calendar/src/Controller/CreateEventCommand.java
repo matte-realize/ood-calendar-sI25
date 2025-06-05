@@ -2,74 +2,163 @@ package Controller;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CreateEventCommand extends AbstractCommand {
 
-  private String tokensString;
-  private String[] tokens;
-  private String subject;
+  private static final Pattern CreateSingleEvent = Pattern.compile(
+          "^create event \"([^\"]+)\" from (\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}) to (\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2})$");
 
-  public CreateEventCommand(String tokensString, String subject) {
-    this.tokensString = tokensString;
-    this.tokens = tokensString.split(" ");
-    this.subject = subject;
+  private static final Pattern CreateEventSeriesNum = Pattern.compile(
+          "^create event \"([^\"]+)\" from (\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}) to (\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}) repeats ([MTWRFSU]+) for (\\d+) times$");
+
+  private static final Pattern CreateEventSeriesUntil = Pattern.compile(
+          "^create event \"([^\"]+)\" from (\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}) to (\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}) repeats ([MTWRFSU]+) until (\\d{4}-\\d{2}-\\d{2})$");
+
+  private static final Pattern AllDayEvent = Pattern.compile(
+          "^create event \"([^\"]+)\" on (\\d{4}-\\d{2}-\\d{2})$");
+
+  private static final Pattern AllDayEventSeriesNum = Pattern.compile(
+          "^create event \"([^\"]+)\" on (\\d{4}-\\d{2}-\\d{2}) repeats ([MTWRFSU]+) for (\\d+) times$");
+
+  private static final Pattern AllDayEventSeriesUntil = Pattern.compile(
+          "^create event \"([^\"]+)\" on (\\d{4}-\\d{2}-\\d{2}) repeats ([MTWRFSU]+) until (\\d{4}-\\d{2}-\\d{2})$");
+
+  private final String tokensString;
+
+  public CreateEventCommand(String tokensString) {
+    this.tokensString = "create" + tokensString;
+
   }
 
   @Override
   public void execute() throws IllegalArgumentException {
 
-    if (tokens[0].equals("from")) {
-      if (tokens.length >= 4 && isValidDateTime(tokens[1], "yyyy-MM-dd'T'HH:mm") && tokens[2].equals("to") && isValidDateTime(tokens[3], "yyyy-MM-dd'T'HH:mm")) {
-        if (tokens.length == 4) {
-          //model.createEvent(this.subject, tokens[1], tokens[3]);
-          System.out.println("Created Event!");
-        } else {
-          if (tokens[4].equals("repeats")) {
-            if (tokens.length < 8) {
-              throw new IllegalArgumentException("Missing part of the command");
-            } else {
-              if (isValidWeekdayFormat(tokens[5])) {
-                Set<Character> weekDays = new HashSet<>();
-
-                for (char c : tokens[5].toCharArray()) {
-                  weekDays.add(c);
-                }
-
-                if (tokens[6].equals("for")) {
-                  int numberOfWeeks;
-                  try {
-                    numberOfWeeks = Integer.parseInt(tokens[7]);
-                  } catch (NumberFormatException e) {
-                    throw new IllegalArgumentException("Must specify times to repeat as an integer");
-                  }
-
-                  if (tokens.length < 9 || !tokens[8].equals("times")) {
-                    throw new IllegalArgumentException("Typo in the command: make sure \"times\" is included");
-                  } else {
-                    //model.createEventSeries(this.subject, tokens[1], tokens[2], weekDays, numberOfWeeks);
-                    System.out.println("Created Event Series!");
-                  }
-                } else if (tokens[6].equals("until") && isValidDateTime(tokens[7], "yyyy-MM-dd")) {
-                  //model.createEventSeries(this.subject, tokens[1], tokens[2], weekdays, tokens[7]
-                  System.out.println("Created Event Series!");
-                } else {
-                  throw new IllegalArgumentException("Typo in the command");
-                }
-              } else {
-                throw new IllegalArgumentException("Weekday format must of M T W R F S U");
-              }
-            }
-          } else {
-            throw new IllegalArgumentException("You must specify series using \"repeats\"");
-          }
-        }
-      } else {
-        throw new IllegalArgumentException("Invalid date time format, must be: \"yyyy-MM-ddTHH:mm to yyyy-MM-ddTHH:mm\"");
-      }
-    } else if (tokens[0].equals("on")) {
-
+    Matcher m;
+    if ((m = CreateSingleEvent.matcher(tokensString)).matches()) {
+      handleSingleEvent(m);
+    } else if ((m = CreateEventSeriesNum.matcher(tokensString)).matches()) {
+      handleRepeatingEventNTimes(m);
+    } else if ((m = CreateEventSeriesUntil.matcher(tokensString)).matches()) {
+      handleRepeatingEventUntil(m);
+    } else if ((m = AllDayEvent.matcher(tokensString)).matches()) {
+      handleAllDayEvent(m);
+    } else if ((m = AllDayEventSeriesNum.matcher(tokensString)).matches()) {
+      handleAllDayEventRepeatNTimes(m);
+    } else if ((m = AllDayEventSeriesUntil.matcher(tokensString)).matches()) {
+      handleAllDayEventRepeatUntil(m);
     } else {
-      throw new IllegalArgumentException("Unknown command: create an event using \"from\" or \"on\"");
+      throw new IllegalArgumentException("Invalid command: \"" + tokensString + "\"");
     }
   }
+
+  private void handleSingleEvent(Matcher m) {
+    String subject = m.group(1);
+    String start = m.group(2);
+    String end = m.group(3);
+
+    if (!isValidDateTime(start) || !isValidDateTime(end)) {
+      throw new IllegalArgumentException("Invalid datetime format. Expected format: yyyy-MM-ddTHH:mm");
+    }
+
+    System.out.println("Created Event: \"" + subject + "\" from " + start + " to " + end);
+  }
+
+  private void handleRepeatingEventNTimes(Matcher m) {
+    String subject = m.group(1);
+    String start = m.group(2);
+    String end = m.group(3);
+    String weekdays = m.group(4);
+    String repeatNum = m.group(5);
+
+    if (!isValidDateTime(start) || !isValidDateTime(end)) {
+      throw new IllegalArgumentException("Invalid datetime format. Expected format: yyyy-MM-ddTHH:mm");
+    }
+
+    if (!isValidWeekdayFormat(weekdays)) {
+      throw new IllegalArgumentException("Invalid weekday format. Expected subset of MTWRFSU");
+    }
+
+    if (Integer.parseInt(repeatNum) < 1) {
+      throw new IllegalArgumentException("Invalid repeat number. Must be greater than 0");
+    }
+    System.out.println("Created Event: \"" + subject + "\" from " + start + " to " + end);
+  }
+
+  private void handleRepeatingEventUntil(Matcher m) {
+    String subject = m.group(1);
+    String start = m.group(2);
+    String end = m.group(3);
+    String weekdays = m.group(4);
+    String untilDate = m.group(5);
+
+    if (!isValidDateTime(start) || !isValidDateTime(end)) {
+      throw new IllegalArgumentException("Invalid datetime format. Expected format: yyyy-MM-ddTHH:mm");
+    }
+
+    if (!isValidWeekdayFormat(weekdays)) {
+      throw new IllegalArgumentException("Invalid weekday format. Expected subset of MTWRFSU");
+    }
+
+    if (!isValidDate(untilDate)) {
+      throw new IllegalArgumentException("Invalid date format. Expected format: yyyy-MM-dd");
+    }
+    System.out.println("Created Event: \"" + subject + "\" from " + start + " to " + end);
+  }
+
+  private void handleAllDayEvent(Matcher m) {
+    String subject = m.group(1);
+    String start = m.group(2)+ "T08:00";
+    String end = m.group(2) + "T17:00";
+
+    if (!isValidDateTime(start) || !isValidDateTime(end)) {
+      throw new IllegalArgumentException("Invalid datet format. Expected format: yyyy-MM-dd");
+    }
+
+    System.out.println("Created Event: \"" + subject + "\" from " + start + " to " + end);
+  }
+
+  private void handleAllDayEventRepeatNTimes(Matcher m) {
+    String subject = m.group(1);
+    String start = m.group(2)+ "T08:00";
+    String end = m.group(2) + "T17:00";
+    String weekdays = m.group(3);
+    String repeatNum = m.group(4);
+
+    if (!isValidDateTime(start) || !isValidDateTime(end)) {
+      throw new IllegalArgumentException("Invalid date format. Expected format: yyyy-MM-dd");
+    }
+
+    if (!isValidWeekdayFormat(weekdays)) {
+      throw new IllegalArgumentException("Invalid weekday format. Expected subset of MTWRFSU");
+    }
+
+    if (Integer.parseInt(repeatNum) < 1) {
+      throw new IllegalArgumentException("Invalid repeat number. Must be greater than 0");
+    }
+    System.out.println("Created Event: \"" + subject + "\" from " + start + " to " + end);
+  }
+
+  private void handleAllDayEventRepeatUntil(Matcher m) {
+    String subject = m.group(1);
+    String start = m.group(2)+ "T08:00";
+    String end = m.group(2) + "T17:00";
+    String weekdays = m.group(3);
+    String untilDate = m.group(4);
+
+    if (!isValidDateTime(start) || !isValidDateTime(end)) {
+      throw new IllegalArgumentException("Invalid date format. Expected format: yyyy-MM-dd");
+    }
+
+    if (!isValidWeekdayFormat(weekdays)) {
+      throw new IllegalArgumentException("Invalid weekday format. Expected subset of MTWRFSU");
+    }
+
+    if (!isValidDate(untilDate)) {
+      throw new IllegalArgumentException("Invalid date format. Expected format: yyyy-MM-dd");
+    }
+    System.out.println("Created Event: \"" + subject + "\" from " + start + " to " + end);
+  }
+
 }

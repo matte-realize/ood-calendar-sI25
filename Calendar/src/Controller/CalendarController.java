@@ -51,22 +51,12 @@ public class CalendarController implements CalendarControllerInterface{
 
   private boolean processCommand(String command, String tokensString) throws IllegalArgumentException {
 
-    String[] tokens;
 
     switch (command) {
       case "create":
-        tokens = tokensString.split("\"");
 
-        if (tokens.length != 3) {
-          throw new IllegalArgumentException("Create event must contain a subject enclosed by \" and no other \"");
-        }
-
-        if (tokens[0].equals(" event ")) {
-          CreateEventCommand createEvent = new CreateEventCommand(tokens[2].stripLeading(), tokens[1]);
+          CreateEventCommand createEvent = new CreateEventCommand(tokensString);
           createEvent.execute();
-        } else {
-          throw new IllegalArgumentException("create command must specify \"event\" followed by the subject");
-        }
 
         break;
       case "edit":
