@@ -15,6 +15,36 @@ public class Event implements EventInterface {
     this.startDateTime = startDateTime;
   }
 
+  @Override
+  public String getSubject() {
+    return subject;
+  }
+
+  @Override
+  public LocalDateTime getStartDateTime() {
+    return startDateTime;
+  }
+
+  @Override
+  public LocalDateTime getEndDateTime() {
+    return endDateTime;
+  }
+
+  @Override
+  public String getDescription() {
+    return description;
+  }
+
+  @Override
+  public Location getLocation() {
+    return location;
+  }
+
+  @Override
+  public Status getStatus() {
+    return status;
+  }
+
   public static class CustomEventBuilder extends EventBuilder<CustomEventBuilder> {
     public EventInterface build() {
       Event event = new Event(this.subject, this.startDateTime);

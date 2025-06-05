@@ -15,7 +15,7 @@ public interface CalendarInterface {
   /**
    * Creates a single event within the date for the calendar.
    */
-  EventInterface createEvent(String subject,
+  Event createEvent(String subject,
                              LocalDateTime start,
                              LocalDateTime end,
                              String description,
@@ -34,7 +34,10 @@ public interface CalendarInterface {
    * Edits a single event whether it's an independent event or
    * part of a series.
    */
-  void editEvent();
+  void editEvent(String subject,
+                 LocalDateTime start,
+                 EventInterface updatedEvent
+  );
 
   /**
    * Edits the entire event series.
