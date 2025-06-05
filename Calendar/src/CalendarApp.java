@@ -4,12 +4,12 @@
 //
 
 import Controller.CalendarController;
-import Model.CalendarModel;
+import Model.Calendar;
 import View.CalendarView;
 
 public class CalendarApp {
   public static void main(String[] args) {
-    CalendarModel model = new CalendarModel();
+    Calendar model = new Calendar();
     CalendarView view = new CalendarView();
     CalendarController calendarController = new CalendarController(model, view);
     calendarController.go(args);

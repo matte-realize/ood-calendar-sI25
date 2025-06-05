@@ -4,10 +4,10 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 public class Event implements EventInterface {
-  private String subject;
-  private LocalDateTime startDateTime;
-  private Optional<LocalDateTime> endDateTime;
-  private Optional<String> description;
+  private final String subject;
+  private final LocalDateTime startDateTime;
+  private LocalDateTime endDateTime;
+  private String description;
   private Location location;
   private Status status;
 

@@ -9,14 +9,13 @@ import java.time.LocalDateTime;
 
 public abstract class EventBuilder<T extends EventBuilder<T>> {
   protected String subject;
-  protected LocalDateTime startDateTime
-  protected LocalTime startTime;
-  protected LocalTime endTime;
+  protected LocalDateTime startDateTime;
+  protected LocalDateTime endDateTime;
   protected String description;
   protected Location location;
   protected Status status;
 
-  public T setEndDateTime(LocalDateTIme endDateTime) {
+  public T setEndDateTime(LocalDateTime endDateTime) {
     this.endDateTime = endDateTime;
     return (T)this.returnBuilder();
   }
