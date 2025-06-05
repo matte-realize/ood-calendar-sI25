@@ -1,7 +1,6 @@
 package Model;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 public class Event implements EventInterface {
   private final String subject;

@@ -1,6 +1,7 @@
 package Model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -14,7 +15,13 @@ public interface CalendarInterface {
   /**
    * Creates a single event within the date for the calendar.
    */
-  void createEvent();
+  EventInterface createEvent(String subject,
+                             LocalDateTime start,
+                             LocalDateTime end,
+                             String description,
+                             Location location,
+                             Status status
+  ) throws IllegalArgumentException;
 
   /**
    * Creates a recurring event series where each event will
