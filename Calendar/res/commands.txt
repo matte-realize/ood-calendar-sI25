@@ -1,5 +1,32 @@
-create event "Test Event One" from 2025-12-12T12:30 to 2025-12-12T12:45
-create event "Test Event Two" on 2025-12-12
-create event "Test Event Three" from 2025-01-12T12:30 to 2025-12-12T12:45 repeats MTF for 9 times
+create event "Event One" from 2025-08-10T09:00 to 2025-08-10T10:00
+create event "Event Two" from 2025-06-10T09:30 to 2025-06-10T11:00
+create event "Event Three" from 2025-06-10T12:00 to 2025-06-10T12:00
+create event "Event Four" from 2025-06-10T23:00 to 2025-06-11T07:00
+create event "Event Five" from 2025-06-10T07:00 to 2025-06-10T08:00 repeats MW for 10 times
+create event "Event Six" from 2025-06-10T10:00 to 2025-06-10T11:00 repeats T for 3 times
+create event "Event Seven" from 2025-06-10T08:00 to 2025-06-10T10:00 repeats MTWRFSU for 2 times
+create event "Event Eight" from 2025-05-10T09:00 to 2025-05-10T23:30 repeats MTWRF until 2025-06-30
+create event "Event Nine" from 2025-06-09T08:00 to 2025-06-09T09:00 repeats U until 2025-07-01
+create event "Event Ten" on 2025-12-25
+create event "Event Eleven" on 2025-08-15
+create event "Event Twelve" on 2025-06-10 repeats F for 4 times
+create event "Event Thirteen" on 2025-06-10 repeats MW for 6 times
+create event "Event Fourteen" on 2025-06-10 repeats SU until 2025-08-30
+create event "Event Fifteen" on 2025-06-15 repeats T until 2025-07-01
+
+edit event subject "Event One" from 2025-08-10T09:00 to 2025-08-10T10:00 with "Morning Meeting"
+edit event start "Event Two" from 2025-06-10T09:30 to 2025-06-10T11:00 with 2025-06-10T09:00
+edit event end "Event Two" from 2025-06-10T09:00 to 2025-06-10T11:00 with 2025-06-10T10:45
+edit event location "Event Two" from 2025-06-10T09:30 to 2025-06-10T11:00 with ONLINE
+edit event status "Event Two" from 2025-06-10T09:30 to 2025-06-10T11:00 with PRIVATE
+
+
+print events on 2025-06-10
+print events on 2025-12-25
+print events on 2026-01-01
+print events from 2025-06-10T00:00 to 2025-06-11T00:00
+print events from 2025-06-10T09:00 to 2025-06-10T09:01
+show status on 2025-06-10T09:00
+show status on 2025-06-10T23:59
 
 exit

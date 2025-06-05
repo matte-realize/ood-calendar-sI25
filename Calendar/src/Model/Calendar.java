@@ -178,6 +178,55 @@ public class Calendar implements CalendarInterface {
     return null;
   }
 
+  public List<Event> getEventsSingleDay(LocalDate date) {
+
+    List<Event> filteredEvents = new ArrayList<>();
+    List<Event> allEvents = new ArrayList<>();
+
+    for (List<Event> events : eventsByDate.values()) {
+      allEvents.addAll(events);
+    }
+
+
+    for (Event e : allEvents) {
+      LocalDateTime eventStart = e.getStartDateTime();
+      LocalDateTime eventEnd = e.getEndDateTime();
+
+      if (eventStart.toLocalDate().equals(date) || eventEnd.toLocalDate().equals(date)
+              || eventStart.toLocalDate().isBefore(date) && eventEnd.toLocalDate().isAfter(date)) {
+        filteredEvents.add(e);
+      }
+
+    }
+
+    return filteredEvents;
+  }
+
+
+  public List<Event> getEventsWindow(LocalDateTime start, LocalDateTime end) {
+
+    List<Event> filteredEvents = new ArrayList<>();
+    List<Event> allEvents = new ArrayList<>();
+
+    for (List<Event> events : eventsByDate.values()) {
+      allEvents.addAll(events);
+    }
+
+
+      for (Event e : allEvents) {
+        LocalDateTime eventStart = e.getStartDateTime();
+        LocalDateTime eventEnd = e.getEndDateTime();
+
+        if (eventStart.isAfter(start) && eventStart.isBefore(end) || eventEnd.isAfter(start) && eventEnd.isBefore(end)
+        || (eventStart.isBefore(start) && eventEnd.isAfter(end))) {
+          filteredEvents.add(e);
+        }
+
+      }
+
+    return filteredEvents;
+  }
+
   @Override
   public List<Event> getEventSeries() {
     return List.of();
