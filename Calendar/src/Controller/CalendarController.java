@@ -61,18 +61,20 @@ public class CalendarController implements CalendarControllerInterface{
         break;
       case "edit":
 
-        /*if (tokens[1].equals("event")) {
+        EditEventCommand editEvent = new EditEventCommand(tokensString);
+        editEvent.execute();
 
-        } else if (tokens[1].equals("events")) {
-
-        } else if (tokens[1].equals("series")) {
-
-        } else {
-          throw new IllegalArgumentException("Invalid command");
-        }*/
+        break;
       case "print":
+
+        QueryEventCommand printEvent = new QueryEventCommand(tokensString, "print");
+        printEvent.execute();
+
           break;
       case "show":
+
+        QueryEventCommand showStatus = new QueryEventCommand(tokensString, "show");
+        showStatus.execute();
         break;
       case "exit":
         return true;

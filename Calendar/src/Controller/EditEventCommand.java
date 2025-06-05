@@ -17,7 +17,7 @@ public class EditEventCommand extends AbstractCommand {
   private final String tokensString;
 
   public EditEventCommand(String tokensString) {
-    this.tokensString = tokensString;
+    this.tokensString = "edit" + tokensString;
   }
 
   @Override
