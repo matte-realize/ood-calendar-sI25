@@ -70,7 +70,7 @@ public class Calendar implements CalendarInterface {
       }
     }
 
-    Event toReplace = candidates.getFirst();
+    Event toReplace = candidates.get(0);
 
     eventsByDate.get(originalDate).remove(toReplace);
 

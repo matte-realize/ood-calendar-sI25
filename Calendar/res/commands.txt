@@ -1,0 +1,5 @@
+create event "Test Event One" from 2025-12-12T12:30 to 2025-12-12T12:45
+create event "Test Event Two" on 2025-12-12
+create event "Test Event Three" from 2025-01-12T12:30 to 2025-12-12T12:45 repeats MTF for 9 times
+
+exit

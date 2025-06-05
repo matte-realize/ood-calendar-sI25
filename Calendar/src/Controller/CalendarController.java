@@ -8,8 +8,9 @@ package Controller;
 import Model.Calendar;
 import View.CalendarView;
 
-import java.io.Console;
-import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class CalendarController implements CalendarControllerInterface{
@@ -47,6 +48,31 @@ public class CalendarController implements CalendarControllerInterface{
   }
 
   public void runHeadlessMode(String filename) throws IllegalArgumentException {
+
+    try (Scanner scanner = new Scanner(new FileReader(filename))) {
+      String command;
+      String tokensString;
+      boolean exitFound = false;
+
+      while ((command = scanner.next()) != null) {
+
+        if (command.equalsIgnoreCase("exit")) {
+          System.out.println("Exiting...");
+          exitFound = true;
+          break;
+        } else {
+          tokensString = scanner.nextLine();
+          processCommand(command, tokensString);
+        }
+      }
+
+      if (!exitFound) {
+        System.err.println("Error: headless command file must end with an 'exit' command.");
+      }
+
+    } catch (IOException e) {
+      System.err.println("Failed to read command file: " + e.getMessage());
+    }
   }
 
   private boolean processCommand(String command, String tokensString) throws IllegalArgumentException {
