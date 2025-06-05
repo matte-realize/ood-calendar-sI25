@@ -20,7 +20,7 @@ import static org.junit.Assert.assertEquals;
 public class CalendarEditEventTest extends AbstractCalendarTest {
   @Test
   public void testEditEventOnlySubject() {
-    LocalDateTime allDayTimeStart = LocalDateTime.of(2025, 6, 10, 0, 0);
+    LocalDateTime allDayTimeStart = LocalDateTime.of(2025, 6, 10, 8, 0);
 
     EventInterface allDayEventEdit = new Event.CustomEventBuilder()
             .setSubject("Harry's Wedding")
@@ -29,7 +29,7 @@ public class CalendarEditEventTest extends AbstractCalendarTest {
 
     calendar.editEvent(
             "Wedding",
-            LocalDateTime.of(2025, 6, 10, 0, 0),
+            LocalDateTime.of(2025, 6, 10, 8, 0),
             allDayEventEdit,
             EditMode.SINGLE
     );
@@ -37,29 +37,28 @@ public class CalendarEditEventTest extends AbstractCalendarTest {
     assertEquals("Harry's Wedding", updatedAllDayEvent.getSubject());
 
     LocalDateTime detailedTimeStart = LocalDateTime.of(2025, 7, 14, 9, 0);
-    LocalDateTime detailedEndStart = LocalDateTime.of(2025, 7, 14, 10, 0);
+    LocalDateTime detailedTimeEnd = LocalDateTime.of(2025, 7, 14, 10, 0);
 
     EventInterface detailedEventEdit = new Event.CustomEventBuilder()
             .setSubject("Meeting with Lawyers")
             .setStartDateTime(detailedTimeStart)
-            .setEndDateTime(detailedEndStart)
+            .setEndDateTime(detailedTimeEnd)
             .build();
 
     calendar.editEvent(
             "Meeting",
-            LocalDateTime.of(2025, 7, 14, 9, 0),
+            detailedTimeStart,
             detailedEventEdit,
             EditMode.SINGLE
     );
-    EventInterface updatedDetailedEvent = calendar.getEvent("Meeting with Lawyers", detailedTimeStart, detailedEndStart);
+    EventInterface updatedDetailedEvent = calendar.getEvent("Meeting with Lawyers", detailedTimeStart, detailedTimeEnd);
     assertEquals("Meeting with Lawyers", updatedDetailedEvent.getSubject());
   }
-}
 
-  /*@Test
+  @Test
   public void testEditEventOnlyStartTime() {
-    LocalDateTime allDayTimeStart = LocalDateTime.of(2025, 6, 10, 0, 0);
-    LocalDateTime allDayUpdateTimeStart = LocalDateTime.of(2025, 6, 11, 0, 0);
+    LocalDateTime allDayTimeStart = LocalDateTime.of(2025, 6, 10, 8, 0);
+    LocalDateTime allDayUpdateTimeStart = LocalDateTime.of(2025, 6, 11, 8, 0);
 
     EventInterface allDayEventUpdate = new Event.CustomEventBuilder()
             .setSubject("Wedding")
@@ -73,25 +72,30 @@ public class CalendarEditEventTest extends AbstractCalendarTest {
             EditMode.SINGLE
     );
 
-    String expectedWeddingStartDateTime = LocalDateTime.of(2025, 6, 11, 0, 0).toString();
+    String expectedWeddingStartDateTime = LocalDateTime.of(2025, 6, 11, 8, 0).toString();
     EventInterface updatedAllDayEvent = calendar.getEvent("Wedding", allDayUpdateTimeStart, null);
 
     assertEquals(expectedWeddingStartDateTime, updatedAllDayEvent.getStartDateTime().toString());
 
+    LocalDateTime detailedTimeStart = LocalDateTime.of(2025, 7, 14, 9, 0);
+    LocalDateTime detailedTimeEnd = LocalDateTime.of(2025, 7, 14, 11, 0);
+    LocalDateTime detailedTimeStartUpdate = LocalDateTime.of(2025, 7, 14, 10, 0);
+
     EventInterface detailedEventEdit = new Event.CustomEventBuilder()
             .setSubject("Meeting")
-            .setStartDateTime(LocalDateTime.of(2025, 7, 15, 9, 0))
+            .setStartDateTime(detailedTimeStartUpdate)
+            .setEndDateTime(detailedTimeEnd)
             .build();
 
     calendar.editEvent(
             "Meeting",
-            LocalDateTime.of(2025, 7, 14, 9, 0),
+            detailedTimeStart,
             detailedEventEdit,
             EditMode.SINGLE
     );
 
-    String expectedMeetingStartDateTime = LocalDateTime.of(2025, 7, 15, 9, 0).toString();
-    EventInterface updatedDetailedEvent = calendar.getEvent("Meeting", LocalDate.of(2025, 7, 15));
+    String expectedMeetingStartDateTime = LocalDateTime.of(2025, 7, 14, 10, 0).toString();
+    EventInterface updatedDetailedEvent = calendar.getEvent("Meeting", detailedTimeStartUpdate, detailedTimeEnd);
 
     assertEquals(expectedMeetingStartDateTime, updatedDetailedEvent.getStartDateTime().toString());
   }
@@ -99,7 +103,6 @@ public class CalendarEditEventTest extends AbstractCalendarTest {
   @Test
   public void testEditEventOnlyEndTime() {
     LocalDateTime startTime = LocalDateTime.of(2025, 7, 14, 9, 0);
-    LocalDateTime endTime = LocalDateTime.of(2025, 7, 14, 10, 0);
     LocalDateTime endTimeUpdate = LocalDateTime.of(2025, 7, 14, 12, 0);
 
     EventInterface detailedEventEdit = new Event.CustomEventBuilder()
@@ -123,9 +126,13 @@ public class CalendarEditEventTest extends AbstractCalendarTest {
 
   @Test
   public void testEditEventOnlyDescription() {
+    LocalDateTime startTime = LocalDateTime.of(2025, 7, 14, 9, 0);
+    LocalDateTime endTime = LocalDateTime.of(2025, 7, 14, 10, 0);
+
     EventInterface detailedEventEdit = new Event.CustomEventBuilder()
             .setSubject("Meeting")
-            .setStartDateTime(LocalDateTime.of(2025, 7, 14, 9, 0))
+            .setStartDateTime(startTime)
+            .setEndDateTime(endTime)
             .setDescription("Discussion about politics.")
             .build();
 
@@ -135,7 +142,7 @@ public class CalendarEditEventTest extends AbstractCalendarTest {
             detailedEventEdit,
             EditMode.SINGLE
     );
-    EventInterface updatedDetailedEvent = calendar.getEvent("Meeting", LocalDate.of(2025, 7, 14));
+    EventInterface updatedDetailedEvent = calendar.getEvent("Meeting", startTime, endTime);
 
     assertEquals("Discussion about politics.", updatedDetailedEvent.getDescription());
   }
@@ -148,6 +155,7 @@ public class CalendarEditEventTest extends AbstractCalendarTest {
     EventInterface detailedEventEdit = new Event.CustomEventBuilder()
             .setSubject("Meeting")
             .setStartDateTime(startTime)
+            .setEndDateTime(endTime)
             .setLocation(Location.PHYSICAL)
             .build();
 
@@ -165,9 +173,13 @@ public class CalendarEditEventTest extends AbstractCalendarTest {
 
   @Test
   public void testEditEventOnlyStatus() {
+    LocalDateTime startTime = LocalDateTime.of(2025, 7, 14, 9, 0);
+    LocalDateTime endTime = LocalDateTime.of(2025, 7, 14, 10, 0);
+
     EventInterface detailedEventEdit = new Event.CustomEventBuilder()
             .setSubject("Meeting")
-            .setStartDateTime(LocalDateTime.of(2025, 7, 14, 9, 0))
+            .setStartDateTime(startTime)
+            .setEndDateTime(endTime)
             .setStatus(Status.PUBLIC)
             .build();
 
@@ -178,17 +190,22 @@ public class CalendarEditEventTest extends AbstractCalendarTest {
             EditMode.SINGLE
     );
 
-    EventInterface updatedDetailedEvent = calendar.getEvent("Meeting", LocalDate.of(2025, 7, 14));
+    EventInterface updatedDetailedEvent = calendar.getEvent("Meeting", startTime, endTime);
 
     assertEquals(Status.PUBLIC, updatedDetailedEvent.getStatus());
   }
 
   @Test
   public void testEditEventMultipleAttributes() {
+    LocalDateTime startTime = LocalDateTime.of(2025, 7, 14, 9, 0);
+    LocalDateTime endTime = LocalDateTime.of(2025, 7, 14, 10, 0);
+    LocalDateTime updateStartTime = LocalDateTime.of(2025, 7, 15, 12, 0);
+    LocalDateTime updateEndTime = LocalDateTime.of(2025, 7, 15, 15, 0);
+
     EventInterface detailedEventEdit = new Event.CustomEventBuilder()
             .setSubject("Important Meeting")
-            .setStartDateTime(LocalDateTime.of(2025, 7, 15, 12, 0))
-            .setEndDateTime(LocalDateTime.of(2025, 7, 15, 15, 0))
+            .setStartDateTime(updateStartTime)
+            .setEndDateTime(updateEndTime)
             .build();
 
     calendar.editEvent(
@@ -198,49 +215,51 @@ public class CalendarEditEventTest extends AbstractCalendarTest {
             EditMode.SINGLE
     );
 
-    String expectedMeetingStartDateTime = LocalDateTime.of(2025, 7, 15, 12, 0).toString();
-    String expectedMeetingEndDateTime = LocalDateTime.of(2025, 7, 15, 15, 0).toString();
-    EventInterface updatedDetailedEvent = calendar.getEvent("Important Meeting", LocalDate.of(2025, 7, 15));
+    EventInterface updatedDetailedEvent = calendar.getEvent("Important Meeting", updateStartTime, updateEndTime);
 
     assertEquals("Important Meeting", updatedDetailedEvent.getSubject());
-    assertEquals(expectedMeetingStartDateTime, updatedDetailedEvent.getStartDateTime().toString());
-    assertEquals(expectedMeetingEndDateTime, updatedDetailedEvent.getEndDateTime().toString());
+    assertEquals(updateStartTime.toString(), updatedDetailedEvent.getStartDateTime().toString());
+    assertEquals(updateEndTime.toString(), updatedDetailedEvent.getEndDateTime().toString());
   }
 
   @Test
   public void testMultipleEdits() {
+    LocalDateTime startTime = LocalDateTime.of(2025, 7, 14, 9, 0);
+    LocalDateTime endTime = LocalDateTime.of(2025, 7, 14, 10, 0);
+    LocalDateTime startTimeUpdate = LocalDateTime.of(2025, 7, 14, 10, 0);
+
     EventInterface detailedEventEdit = new Event.CustomEventBuilder()
             .setSubject("Meeting")
-            .setStartDateTime(LocalDateTime.of(2025, 7, 14, 10, 0))
+            .setStartDateTime(startTimeUpdate)
+            .setEndDateTime(endTime)
             .build();
 
     calendar.editEvent(
             "Meeting",
-            LocalDateTime.of(2025, 7, 14, 9, 0),
+            startTime,
             detailedEventEdit,
             EditMode.SINGLE
     );
 
-    String expectedMeetingStartDateTime = LocalDateTime.of(2025, 7, 14, 10, 0).toString();
-    EventInterface updatedDetailedEvent = calendar.getEvent("Meeting", LocalDate.of(2025, 7, 14));
+    EventInterface updatedDetailedEvent = calendar.getEvent("Meeting", startTimeUpdate, endTime);
 
-    assertEquals(expectedMeetingStartDateTime, updatedDetailedEvent.getStartDateTime().toString());
+    assertEquals(startTimeUpdate.toString(), updatedDetailedEvent.getStartDateTime().toString());
 
     EventInterface detailedEventEdit2 = new Event.CustomEventBuilder()
             .setSubject("Important Meeting")
-            .setStartDateTime(LocalDateTime.of(2025, 7, 14, 10, 0))
+            .setStartDateTime(startTimeUpdate)
+            .setEndDateTime(endTime)
             .build();
 
     calendar.editEvent(
             "Meeting",
-            LocalDateTime.of(2025, 7, 14, 10, 0),
+            startTimeUpdate,
             detailedEventEdit2,
             EditMode.SINGLE
     );
 
-    EventInterface updatedDetailedEvent2 = calendar.getEvent("Important Meeting", LocalDate.of(2025, 7, 14));
+    EventInterface updatedDetailedEvent2 = calendar.getEvent("Important Meeting", startTimeUpdate, endTime);
 
     assertEquals("Important Meeting", updatedDetailedEvent2.getSubject());
   }
 }
-*/

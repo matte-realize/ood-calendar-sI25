@@ -1,6 +1,7 @@
 package Model;
 
 import java.time.DayOfWeek;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -30,8 +31,8 @@ public class Calendar implements CalendarInterface {
     baseExceptions(subject, start);
 
     if (end == null) {
-      start = start.toLocalDate().atStartOfDay();
-      end = start.toLocalDate().atTime(23, 59);
+      start = start.toLocalDate().atTime(8, 0);
+      end = start.toLocalDate().atTime(17, 0);
     }
 
     if (end.isBefore(start)) {
@@ -58,6 +59,7 @@ public class Calendar implements CalendarInterface {
   public EventSeries createEventSeries(String subject,
                                        LocalDateTime start,
                                        LocalDateTime end,
+                                       LocalDateTime endRange,
                                        List<DayOfWeek> repeatDays,
                                        Integer occurrences,
                                        String description,
@@ -77,12 +79,24 @@ public class Calendar implements CalendarInterface {
     LocalDateTime current = start;
     int count = 0;
 
-    while (count < occurrences && (end == null || !current.isAfter(end))) {
+    Duration duration = null;
+    if (end != null) {
+      duration = Duration.between(start, end);
+    }
+
+    while ((occurrences == null || occurrences == 0 || count < occurrences) &&
+            (endRange == null || !current.isAfter(endRange))) {
       if (repeatDays.contains(current.getDayOfWeek())) {
+        LocalDateTime instanceEnd;
+        if (duration != null) {
+          instanceEnd = current.plus(duration);
+        } else {
+          instanceEnd = current.toLocalDate().atTime(17, 0);
+        }
         Event.CustomEventBuilder builder = new Event.CustomEventBuilder()
                 .setSubject(subject)
                 .setStartDateTime(current)
-                .setEndDateTime(current.plusHours(1))
+                .setEndDateTime(instanceEnd)
                 .setDescription(description)
                 .setLocation(location)
                 .setStatus(status);
@@ -90,6 +104,7 @@ public class Calendar implements CalendarInterface {
         Event instance = (Event) builder.build();
         series.addInstance(instance);
         eventsByDate.computeIfAbsent(current.toLocalDate(), d -> new ArrayList<>()).add(instance);
+
         count++;
       }
       current = current.plusDays(1);

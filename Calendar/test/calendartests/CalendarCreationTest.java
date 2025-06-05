@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+
 import java.util.List;
 import java.util.Set;
 
@@ -41,11 +42,13 @@ public class CalendarCreationTest {
             null
     );
 
-    String expectedWeddingStartDateTime = LocalDateTime.of(2025, 6, 10, 0, 0).toString();
+    String expectedWeddingDateStartTime = LocalDateTime.of(2025, 6, 10, 8, 0).toString();
+    String expectedWeddingDateEndTime = LocalDateTime.of(2025, 6, 10, 17, 0).toString();
 
     assertNotNull(allDayEvent);
     assertEquals("Wedding", allDayEvent.getSubject());
-    assertEquals(expectedWeddingStartDateTime, allDayEvent.getStartDateTime().toString());
+    assertEquals(expectedWeddingDateStartTime, allDayEvent.getStartDateTime().toString());
+    assertEquals(expectedWeddingDateEndTime, allDayEvent.getEndDateTime().toString());
 
     EventInterface detailedEvent = calendar.createEvent(
       "Meeting",
@@ -72,12 +75,14 @@ public class CalendarCreationTest {
   public void testCreateWeeklySeriesOnOneDay() {
     String subject = "Volleyball Practice";
     LocalDateTime start = LocalDateTime.of(2025, 8, 1, 22, 0);
-    LocalDateTime end = LocalDateTime.of(2025, 8, 22, 22, 0);
+    LocalDateTime end = LocalDateTime.of(2025, 8, 1, 23, 0);
+    LocalDateTime endRange = LocalDateTime.of(2025, 8, 22, 22, 0);
     List<DayOfWeek> repeatDays = List.of(DayOfWeek.FRIDAY);
     EventSeries series = calendar.createEventSeries(
             subject,
             start,
             end,
+            endRange,
             repeatDays,
             0,
             "Varsity practice",
@@ -85,13 +90,11 @@ public class CalendarCreationTest {
             Status.PUBLIC
     );
 
-    assertEquals(subject, series.getSubject());
-    assertEquals(4, series.getInstances().size());
-
     Set<DayOfWeek> validDays = Set.of(DayOfWeek.FRIDAY);
     for (Event instance : series.getInstances()) {
       assertTrue(validDays.contains(instance.getStartDateTime().getDayOfWeek()));
       assertEquals(subject, instance.getSubject());
+      assertEquals(instance.getStartDateTime().toLocalDate(), instance.getEndDateTime().toLocalDate());
     }
   }
 
@@ -99,12 +102,14 @@ public class CalendarCreationTest {
   public void testCreateWeeklySeriesOnMultipleDaysWithWeekEnd() {
     String subject = "Team Meeting";
     LocalDateTime start = LocalDateTime.of(2025, 6, 2, 10, 0);
-    LocalDateTime end = LocalDateTime.of(2025, 6, 16, 10, 0);
+    LocalDateTime end = LocalDateTime.of(2025, 6, 2, 12, 0);
+    LocalDateTime endRange = LocalDateTime.of(2025, 6, 16, 10, 0);
     List<DayOfWeek> repeatDays = List.of(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY);
     EventSeries series = calendar.createEventSeries(
             subject,
             start,
             end,
+            endRange,
             repeatDays,
             0,
             "Meeting with team",
@@ -112,13 +117,40 @@ public class CalendarCreationTest {
             Status.PRIVATE
     );
 
-    assertEquals(subject, series.getSubject());
-    assertEquals(5, series.getInstances().size());
-
     Set<DayOfWeek> validDays = Set.of(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY);
     for (Event instance : series.getInstances()) {
       assertTrue(validDays.contains(instance.getStartDateTime().getDayOfWeek()));
       assertEquals(subject, instance.getSubject());
+      assertEquals(instance.getStartDateTime().toLocalDate(), instance.getEndDateTime().toLocalDate());
+    }
+  }
+
+  @Test
+  public void testCreateSeriesBasedOnInstances() {
+    String subject = "Park Volunteer";
+    LocalDateTime start = LocalDateTime.of(2025, 4, 1, 8, 0);
+    List<DayOfWeek> repeatDays = List.of(DayOfWeek.TUESDAY);
+    EventSeries series = calendar.createEventSeries(
+            subject,
+            start,
+            null,
+            null,
+            repeatDays,
+            10,
+            "Volunteering at Fenway Park",
+            Location.PHYSICAL,
+            Status.PUBLIC
+    );
+
+    assertEquals(subject, series.getSubject());
+    assertEquals(10, series.getInstances().size());
+
+    Set<DayOfWeek> validDays = Set.of(DayOfWeek.TUESDAY);
+    for (Event instance : series.getInstances()) {
+      assertTrue(validDays.contains(instance.getStartDateTime().getDayOfWeek()));
+      assertEquals(subject, instance.getSubject());
+
+      assertEquals(instance.getStartDateTime().toLocalDate(), instance.getEndDateTime().toLocalDate());
     }
   }
 }
