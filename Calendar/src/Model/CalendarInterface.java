@@ -1,5 +1,6 @@
 package Model;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,7 +29,15 @@ public interface CalendarInterface {
    * repeatedly start and end on the same day and share the
    * same start and end time.
    */
-  void createEventSeries();
+  EventSeries createEventSeries(String subject,
+                                LocalDateTime start,
+                                LocalDateTime end,
+                                List<DayOfWeek> repeatDays,
+                                int occurrences,
+                                String description,
+                                Location location,
+                                Status status
+  ) throws IllegalArgumentException;
 
   /**
    * Edits a single event whether it's an independent event or
@@ -36,20 +45,16 @@ public interface CalendarInterface {
    */
   void editEvent(String subject,
                  LocalDateTime start,
-                 EventInterface updatedEvent
+                 EventInterface updatedEvent,
+                 EditMode mode
   );
 
   /**
-   * Edits the entire event series.
-   */
-  void editEventSeries();
-
-  /**
    * Gets the events based on the input of a given date.
-   * @param date the date that is input to display all the events.
+   * @param start the date that is input to display all the events.
    * @return a list based on what events are occurring on that day.
    */
-  List<Event> getEvent(LocalDate date);
+  EventInterface getEvent(String subject, LocalDate start);
 
   /**
    * Gets the event series based on the input of a given timestamp.
