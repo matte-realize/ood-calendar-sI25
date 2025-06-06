@@ -43,7 +43,6 @@ public interface CalendarInterface {
   EventSeries createEventSeries(String subject,
                                 LocalDateTime start,
                                 LocalDateTime end,
-                                LocalDateTime endRange,
                                 List<DayOfWeek> repeatDays,
                                 Integer occurrences,
                                 String description,

@@ -59,7 +59,6 @@ public class Calendar implements CalendarInterface {
   public EventSeries createEventSeries(String subject,
                                        LocalDateTime start,
                                        LocalDateTime end,
-                                       LocalDateTime endRange,
                                        List<DayOfWeek> repeatDays,
                                        Integer occurrences,
                                        String description,
@@ -81,11 +80,11 @@ public class Calendar implements CalendarInterface {
 
     Duration duration = null;
     if (end != null) {
-      duration = Duration.between(start, end);
+      duration = Duration.between(start.toLocalTime(), end.toLocalTime());
     }
 
     while ((occurrences == null || occurrences == 0 || count < occurrences) &&
-            (endRange == null || !current.isAfter(endRange))) {
+            (end == null || !current.isAfter(end))) {
       if (repeatDays.contains(current.getDayOfWeek())) {
         LocalDateTime instanceEnd;
         if (duration != null) {

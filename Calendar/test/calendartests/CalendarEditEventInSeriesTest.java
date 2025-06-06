@@ -28,7 +28,6 @@ public class CalendarEditEventInSeriesTest extends AbstractCalendarTest {
             "Workout",
             LocalDateTime.of(2025, 6, 2, 7, 0),
             LocalDateTime.of(2025, 6, 16, 9, 0),
-            LocalDateTime.of(2025, 6, 16, 7, 0),
             List.of(DayOfWeek.MONDAY, DayOfWeek.THURSDAY),
             0,
             "Weekly workouts",
