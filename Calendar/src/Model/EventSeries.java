@@ -26,12 +26,13 @@ public class EventSeries extends Event {
     return occurrences;
   }
 
-  public void setOccurrences(Integer occurrences) {
-    this.occurrences = occurrences;
-  }
 
   public LocalDateTime getEndDateTimeOfSeries() {
     return endDateTimeOfSeries;
+  }
+
+  public void setOccurrences(Integer occurrences) {
+    this.occurrences = occurrences;
   }
 
   public void setEndDateTimeOfSeries(LocalDateTime endDateTimeOfSeries) {

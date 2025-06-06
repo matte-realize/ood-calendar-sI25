@@ -5,6 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import Model.Calendar;
+import Model.EditMode;
 
 public class EditEventCommand extends AbstractCommand {
 
@@ -56,7 +57,7 @@ public class EditEventCommand extends AbstractCommand {
       throw new IllegalArgumentException("Invalid new value format. Make sure the new value is of the same type as you are trying to edit");
     }
 
-    //calendarModel.editEvent(subject, LocalDateTime.parse(from), );
+    // calendarModel.editEvent(subject, LocalDateTime.parse(from), , EditMode.SINGLE);
   }
 
   private void handleEditEventsFrom(Matcher m) {

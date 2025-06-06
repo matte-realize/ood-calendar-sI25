@@ -91,6 +91,8 @@ public class CalendarCreationTest {
     Set<DayOfWeek> validDays = Set.of(DayOfWeek.FRIDAY);
     for (Event instance : series.getInstances()) {
       assertTrue(validDays.contains(instance.getStartDateTime().getDayOfWeek()));
+      assertTrue(validDays.contains(instance.getEndDateTime().getDayOfWeek()));
+
       assertEquals(subject, instance.getSubject());
       assertEquals(instance.getStartDateTime().toLocalDate(), instance.getEndDateTime().toLocalDate());
     }
@@ -116,6 +118,8 @@ public class CalendarCreationTest {
     Set<DayOfWeek> validDays = Set.of(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY);
     for (Event instance : series.getInstances()) {
       assertTrue(validDays.contains(instance.getStartDateTime().getDayOfWeek()));
+      assertTrue(validDays.contains(instance.getEndDateTime().getDayOfWeek()));
+
       assertEquals(subject, instance.getSubject());
       assertEquals(instance.getStartDateTime().toLocalDate(), instance.getEndDateTime().toLocalDate());
     }
@@ -143,6 +147,7 @@ public class CalendarCreationTest {
     Set<DayOfWeek> validDays = Set.of(DayOfWeek.TUESDAY);
     for (Event instance : series.getInstances()) {
       assertTrue(validDays.contains(instance.getStartDateTime().getDayOfWeek()));
+      assertTrue(validDays.contains(instance.getEndDateTime().getDayOfWeek()));
       assertEquals(subject, instance.getSubject());
 
       assertEquals(instance.getStartDateTime().toLocalDate(), instance.getEndDateTime().toLocalDate());

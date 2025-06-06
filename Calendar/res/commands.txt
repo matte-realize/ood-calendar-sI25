@@ -9,10 +9,10 @@ create event "Event Eight" from 2025-05-10T09:00 to 2025-05-10T23:30 repeats MTW
 create event "Event Nine" from 2025-06-09T08:00 to 2025-06-09T09:00 repeats U until 2025-07-01
 create event "Event Ten" on 2025-12-25
 create event "Event Eleven" on 2025-08-15
-create event "Event Twelve" on 2025-06-10 repeats F for 4 times
-create event "Event Thirteen" on 2025-06-10 repeats MW for 6 times
+create event "Event Twelve" on 2025-06-10 repeats T for 4 times
+create event "Event Thirteen" on 2025-06-09 repeats MW for 6 times
 create event "Event Fourteen" on 2025-06-10 repeats SU until 2025-08-30
-create event "Event Fifteen" on 2025-06-15 repeats T until 2025-07-01
+create event "Event Fifteen" on 2025-06-15 repeats U until 2025-07-01
 
 
 

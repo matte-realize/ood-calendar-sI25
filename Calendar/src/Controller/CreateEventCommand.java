@@ -77,7 +77,14 @@ public class CreateEventCommand extends AbstractCommand {
       throw new IllegalArgumentException("Invalid datetime format. Expected format: yyyy-MM-ddTHH:mm");
     }
 
-    calendarModel.createEvent(subject, LocalDateTime.parse(start), LocalDateTime.parse(end), "", null, null);
+    calendarModel.createEvent(
+            subject,
+            LocalDateTime.parse(start),
+            LocalDateTime.parse(end),
+            "",
+            null,
+            null
+    );
   }
 
   private void handleRepeatingEventNTimes(Matcher m, boolean isAllDayEvent) {
@@ -110,7 +117,16 @@ public class CreateEventCommand extends AbstractCommand {
       throw new IllegalArgumentException("Invalid repeat number. Must be greater than 0");
     }
 
-    calendarModel.createEventSeries(subject, LocalDateTime.parse(start), LocalDateTime.parse(end), parseDays(weekdays), Integer.parseInt(repeatNum), null, null, null);
+    calendarModel.createEventSeries(
+            subject,
+            LocalDateTime.parse(start),
+            LocalDateTime.parse(end),
+            parseDays(weekdays),
+            Integer.parseInt(repeatNum),
+            null,
+            null,
+            null
+    );
   }
 
   private void handleRepeatingEventUntil(Matcher m, boolean isALlDayEvent) {
@@ -140,7 +156,16 @@ public class CreateEventCommand extends AbstractCommand {
       throw new IllegalArgumentException("Invalid weekday format. Expected subset of MTWRFSU");
     }
 
-    calendarModel.createEventSeries(subject, LocalDateTime.parse(start), LocalDateTime.parse(end), parseDays(weekdays), calculateWeeksNeeded(LocalDateTime.parse(start), LocalDateTime.parse(untilDate), parseDays(weekdays)), null, null, null);
+    calendarModel.createEventSeries(
+            subject,
+            LocalDateTime.parse(start),
+            LocalDateTime.parse(end),
+            parseDays(weekdays),
+            calculateWeeksNeeded(LocalDateTime.parse(start), LocalDateTime.parse(untilDate), parseDays(weekdays)),
+            null,
+            null,
+            null
+    );
   }
 
 
@@ -167,7 +192,9 @@ public class CreateEventCommand extends AbstractCommand {
     return days;
   }
 
-  private static int calculateWeeksNeeded(LocalDateTime startDate, LocalDateTime repeatUntilDate, List<DayOfWeek> repeatDays) {
+  private static int calculateWeeksNeeded(LocalDateTime startDate,
+                                          LocalDateTime repeatUntilDate,
+                                          List<DayOfWeek> repeatDays) {
     if (startDate.isAfter(repeatUntilDate)) {
       return 0;
     }

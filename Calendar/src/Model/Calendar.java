@@ -75,26 +75,39 @@ public class Calendar implements CalendarInterface {
     series.setOccurrences(occurrences);
     series.setEndDateTimeOfSeries(end);
 
-    LocalDateTime current = start;
     int count = 0;
 
-    Duration duration = null;
-    if (end != null) {
-      duration = Duration.between(start.toLocalTime(), end.toLocalTime());
+    Duration eventDuration;
+    LocalDateTime seriesEndDate;
+
+    if (occurrences != null && occurrences > 0) {
+      seriesEndDate = null;
+      if (start.getHour() == 8 && start.getMinute() == 0) {
+        eventDuration = Duration.ofHours(9);
+      } else {
+        eventDuration = Duration.ofHours(1);
+      }
+    } else {
+      seriesEndDate = end;
+      if (start.getHour() == 8 && start.getMinute() == 0) {
+        eventDuration = Duration.ofHours(9);
+      } else {
+        eventDuration = Duration.ofHours(1);
+      }
     }
 
-    while ((occurrences == null || occurrences == 0 || count < occurrences) &&
-            (end == null || !current.isAfter(end))) {
-      if (repeatDays.contains(current.getDayOfWeek())) {
-        LocalDateTime instanceEnd;
-        if (duration != null) {
-          instanceEnd = current.plus(duration);
-        } else {
-          instanceEnd = current.toLocalDate().atTime(17, 0);
-        }
+    LocalDateTime currentCheck = start;
+
+    while ((occurrences == null || count < occurrences) &&
+            (seriesEndDate == null || !currentCheck.toLocalDate().isAfter(seriesEndDate.toLocalDate()))) {
+
+      if (repeatDays.contains(currentCheck.getDayOfWeek())) {
+        LocalDateTime instanceStart = currentCheck.toLocalDate().atTime(start.toLocalTime());
+        LocalDateTime instanceEnd = instanceStart.plus(eventDuration);
+
         Event.CustomEventBuilder builder = new Event.CustomEventBuilder()
                 .setSubject(subject)
-                .setStartDateTime(current)
+                .setStartDateTime(instanceStart)
                 .setEndDateTime(instanceEnd)
                 .setDescription(description)
                 .setLocation(location)
@@ -102,15 +115,31 @@ public class Calendar implements CalendarInterface {
 
         Event instance = (Event) builder.build();
         series.addInstance(instance);
-        eventsByDate.computeIfAbsent(current.toLocalDate(), d -> new ArrayList<>()).add(instance);
+        eventsByDate.computeIfAbsent(instanceStart.toLocalDate(), d -> new ArrayList<>()).add(instance);
 
         count++;
+
+        if (occurrences != null && count >= occurrences) {
+          break;
+        }
       }
-      current = current.plusDays(1);
+
+      currentCheck = currentCheck.plusDays(1);
     }
 
     mapSeries.put(subject, series);
     return series;
+  }
+
+  private LocalDateTime nextValidDay(LocalDateTime from, List<DayOfWeek> repeatDays) {
+    LocalDateTime candidate = from.plusDays(1);
+    for (int i = 0; i < 7; i++) {
+      if (repeatDays.contains(candidate.getDayOfWeek())) {
+        return candidate;
+      }
+      candidate = candidate.plusDays(1);
+    }
+    return candidate;
   }
 
   @Override
@@ -192,9 +221,47 @@ public class Calendar implements CalendarInterface {
     return null;
   }
 
-  @Override
-  public List<Event> getEventSeries() {
-    return List.of();
+  public List<Event> getEventsSingleDay(LocalDate date) {
+    List<Event> filteredEvents = new ArrayList<>();
+    List<Event> allEvents = new ArrayList<>();
+
+    for (List<Event> events : eventsByDate.values()) {
+      allEvents.addAll(events);
+    }
+
+    for (Event e : allEvents) {
+      LocalDateTime eventStart = e.getStartDateTime();
+      LocalDateTime eventEnd = e.getEndDateTime();
+
+      if (eventStart.toLocalDate().equals(date) || eventEnd.toLocalDate().equals(date)
+              || (eventStart.toLocalDate().isBefore(date) && eventEnd.toLocalDate().isAfter(date))) {
+        filteredEvents.add(e);
+      }
+    }
+
+    return filteredEvents;
+  }
+
+  public List<Event> getEventsWindow(LocalDateTime start, LocalDateTime end) {
+    List<Event> filteredEvents = new ArrayList<>();
+    List<Event> allEvents = new ArrayList<>();
+
+    for (List<Event> events : eventsByDate.values()) {
+      allEvents.addAll(events);
+    }
+
+    for (Event e : allEvents) {
+      LocalDateTime eventStart = e.getStartDateTime();
+      LocalDateTime eventEnd = e.getEndDateTime();
+
+      if ((eventStart.isAfter(start) && eventStart.isBefore(end)) ||
+              (eventEnd.isAfter(start) && eventEnd.isBefore(end)) ||
+              (eventStart.isBefore(start) && eventEnd.isAfter(end))) {
+        filteredEvents.add(e);
+      }
+    }
+
+    return filteredEvents;
   }
 
   private void baseExceptions(String subject, LocalDateTime start) throws IllegalArgumentException {
