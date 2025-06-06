@@ -1,11 +1,6 @@
 package calendartests;
 
-import org.junit.Before;
 import org.junit.Test;
-
-import java.time.DayOfWeek;
-import java.time.LocalDateTime;
-import java.util.List;
 
 import Model.Location;
 import Model.Status;
@@ -17,19 +12,6 @@ import static org.junit.Assert.assertThrows;
  * or within a series.
  */
 public class CalendarExceptionCreationTest extends AbstractCalendarTest {
-  private LocalDateTime sampleStart;
-  private LocalDateTime sampleEnd;
-  private List<DayOfWeek> sampleRepeatDay;
-  private List<DayOfWeek> sampleRepeatDays;
-
-  @Before
-  public void setup() {
-    sampleStart = LocalDateTime.of(2024, 12, 15, 10, 0);
-    sampleEnd = LocalDateTime.of(2024, 12, 15, 11, 0);
-    sampleRepeatDay = List.of(DayOfWeek.MONDAY);
-    sampleRepeatDays = List.of(DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY);
-  }
-
   @Test
   public void testNullSubject() {
     assertThrows(NullPointerException.class, () -> {
@@ -477,6 +459,22 @@ public class CalendarExceptionCreationTest extends AbstractCalendarTest {
               "Fitness",
               Location.PHYSICAL,
               Status.PRIVATE
+      );
+    });
+  }
+
+  @Test
+  public void testNullDaysInSeries() {
+    assertThrows(NullPointerException.class, () -> {
+      calendar.createEventSeries(
+              "Workout",
+              sampleStart,
+              sampleEnd,
+              null,
+              0,
+              null,
+              null,
+              null
       );
     });
   }

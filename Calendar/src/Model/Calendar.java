@@ -16,7 +16,6 @@ import java.util.Map;
  * or even series.
  */
 public class Calendar implements CalendarInterface {
-  private final Map<LocalDate, List<Event>> independentEvents = new HashMap<>();
   private final Map<LocalDate, List<Event>> eventsByDate = new HashMap<>();
   public final Map<String, EventSeries> mapSeries = new HashMap<>();
 
@@ -141,47 +140,135 @@ public class Calendar implements CalendarInterface {
       throw new IllegalArgumentException("Updated event cannot be null!");
     }
 
-    LocalDate originalDate = start.toLocalDate();
-    List<Event> candidates = new ArrayList<>();
-    for (Event e : eventsByDate.getOrDefault(originalDate, Collections.emptyList())) {
-      if (e.getSubject().equals(subject) && e.getStartDateTime().equals(start)) {
-        candidates.add(e);
+    Event targetEvent = null;
+    EventSeries parentSeries = null;
+
+    EventSeries candidateSeries = mapSeries.get(subject);
+    if (candidateSeries != null) {
+      for (Event instance : candidateSeries.getInstances()) {
+        if (instance.getSubject().equals(subject) &&
+                instance.getStartDateTime().equals(start)) {
+          targetEvent = instance;
+          parentSeries = candidateSeries;
+          break;
+        }
       }
     }
 
-    Event edittedEvent = candidates.get(0);
+    if (targetEvent == null) {
+      LocalDate originalDate = start.toLocalDate();
+      List<Event> candidates = eventsByDate.getOrDefault(originalDate, Collections.emptyList());
+      for (Event e : candidates) {
+        if (e.getSubject().equals(subject) && e.getStartDateTime().equals(start)) {
+          targetEvent = e;
+          break;
+        }
+      }
+    }
 
-    if (!(edittedEvent instanceof EventSeries)) {
-      eventReplacement(edittedEvent, updatedEvent);
+    if (targetEvent == null) {
+      throw new IllegalArgumentException("Event not found: " + subject + " at " + start);
+    }
+
+    if (parentSeries == null) {
+      eventReplacement(targetEvent, updatedEvent);
       return;
     }
 
-    EventSeries series = (EventSeries) edittedEvent;
-
     switch (mode) {
       case SINGLE:
-        eventReplacement(edittedEvent, updatedEvent);
+        editSingleEventInSeries(parentSeries, targetEvent, updatedEvent);
         break;
 
       case FUTURE:
-        /*for (Event instance : series.getInstances()) {
-          if (!instance.getStartDateTime().isBefore(start)) {
-            Event newInstance = buildReplacementFrom(instance, updatedEvent);
-            eventReplacement(instance, newInstance);
-          }
-        }*/
+        editFutureEventsInSeries(parentSeries, targetEvent, updatedEvent);
         break;
 
       case ALL:
-        /*for (Event instance : series.getInstances()) {
-          Event newInstance = buildReplacementFrom(instance, updatedEvent);
-          eventReplacement(instance, newInstance);
-        }*/
+        editAllEventsInSeries(parentSeries, updatedEvent);
         break;
 
       default:
         throw new IllegalArgumentException("Unsupported edit mode: " + mode);
     }
+  }
+
+  private void editSingleEventInSeries(EventSeries series, Event targetEvent, EventInterface updatedEvent) {
+    eventReplacement(targetEvent, updatedEvent);
+
+    List<Event> instances = series.getInstances();
+    for (int i = 0; i < instances.size(); i++) {
+      if (instances.get(i).equals(targetEvent)) {
+        instances.set(i, (Event) updatedEvent);
+        break;
+      }
+    }
+  }
+
+  private void editFutureEventsInSeries(EventSeries series, Event targetEvent, EventInterface updatedEvent) {
+    LocalDateTime targetStart = targetEvent.getStartDateTime();
+    List<Event> instances = series.getInstances();
+
+    for (Event instance : instances) {
+      if (!instance.getStartDateTime().isBefore(targetStart)) {
+        Event newInstance = buildReplacementFrom(instance, updatedEvent);
+        eventReplacement(instance, newInstance);
+
+        for (int i = 0; i < instances.size(); i++) {
+          if (instances.get(i).equals(instance)) {
+            instances.set(i, newInstance);
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  private void editAllEventsInSeries(EventSeries series, EventInterface updatedEvent) {
+    List<Event> instances = new ArrayList<>(series.getInstances());
+
+    for (Event instance : instances) {
+      Event newInstance = buildReplacementFrom(instance, updatedEvent);
+      eventReplacement(instance, newInstance);
+
+      List<Event> seriesInstances = series.getInstances();
+      for (int i = 0; i < seriesInstances.size(); i++) {
+        if (seriesInstances.get(i).equals(instance)) {
+          seriesInstances.set(i, newInstance);
+          break;
+        }
+      }
+    }
+  }
+
+  private Event buildReplacementFrom(Event originalInstance, EventInterface template) {
+    Duration originalDuration = Duration.between(
+            originalInstance.getStartDateTime(),
+            originalInstance.getEndDateTime()
+    );
+    Duration templateDuration = Duration.between(
+            template.getStartDateTime(),
+            template.getEndDateTime()
+    );
+
+    Duration newDuration;
+    if (templateDuration.equals(Duration.ZERO)) {
+      newDuration = originalDuration;
+    } else {
+      newDuration = templateDuration;
+    }
+
+    LocalDateTime newEnd = originalInstance.getStartDateTime().plus(newDuration);
+
+    Event.CustomEventBuilder builder = new Event.CustomEventBuilder()
+            .setSubject(template.getSubject())
+            .setStartDateTime(originalInstance.getStartDateTime())
+            .setEndDateTime(newEnd)
+            .setDescription(template.getDescription())
+            .setLocation(template.getLocation())
+            .setStatus(template.getStatus());
+
+    return (Event) builder.build();
   }
 
   private void eventReplacement(Event oldEvent, EventInterface updatedEvent) {

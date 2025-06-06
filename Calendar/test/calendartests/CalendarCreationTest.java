@@ -33,6 +33,7 @@ public class CalendarCreationTest {
 
   @Test
   public void testCreateEventReturnsCorrectArguments() {
+    // overwrites the time since end time determines all day
     EventInterface allDayEvent = calendar.createEvent(
             "Wedding",
             LocalDateTime.of(2025, 6, 10, 0, 0),

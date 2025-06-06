@@ -21,7 +21,6 @@ public class CalendarEditEventTest extends AbstractCalendarTest {
   @Test
   public void testEditEventOnlySubject() {
     LocalDateTime allDayTimeStart = LocalDateTime.of(2025, 6, 10, 8, 0);
-
     EventInterface allDayEventEdit = new Event.CustomEventBuilder()
             .setSubject("Harry's Wedding")
             .setStartDateTime(allDayTimeStart)
@@ -29,7 +28,7 @@ public class CalendarEditEventTest extends AbstractCalendarTest {
 
     calendar.editEvent(
             "Wedding",
-            LocalDateTime.of(2025, 6, 10, 8, 0),
+            allDayTimeStart,
             allDayEventEdit,
             EditMode.SINGLE
     );

@@ -7,6 +7,9 @@ import Controller.CalendarController;
 import Model.Calendar;
 import View.CalendarView;
 
+/**
+ * The application used to run the Calendar Application.
+ */
 public class CalendarApp {
   public static void main(String[] args) {
 
