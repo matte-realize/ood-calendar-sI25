@@ -9,8 +9,12 @@ import java.util.Set;
 import Model.Location;
 import Model.Status;
 
+/**
+ * Abstract class that represents AbstractCommands that implement
+ * the command interface. These methods within the class act as
+ * helpers to check valid values.
+ */
 public abstract class AbstractCommand implements Command {
-
   @Override
   public boolean isValidDateTime(String input) {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
@@ -51,7 +55,7 @@ public abstract class AbstractCommand implements Command {
 
     switch (property) {
       case "subject":
-        case "description":
+      case "description":
         return true;
       case "start":
       case "end":
@@ -63,13 +67,13 @@ public abstract class AbstractCommand implements Command {
         } catch (IllegalArgumentException e) {
           return false;
         }
-        case "location":
-          try {
-            Location.valueOf(newValue.toUpperCase());
-            return true;
-          } catch (IllegalArgumentException e) {
-            return false;
-          }
+      case "location":
+        try {
+          Location.valueOf(newValue.toUpperCase());
+          return true;
+        } catch (IllegalArgumentException e) {
+          return false;
+        }
     }
 
     return true;

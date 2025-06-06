@@ -4,12 +4,21 @@ import java.util.List;
 
 import Model.Event;
 
+/**
+ * Calendar view class that implements the CalenderViewInterface
+ * which is able to display to the user the application for the
+ * calendar.
+ */
 public class CalendarView implements CalendarViewInterface {
 
-  public CalendarView() {}
+  /**
+   * Simple constructor for the calendar view.
+   */
+  public CalendarView() {
+  }
 
-  public void PrintEvents(List<Event> events, String day) {
-
+  @Override
+  public void printEvents(List<Event> events, String day) {
     if (events.isEmpty()) {
       System.out.println("No events found on " + day);
     } else {
@@ -20,8 +29,8 @@ public class CalendarView implements CalendarViewInterface {
     }
   }
 
-  public void PrintStatus(String status, String day) {
-
+  @Override
+  public void printStatus(String status, String day) {
     System.out.println(status + " on " + day);
   }
 }

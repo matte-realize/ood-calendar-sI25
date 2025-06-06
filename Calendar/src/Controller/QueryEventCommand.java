@@ -10,8 +10,11 @@ import Model.Calendar;
 import Model.Event;
 import View.CalendarView;
 
+/**
+ * A command that extends the abstract command class which allows for the user
+ * to be able to query events through the calendar controller.
+ */
 public class QueryEventCommand extends AbstractCommand {
-
   private static final Pattern PrintEvents = Pattern.compile(
           "^print events on (\\d{4}-\\d{2}-\\d{2})$");
 
@@ -54,7 +57,7 @@ public class QueryEventCommand extends AbstractCommand {
       throw new IllegalArgumentException("Invalid date format. Expected format: yyyy-MM-dd");
     }
 
-    calendarView.PrintEvents(calendarModel.getEventsSingleDay(LocalDate.parse(date)), date);
+    calendarView.printEvents(calendarModel.getEventsSingleDay(LocalDate.parse(date)), date);
   }
 
   private void handlePrintEventsFromTo(Matcher m) {
@@ -65,7 +68,7 @@ public class QueryEventCommand extends AbstractCommand {
       throw new IllegalArgumentException("Invalid datetime format. Expected format: yyyy-MM-ddTHH:mm");
     }
 
-    calendarView.PrintEvents(calendarModel.getEventsWindow(LocalDateTime.parse(startDate), LocalDateTime.parse(endDate)), startDate + " to " + endDate);
+    calendarView.printEvents(calendarModel.getEventsWindow(LocalDateTime.parse(startDate), LocalDateTime.parse(endDate)), startDate + " to " + endDate);
 
   }
 
@@ -78,9 +81,9 @@ public class QueryEventCommand extends AbstractCommand {
 
     List<Event> events = calendarModel.getEventsWindow(LocalDateTime.parse(dateTime), LocalDateTime.parse(dateTime));
     if (events.isEmpty()) {
-      calendarView.PrintStatus("Available", dateTime);
+      calendarView.printStatus("Available", dateTime);
     } else {
-      calendarView.PrintStatus("Busy", dateTime);
+      calendarView.printStatus("Busy", dateTime);
     }
   }
 }

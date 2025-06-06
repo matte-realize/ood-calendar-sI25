@@ -1,7 +1,6 @@
 package Controller;
 
 import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
@@ -12,8 +11,12 @@ import java.util.regex.Pattern;
 
 import Model.Calendar;
 
+/**
+ * A command that extends the abstract command class which allows for the user
+ * to be able to create events through single events or a series through the
+ * calendar controller.
+ */
 public class CreateEventCommand extends AbstractCommand {
-
   private static final Pattern CreateSingleEvent = Pattern.compile(
           "^create event \"([^\"]+)\" from (\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}) to (\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2})$");
 
@@ -66,7 +69,7 @@ public class CreateEventCommand extends AbstractCommand {
     String start;
     String end;
     if (isALlDayEvent) {
-      start = m.group(2)+ "T08:00";
+      start = m.group(2) + "T08:00";
       end = m.group(2) + "T17:00";
     } else {
       start = m.group(2);
@@ -94,7 +97,7 @@ public class CreateEventCommand extends AbstractCommand {
     String weekdays;
     String repeatNum;
     if (isAllDayEvent) {
-      start = m.group(2)+ "T08:00";
+      start = m.group(2) + "T08:00";
       end = m.group(2) + "T17:00";
       weekdays = m.group(3);
       repeatNum = m.group(4);
@@ -136,16 +139,16 @@ public class CreateEventCommand extends AbstractCommand {
     String weekdays;
     String untilDate;
     if (isALlDayEvent) {
-       start = m.group(2)+ "T08:00";
-       end = m.group(2) + "T17:00";
-       weekdays = m.group(3);
-       untilDate = m.group(4) + "T23:59";
+      start = m.group(2) + "T08:00";
+      end = m.group(2) + "T17:00";
+      weekdays = m.group(3);
+      untilDate = m.group(4) + "T23:59";
 
     } else {
-       start = m.group(2);
-       end = m.group(3);
-       weekdays = m.group(4);
-       untilDate = m.group(5) + "T23:59";
+      start = m.group(2);
+      end = m.group(3);
+      weekdays = m.group(4);
+      untilDate = m.group(5) + "T23:59";
     }
 
     if (!isValidDateTime(start) || !isValidDateTime(end)) {

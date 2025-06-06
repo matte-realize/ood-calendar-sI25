@@ -13,7 +13,14 @@ import java.io.IOException;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-public class CalendarController implements CalendarControllerInterface{
+/**
+ * Controller class that implements the CalendarControllerInterface and
+ * acts as the controller for the Calendar in order to be able to process
+ * commands as well as determine between the interactive and headless
+ * mode to run commands.
+ */
+
+public class CalendarController implements CalendarControllerInterface {
   private final Calendar calendarModel;
   private final CalendarView calendarView;
 
@@ -22,6 +29,7 @@ public class CalendarController implements CalendarControllerInterface{
     this.calendarView = calendarView;
   }
 
+  @Override
   public void go(String[] args) {
     switch (args[1].toLowerCase()) {
       case "interactive":
@@ -30,7 +38,6 @@ public class CalendarController implements CalendarControllerInterface{
       case "headless":
         this.runHeadlessMode(args[2]);
     }
-
   }
 
   private void runInteractiveMode() throws IllegalArgumentException {
@@ -43,8 +50,7 @@ public class CalendarController implements CalendarControllerInterface{
       System.out.print("> ");
       command = scanner.next();
       tokensString = scanner.nextLine();
-    } while(!this.processCommand(command, tokensString));
-
+    } while (!this.processCommand(command, tokensString));
   }
 
   private void runHeadlessMode(String filename) throws IllegalArgumentException {
@@ -55,7 +61,6 @@ public class CalendarController implements CalendarControllerInterface{
       boolean exitFound = false;
 
       while (!exitFound) {
-
         try {
           command = scanner.next();
           if (command.equalsIgnoreCase("exit")) {
@@ -70,38 +75,30 @@ public class CalendarController implements CalendarControllerInterface{
           System.err.println("Error: headless command file must end with an 'exit' command.");
           break;
         }
-
       }
-
     } catch (IOException e) {
       System.err.println("Failed to read command file: " + e.getMessage());
     }
   }
 
   private boolean processCommand(String command, String tokensString) throws IllegalArgumentException {
-
-
     switch (command) {
       case "create":
-
-          CreateEventCommand createEvent = new CreateEventCommand(tokensString, calendarModel);
-          createEvent.execute();
+        CreateEventCommand createEvent = new CreateEventCommand(tokensString, calendarModel);
+        createEvent.execute();
 
         break;
       case "edit":
-
         EditEventCommand editEvent = new EditEventCommand(tokensString, calendarModel);
         editEvent.execute();
 
         break;
       case "print":
-
         QueryEventCommand printEvent = new QueryEventCommand(tokensString, "print", calendarModel, calendarView);
         printEvent.execute();
 
-          break;
+        break;
       case "show":
-
         QueryEventCommand showStatus = new QueryEventCommand(tokensString, "show", calendarModel, calendarView);
         showStatus.execute();
         break;

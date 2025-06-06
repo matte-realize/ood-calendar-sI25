@@ -2,6 +2,12 @@ package Model;
 
 import java.time.LocalDateTime;
 
+/**
+ * An event class that implements the event interface
+ * that acts as an event for the calendar provided with
+ * a subject, start date time, end date time, description,
+ * location, and status.
+ */
 public class Event implements EventInterface {
   private final String subject;
   private final LocalDateTime startDateTime;
@@ -10,6 +16,14 @@ public class Event implements EventInterface {
   private Location location;
   private Status status;
 
+  /**
+   * Constructor that takes in the subject and start date time
+   * arguments as the minimum necessary arguments for an event.
+   *
+   * @param subject       the subject that is the unique identifier for the event.
+   * @param startDateTime the start time for the event.
+   * @throws IllegalArgumentException if any of the parameters given are invalid.
+   */
   public Event(String subject, LocalDateTime startDateTime) throws IllegalArgumentException {
     this.subject = subject;
     this.startDateTime = startDateTime;
@@ -45,16 +59,31 @@ public class Event implements EventInterface {
     return status;
   }
 
+  /**
+   * Returns a string over the event based on the minimum
+   * details provided.
+   *
+   * @return a string describing the details of the event.
+   */
   public String printEvent() {
     String eventString = this.subject + " from " + this.startDateTime.toString() + " to " + this.endDateTime.toString();
 
     if (this.location != null) {
-      eventString += " " + this.location.toString();
+      eventString += " " + this.location;
     }
     return eventString;
   }
 
+  /**
+   * A class representing a builder for creating events that extends
+   * the event builder.
+   */
   public static class CustomEventBuilder extends EventBuilder<CustomEventBuilder> {
+    /**
+     * Performs the build command to create an event.
+     *
+     * @return an event interface based on the details of the event.
+     */
     public EventInterface build() {
       Event event = new Event(this.subject, this.startDateTime);
       event.description = this.description;

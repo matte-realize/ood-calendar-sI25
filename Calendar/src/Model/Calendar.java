@@ -131,17 +131,6 @@ public class Calendar implements CalendarInterface {
     return series;
   }
 
-  private LocalDateTime nextValidDay(LocalDateTime from, List<DayOfWeek> repeatDays) {
-    LocalDateTime candidate = from.plusDays(1);
-    for (int i = 0; i < 7; i++) {
-      if (repeatDays.contains(candidate.getDayOfWeek())) {
-        return candidate;
-      }
-      candidate = candidate.plusDays(1);
-    }
-    return candidate;
-  }
-
   @Override
   public void editEvent(String subject,
                         LocalDateTime start,
@@ -221,6 +210,12 @@ public class Calendar implements CalendarInterface {
     return null;
   }
 
+  /**
+   * Returns the events of a single day as a list for retrieval.
+   *
+   * @param date the date given for the retrieval.
+   * @return a list of events for the given day.
+   */
   public List<Event> getEventsSingleDay(LocalDate date) {
     List<Event> filteredEvents = new ArrayList<>();
     List<Event> allEvents = new ArrayList<>();
@@ -242,6 +237,14 @@ public class Calendar implements CalendarInterface {
     return filteredEvents;
   }
 
+  /**
+   * Returns the events of a given time window based on the start and end times
+   * as a list for retrieval.
+   *
+   * @param start the starting time for the time window.
+   * @param end the ending time for the time window.
+   * @return a list of events given through the time window.
+   */
   public List<Event> getEventsWindow(LocalDateTime start, LocalDateTime end) {
     List<Event> filteredEvents = new ArrayList<>();
     List<Event> allEvents = new ArrayList<>();

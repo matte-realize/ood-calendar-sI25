@@ -7,8 +7,12 @@ import java.util.regex.Pattern;
 import Model.Calendar;
 import Model.EditMode;
 
+/**
+ * A command that extends the abstract command class which allows for the user
+ * to be able to edit events through single events or a series through the
+ * calendar controller.
+ */
 public class EditEventCommand extends AbstractCommand {
-
   private static final Pattern EditSingleEvent = Pattern.compile(
           "^edit event (subject|start|end|description|location|status) \"([^\"]+)\" from (\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}) to (\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}) with (.+)$");
 
