@@ -1,6 +1,8 @@
 package Controller;
 
 
+import Model.Calendar;
+
 public abstract interface Command {
 
   void execute() throws IllegalArgumentException;

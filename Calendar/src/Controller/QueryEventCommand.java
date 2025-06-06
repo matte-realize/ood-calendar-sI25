@@ -1,7 +1,14 @@
 package Controller;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import Model.Calendar;
+import Model.Event;
+import View.CalendarView;
 
 public class QueryEventCommand extends AbstractCommand {
 
@@ -15,9 +22,13 @@ public class QueryEventCommand extends AbstractCommand {
           "^show status on (\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2})$");
 
   private final String tokensString;
+  private Calendar calendarModel;
+  private CalendarView calendarView;
 
-  public QueryEventCommand(String tokensString, String command) {
+  public QueryEventCommand(String tokensString, String command, Calendar calendarModel, CalendarView calendarView) {
     this.tokensString = command + tokensString;
+    this.calendarModel = calendarModel;
+    this.calendarView = calendarView;
   }
 
   @Override
@@ -43,7 +54,7 @@ public class QueryEventCommand extends AbstractCommand {
       throw new IllegalArgumentException("Invalid date format. Expected format: yyyy-MM-dd");
     }
 
-    System.out.println("Printing events on " + date);
+    calendarView.PrintEvents(calendarModel.getEventsSingleDay(LocalDate.parse(date)), date);
   }
 
   private void handlePrintEventsFromTo(Matcher m) {
@@ -54,7 +65,7 @@ public class QueryEventCommand extends AbstractCommand {
       throw new IllegalArgumentException("Invalid datetime format. Expected format: yyyy-MM-ddTHH:mm");
     }
 
-    System.out.println("Printing events from " + startDate + " to " + endDate);
+    calendarView.PrintEvents(calendarModel.getEventsWindow(LocalDateTime.parse(startDate), LocalDateTime.parse(endDate)), startDate + " to " + endDate);
 
   }
 
@@ -65,6 +76,11 @@ public class QueryEventCommand extends AbstractCommand {
       throw new IllegalArgumentException("Invalid datetime format. Expected format: yyyy-MM-ddTHH:mm");
     }
 
-    System.out.println("Status on " + dateTime + " is ---") ;
+    List<Event> events = calendarModel.getEventsWindow(LocalDateTime.parse(dateTime), LocalDateTime.parse(dateTime));
+    if (events.isEmpty()) {
+      calendarView.PrintStatus("Available", dateTime);
+    } else {
+      calendarView.PrintStatus("Busy", dateTime);
+    }
   }
 }

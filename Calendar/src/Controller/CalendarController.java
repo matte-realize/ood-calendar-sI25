@@ -8,14 +8,14 @@ package Controller;
 import Model.Calendar;
 import View.CalendarView;
 
-import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class CalendarController implements CalendarControllerInterface{
-  private Calendar calendarModel;
-  private CalendarView calendarView;
+  private final Calendar calendarModel;
+  private final CalendarView calendarView;
 
   public CalendarController(Calendar calendarModel, CalendarView calendarView) {
     this.calendarModel = calendarModel;
@@ -33,7 +33,7 @@ public class CalendarController implements CalendarControllerInterface{
 
   }
 
-  public void runInteractiveMode() throws IllegalArgumentException {
+  private void runInteractiveMode() throws IllegalArgumentException {
     Scanner scanner = new Scanner(System.in);
     System.out.println("Type commands to view/edit calendar (type 'exit' to quit):");
 
@@ -47,27 +47,30 @@ public class CalendarController implements CalendarControllerInterface{
 
   }
 
-  public void runHeadlessMode(String filename) throws IllegalArgumentException {
+  private void runHeadlessMode(String filename) throws IllegalArgumentException {
 
     try (Scanner scanner = new Scanner(new FileReader(filename))) {
       String command;
       String tokensString;
       boolean exitFound = false;
 
-      while ((command = scanner.next()) != null) {
+      while (!exitFound) {
 
-        if (command.equalsIgnoreCase("exit")) {
-          System.out.println("Exiting...");
-          exitFound = true;
+        try {
+          command = scanner.next();
+          if (command.equalsIgnoreCase("exit")) {
+            System.out.println("Exiting...");
+            exitFound = true;
+            break;
+          } else {
+            tokensString = scanner.nextLine();
+            processCommand(command, tokensString);
+          }
+        } catch (NoSuchElementException e) {
+          System.err.println("Error: headless command file must end with an 'exit' command.");
           break;
-        } else {
-          tokensString = scanner.nextLine();
-          processCommand(command, tokensString);
         }
-      }
 
-      if (!exitFound) {
-        System.err.println("Error: headless command file must end with an 'exit' command.");
       }
 
     } catch (IOException e) {
@@ -81,25 +84,25 @@ public class CalendarController implements CalendarControllerInterface{
     switch (command) {
       case "create":
 
-          CreateEventCommand createEvent = new CreateEventCommand(tokensString);
+          CreateEventCommand createEvent = new CreateEventCommand(tokensString, calendarModel);
           createEvent.execute();
 
         break;
       case "edit":
 
-        EditEventCommand editEvent = new EditEventCommand(tokensString);
+        EditEventCommand editEvent = new EditEventCommand(tokensString, calendarModel);
         editEvent.execute();
 
         break;
       case "print":
 
-        QueryEventCommand printEvent = new QueryEventCommand(tokensString, "print");
+        QueryEventCommand printEvent = new QueryEventCommand(tokensString, "print", calendarModel, calendarView);
         printEvent.execute();
 
           break;
       case "show":
 
-        QueryEventCommand showStatus = new QueryEventCommand(tokensString, "show");
+        QueryEventCommand showStatus = new QueryEventCommand(tokensString, "show", calendarModel, calendarView);
         showStatus.execute();
         break;
       case "exit":

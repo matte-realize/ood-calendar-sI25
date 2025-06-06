@@ -1,7 +1,10 @@
 package Controller;
 
+import java.time.LocalDateTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import Model.Calendar;
 
 public class EditEventCommand extends AbstractCommand {
 
@@ -15,9 +18,11 @@ public class EditEventCommand extends AbstractCommand {
           "^edit series (subject|start|end|description|location|status) \"([^\"]+)\" from (\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}) with (.+)$");
 
   private final String tokensString;
+  private Calendar calendarModel;
 
-  public EditEventCommand(String tokensString) {
+  public EditEventCommand(String tokensString, Calendar calendarModel) {
     this.tokensString = "edit" + tokensString;
+    this.calendarModel = calendarModel;
   }
 
   @Override
@@ -51,8 +56,7 @@ public class EditEventCommand extends AbstractCommand {
       throw new IllegalArgumentException("Invalid new value format. Make sure the new value is of the same type as you are trying to edit");
     }
 
-    System.out.printf("Editing SINGLE event \"%s\" (%s to %s): %s -> %s%n",
-            subject, from, to, property, newValue);
+    //calendarModel.editEvent(subject, LocalDateTime.parse(from), );
   }
 
   private void handleEditEventsFrom(Matcher m) {

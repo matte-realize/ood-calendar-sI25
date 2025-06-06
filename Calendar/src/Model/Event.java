@@ -45,6 +45,15 @@ public class Event implements EventInterface {
     return status;
   }
 
+  public String printEvent() {
+    String eventString = this.subject + " from " + this.startDateTime.toString() + " to " + this.endDateTime.toString();
+
+    if (this.location != null) {
+      eventString += " " + this.location.toString();
+    }
+    return eventString;
+  }
+
   public static class CustomEventBuilder extends EventBuilder<CustomEventBuilder> {
     public EventInterface build() {
       Event event = new Event(this.subject, this.startDateTime);
