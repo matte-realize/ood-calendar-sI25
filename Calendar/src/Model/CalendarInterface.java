@@ -69,11 +69,4 @@ public interface CalendarInterface {
   EventInterface getEvent(String subject,
                           LocalDateTime start,
                           LocalDateTime end);
-
-  /**
-   * Gets the event series based on the input of a given timestamp.
-   *
-   * @return
-   */
-  List<Event> getEventSeries();
 }

@@ -192,11 +192,6 @@ public class Calendar implements CalendarInterface {
     return null;
   }
 
-  @Override
-  public List<Event> getEventSeries() {
-    return List.of();
-  }
-
   private void baseExceptions(String subject, LocalDateTime start) throws IllegalArgumentException {
     if (subject == null || subject.isEmpty()) {
       throw new IllegalArgumentException("Subject must contain a string!");

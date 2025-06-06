@@ -59,17 +59,21 @@ public class CalendarEditEventInSeriesTest extends AbstractCalendarTest {
     }
   }
 
-  /*@Test
+  @Test
+  public void testEditEventAndFutureInSeries() {
+
+  }
+
+
+  @Test
   public void testEditAllEventsInSeries() {
-    LocalDateTime firstDateStart = LocalDateTime.of(2025, 6, 5, 16, 0);
-    LocalDateTime end = LocalDateTime.of(2025, 6, 5, 20, 0);
-    LocalDateTime lastDateStart = LocalDateTime.of(2025, 6, 26, 16, 0);
+    LocalDateTime start = LocalDateTime.of(2025, 6, 5, 16, 0);
+    LocalDateTime end = LocalDateTime.of(2025, 6, 26, 20, 0);
 
     EventSeries series = calendar.createEventSeries(
             "Therapy",
-            firstDateStart,
+            start,
             end,
-            lastDateStart,
             List.of(DayOfWeek.THURSDAY),
             0,
             "Session with Dr.Shine",
@@ -84,18 +88,26 @@ public class CalendarEditEventInSeriesTest extends AbstractCalendarTest {
 
     calendar.editEvent("Therapy", series.getStartDateTime(), edit, EditMode.ALL);
 
-    assertNotNull(calendar.getEvent("Therapy Session", firstDateStart, null));
+    assertNotNull(calendar.getEvent("Therapy Session",
+            start,
+            LocalDateTime.of(2025, 6, 5, 20, 0)));
 
-    assertNotNull(calendar.getEvent("Therapy Session", LocalDate.of(2025, 6, 12)));
+    assertNotNull(calendar.getEvent("Therapy Session",
+            LocalDateTime.of(2025, 6, 12, 16, 0),
+            LocalDateTime.of(2025, 6, 12, 20, 0)));
 
-    assertNotNull(calendar.getEvent("Therapy Session", LocalDate.of(2025, 6, 19)));
+    assertNotNull(calendar.getEvent("Therapy Session",
+            LocalDateTime.of(2025, 6, 19, 16, 0),
+            LocalDateTime.of(2025, 6, 19, 20, 0)));
 
-    assertNotNull(calendar.getEvent("Therapy Session", LocalDate.of(2025, 6, 26)));
+    assertNotNull(calendar.getEvent("Therapy Session",
+            LocalDateTime.of(2025, 6, 26, 16, 0),
+            end));
 
     for (Event e : series.getInstances()) {
       EventInterface updated = calendar.getEvent("Therapy Session", e.getStartDateTime(), e.getEndDateTime());
       assertNotNull(updated);
       assertEquals("Therapy Session", updated.getSubject());
     }
-  }*/
+  }
 }
