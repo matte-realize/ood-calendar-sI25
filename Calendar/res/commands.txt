@@ -14,11 +14,6 @@ create event "Event Thirteen" on 2025-06-10 repeats MW for 6 times
 create event "Event Fourteen" on 2025-06-10 repeats SU until 2025-08-30
 create event "Event Fifteen" on 2025-06-15 repeats T until 2025-07-01
 
-edit event subject "Event One" from 2025-08-10T09:00 to 2025-08-10T10:00 with "Morning Meeting"
-edit event start "Event Two" from 2025-06-10T09:30 to 2025-06-10T11:00 with 2025-06-10T09:00
-edit event end "Event Two" from 2025-06-10T09:00 to 2025-06-10T11:00 with 2025-06-10T10:45
-edit event location "Event Two" from 2025-06-10T09:30 to 2025-06-10T11:00 with ONLINE
-edit event status "Event Two" from 2025-06-10T09:30 to 2025-06-10T11:00 with PRIVATE
 
 
 print events on 2025-06-10
