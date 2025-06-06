@@ -75,14 +75,12 @@ public class CalendarCreationTest {
   public void testCreateWeeklySeriesOnOneDay() {
     String subject = "Volleyball Practice";
     LocalDateTime start = LocalDateTime.of(2025, 8, 1, 22, 0);
-    LocalDateTime end = LocalDateTime.of(2025, 8, 1, 23, 0);
-    LocalDateTime endRange = LocalDateTime.of(2025, 8, 22, 22, 0);
+    LocalDateTime end = LocalDateTime.of(2025, 8, 22, 23, 0);
     List<DayOfWeek> repeatDays = List.of(DayOfWeek.FRIDAY);
     EventSeries series = calendar.createEventSeries(
             subject,
             start,
             end,
-            endRange,
             repeatDays,
             0,
             "Varsity practice",
@@ -102,14 +100,12 @@ public class CalendarCreationTest {
   public void testCreateWeeklySeriesOnMultipleDaysWithWeekEnd() {
     String subject = "Team Meeting";
     LocalDateTime start = LocalDateTime.of(2025, 6, 2, 10, 0);
-    LocalDateTime end = LocalDateTime.of(2025, 6, 2, 12, 0);
-    LocalDateTime endRange = LocalDateTime.of(2025, 6, 16, 10, 0);
+    LocalDateTime end = LocalDateTime.of(2025, 6, 16, 12, 0);
     List<DayOfWeek> repeatDays = List.of(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY);
     EventSeries series = calendar.createEventSeries(
             subject,
             start,
             end,
-            endRange,
             repeatDays,
             0,
             "Meeting with team",
@@ -133,7 +129,6 @@ public class CalendarCreationTest {
     EventSeries series = calendar.createEventSeries(
             subject,
             start,
-            null,
             null,
             repeatDays,
             10,
