@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.HashSet;
 import java.util.Set;
 
 import Model.Location;
@@ -39,7 +40,14 @@ public abstract class AbstractCommand implements Command {
 
   @Override
   public boolean isValidWeekdayFormat(String input) {
-    Set<Character> validDays = Set.of('M', 'T', 'W', 'R', 'F', 'S', 'U');
+    Set<Character> validDays = new HashSet<>();
+    validDays.add('M');
+    validDays.add('T');
+    validDays.add('W');
+    validDays.add('R');
+    validDays.add('F');
+    validDays.add('S');
+    validDays.add('U');
 
     for (char ch : input.toCharArray()) {
       if (!validDays.contains(ch)) {

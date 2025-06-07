@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -171,16 +172,18 @@ public class CreateEventCommand extends AbstractCommand {
     );
   }
 
-
-  private static final Map<Character, DayOfWeek> dayMap = Map.of(
-          'M', DayOfWeek.MONDAY,
-          'T', DayOfWeek.TUESDAY,
-          'W', DayOfWeek.WEDNESDAY,
-          'R', DayOfWeek.THURSDAY,
-          'F', DayOfWeek.FRIDAY,
-          'S', DayOfWeek.SATURDAY,
-          'U', DayOfWeek.SUNDAY
-  );
+  // Changed from Map.of() to use HashMap for JDK 11 compatibility
+  private static final Map<Character, DayOfWeek> dayMap;
+  static {
+    dayMap = new HashMap<>();
+    dayMap.put('M', DayOfWeek.MONDAY);
+    dayMap.put('T', DayOfWeek.TUESDAY);
+    dayMap.put('W', DayOfWeek.WEDNESDAY);
+    dayMap.put('R', DayOfWeek.THURSDAY);
+    dayMap.put('F', DayOfWeek.FRIDAY);
+    dayMap.put('S', DayOfWeek.SATURDAY);
+    dayMap.put('U', DayOfWeek.SUNDAY);
+  }
 
   private static List<DayOfWeek> parseDays(String input) {
     List<DayOfWeek> days = new ArrayList<>();
@@ -226,5 +229,4 @@ public class CreateEventCommand extends AbstractCommand {
 
     return weeks;
   }
-
 }

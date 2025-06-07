@@ -1,8 +1,3 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
 package Controller;
 
 import Model.Calendar;
@@ -19,7 +14,6 @@ import java.util.Scanner;
  * commands as well as determine between the interactive and headless
  * mode to run commands.
  */
-
 public class CalendarController implements CalendarControllerInterface {
   private final Calendar calendarModel;
   private final CalendarView calendarView;
@@ -37,6 +31,9 @@ public class CalendarController implements CalendarControllerInterface {
         break;
       case "headless":
         this.runHeadlessMode(args[2]);
+        break;
+      default:
+        System.err.println("Invalid mode. Use 'interactive' or 'headless'.");
     }
   }
 
@@ -86,17 +83,14 @@ public class CalendarController implements CalendarControllerInterface {
       case "create":
         CreateEventCommand createEvent = new CreateEventCommand(tokensString, calendarModel);
         createEvent.execute();
-
         break;
       case "edit":
         EditEventCommand editEvent = new EditEventCommand(tokensString, calendarModel);
         editEvent.execute();
-
         break;
       case "print":
         QueryEventCommand printEvent = new QueryEventCommand(tokensString, "print", calendarModel, calendarView);
         printEvent.execute();
-
         break;
       case "show":
         QueryEventCommand showStatus = new QueryEventCommand(tokensString, "show", calendarModel, calendarView);

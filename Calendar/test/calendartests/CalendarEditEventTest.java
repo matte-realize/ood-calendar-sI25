@@ -2,7 +2,6 @@ package calendartests;
 
 import org.junit.Test;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import Model.EditMode;
