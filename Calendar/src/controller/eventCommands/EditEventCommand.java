@@ -1,8 +1,9 @@
-package controller;
+package controller.eventCommands;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import controller.AbstractCommand;
 import model.Calendar;
 
 /**

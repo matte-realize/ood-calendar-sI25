@@ -1,4 +1,4 @@
-package controller;
+package controller.eventCommands;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import controller.AbstractCommand;
 import model.Calendar;
 
 /**

@@ -1,4 +1,4 @@
-package controller;
+package controller.eventCommands;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import controller.AbstractCommand;
 import model.Calendar;
 import model.Event;
 import view.CalendarView;
