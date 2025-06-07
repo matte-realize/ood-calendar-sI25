@@ -1,4 +1,4 @@
-package Controller;
+package controller;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import Model.Calendar;
+import model.Calendar;
 
 /**
  * A command that extends the abstract command class which allows for the user
@@ -19,22 +19,32 @@ import Model.Calendar;
  */
 public class CreateEventCommand extends AbstractCommand {
   private static final Pattern CreateSingleEvent = Pattern.compile(
-          "^create event \"([^\"]+)\" from (\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}) to (\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2})$");
+          "^create event \"([^\"]+)\" from "
+                  + "(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}) to "
+                  + "(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2})$");
 
   private static final Pattern CreateEventSeriesNum = Pattern.compile(
-          "^create event \"([^\"]+)\" from (\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}) to (\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}) repeats ([MTWRFSU]+) for (\\d+) times$");
+          "^create event \"([^\"]+)\" from "
+                  + "(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}) to "
+                  + "(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}) repeats "
+                  + "([MTWRFSU]+) for (\\d+) times$");
 
   private static final Pattern CreateEventSeriesUntil = Pattern.compile(
-          "^create event \"([^\"]+)\" from (\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}) to (\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}) repeats ([MTWRFSU]+) until (\\d{4}-\\d{2}-\\d{2})$");
+          "^create event \"([^\"]+)\" from "
+                  + "(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}) to "
+                  + "(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}) repeats "
+                  + "([MTWRFSU]+) until (\\d{4}-\\d{2}-\\d{2})$");
 
   private static final Pattern AllDayEvent = Pattern.compile(
           "^create event \"([^\"]+)\" on (\\d{4}-\\d{2}-\\d{2})$");
 
   private static final Pattern AllDayEventSeriesNum = Pattern.compile(
-          "^create event \"([^\"]+)\" on (\\d{4}-\\d{2}-\\d{2}) repeats ([MTWRFSU]+) for (\\d+) times$");
+          "^create event \"([^\"]+)\" on (\\d{4}-\\d{2}-\\d{2}) "
+                  + "repeats ([MTWRFSU]+) for (\\d+) times$");
 
   private static final Pattern AllDayEventSeriesUntil = Pattern.compile(
-          "^create event \"([^\"]+)\" on (\\d{4}-\\d{2}-\\d{2}) repeats ([MTWRFSU]+) until (\\d{4}-\\d{2}-\\d{2})$");
+          "^create event \"([^\"]+)\" on (\\d{4}-\\d{2}-\\d{2}) "
+                  + "repeats ([MTWRFSU]+) until (\\d{4}-\\d{2}-\\d{2})$");
 
   private final String tokensString;
   private final Calendar calendarModel;
@@ -78,7 +88,9 @@ public class CreateEventCommand extends AbstractCommand {
     }
 
     if (!isValidDateTime(start) || !isValidDateTime(end)) {
-      throw new IllegalArgumentException("Invalid datetime format. Expected format: yyyy-MM-ddTHH:mm");
+      throw new IllegalArgumentException(
+              "Invalid datetime format. Expected format: yyyy-MM-ddTHH:mm"
+      );
     }
 
     calendarModel.createEvent(
@@ -110,15 +122,21 @@ public class CreateEventCommand extends AbstractCommand {
     }
 
     if (!isValidDateTime(start) || !isValidDateTime(end)) {
-      throw new IllegalArgumentException("Invalid datetime format. Expected format: yyyy-MM-ddTHH:mm");
+      throw new IllegalArgumentException(
+              "Invalid datetime format. Expected format: yyyy-MM-ddTHH:mm"
+      );
     }
 
     if (!isValidWeekdayFormat(weekdays)) {
-      throw new IllegalArgumentException("Invalid weekday format. Expected subset of MTWRFSU");
+      throw new IllegalArgumentException(
+              "Invalid weekday format. Expected subset of MTWRFSU"
+      );
     }
 
     if (Integer.parseInt(repeatNum) < 1) {
-      throw new IllegalArgumentException("Invalid repeat number. Must be greater than 0");
+      throw new IllegalArgumentException(
+              "Invalid repeat number. Must be greater than 0"
+      );
     }
 
     calendarModel.createEventSeries(
@@ -153,11 +171,15 @@ public class CreateEventCommand extends AbstractCommand {
     }
 
     if (!isValidDateTime(start) || !isValidDateTime(end)) {
-      throw new IllegalArgumentException("Invalid datetime format. Expected format: yyyy-MM-ddTHH:mm");
+      throw new IllegalArgumentException(
+              "Invalid datetime format. Expected format: yyyy-MM-ddTHH:mm"
+      );
     }
 
     if (!isValidWeekdayFormat(weekdays)) {
-      throw new IllegalArgumentException("Invalid weekday format. Expected subset of MTWRFSU");
+      throw new IllegalArgumentException(
+              "Invalid weekday format. Expected subset of MTWRFSU"
+      );
     }
 
     calendarModel.createEventSeries(
@@ -165,15 +187,19 @@ public class CreateEventCommand extends AbstractCommand {
             LocalDateTime.parse(start),
             LocalDateTime.parse(end),
             parseDays(weekdays),
-            calculateWeeksNeeded(LocalDateTime.parse(start), LocalDateTime.parse(untilDate), parseDays(weekdays)),
+            calculateWeeksNeeded(
+                    LocalDateTime.parse(start),
+                    LocalDateTime.parse(untilDate),
+                    parseDays(weekdays)
+            ),
             null,
             null,
             null
     );
   }
 
-  // Changed from Map.of() to use HashMap for JDK 11 compatibility
   private static final Map<Character, DayOfWeek> dayMap;
+
   static {
     dayMap = new HashMap<>();
     dayMap.put('M', DayOfWeek.MONDAY);

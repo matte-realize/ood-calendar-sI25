@@ -1,4 +1,4 @@
-package Model;
+package model;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -10,9 +10,9 @@ import java.util.ArrayList;
  */
 public class EventSeries extends Event {
   private List<Event> instances = new ArrayList<>();
-  private List<java.time.DayOfWeek> repeatDays;
-  private Integer occurrences;
-  private LocalDateTime endDateTimeOfSeries;
+  public List<java.time.DayOfWeek> repeatDays;
+  public Integer occurrences;
+  public LocalDateTime endDateTimeOfSeries;
 
   /**
    * Constructor for an event series.

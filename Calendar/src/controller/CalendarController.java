@@ -1,7 +1,7 @@
-package Controller;
+package controller;
 
-import Model.Calendar;
-import View.CalendarView;
+import model.Calendar;
+import view.CalendarView;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -24,7 +24,7 @@ public class CalendarController implements CalendarControllerInterface {
   }
 
   @Override
-  public void go(String[] args) {
+  public void play(String[] args) {
     switch (args[1].toLowerCase()) {
       case "interactive":
         this.runInteractiveMode();
@@ -47,11 +47,11 @@ public class CalendarController implements CalendarControllerInterface {
       System.out.print("> ");
       command = scanner.next();
       tokensString = scanner.nextLine();
-    } while (!this.processCommand(command, tokensString));
+    }
+    while (!this.processCommand(command, tokensString));
   }
 
   private void runHeadlessMode(String filename) throws IllegalArgumentException {
-
     try (Scanner scanner = new Scanner(new FileReader(filename))) {
       String command;
       String tokensString;
@@ -81,19 +81,23 @@ public class CalendarController implements CalendarControllerInterface {
   private boolean processCommand(String command, String tokensString) throws IllegalArgumentException {
     switch (command) {
       case "create":
-        CreateEventCommand createEvent = new CreateEventCommand(tokensString, calendarModel);
+        CreateEventCommand createEvent =
+                new CreateEventCommand(tokensString, calendarModel);
         createEvent.execute();
         break;
       case "edit":
-        EditEventCommand editEvent = new EditEventCommand(tokensString, calendarModel);
+        EditEventCommand editEvent =
+                new EditEventCommand(tokensString, calendarModel);
         editEvent.execute();
         break;
       case "print":
-        QueryEventCommand printEvent = new QueryEventCommand(tokensString, "print", calendarModel, calendarView);
+        QueryEventCommand printEvent =
+                new QueryEventCommand(tokensString, "print", calendarModel, calendarView);
         printEvent.execute();
         break;
       case "show":
-        QueryEventCommand showStatus = new QueryEventCommand(tokensString, "show", calendarModel, calendarView);
+        QueryEventCommand showStatus =
+                new QueryEventCommand(tokensString, "show", calendarModel, calendarView);
         showStatus.execute();
         break;
       case "exit":

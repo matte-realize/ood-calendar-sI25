@@ -6,12 +6,12 @@ import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import Model.EditMode;
-import Model.Event;
-import Model.EventInterface;
-import Model.EventSeries;
-import Model.Location;
-import Model.Status;
+import model.EditMode;
+import model.Event;
+import model.EventInterface;
+import model.EventSeries;
+import model.Location;
+import model.Status;
 
 import static org.junit.Assert.assertThrows;
 

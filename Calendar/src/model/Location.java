@@ -1,4 +1,4 @@
-package Model;
+package model;
 
 /**
  * Enum class that determines the location

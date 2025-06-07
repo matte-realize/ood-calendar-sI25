@@ -9,12 +9,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
-import Model.Calendar;
-import Model.Event;
-import Model.EventInterface;
-import Model.EventSeries;
-import Model.Location;
-import Model.Status;
+import model.Calendar;
+import model.Event;
+import model.EventInterface;
+import model.EventSeries;
+import model.Location;
+import model.Status;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -95,7 +95,10 @@ public class CalendarCreationTest {
       assertTrue(validDays.contains(instance.getEndDateTime().getDayOfWeek()));
 
       assertEquals(subject, instance.getSubject());
-      assertEquals(instance.getStartDateTime().toLocalDate(), instance.getEndDateTime().toLocalDate());
+      assertEquals(
+              instance.getStartDateTime().toLocalDate(),
+              instance.getEndDateTime().toLocalDate()
+      );
     }
   }
 
@@ -122,7 +125,10 @@ public class CalendarCreationTest {
       assertTrue(validDays.contains(instance.getEndDateTime().getDayOfWeek()));
 
       assertEquals(subject, instance.getSubject());
-      assertEquals(instance.getStartDateTime().toLocalDate(), instance.getEndDateTime().toLocalDate());
+      assertEquals(
+              instance.getStartDateTime().toLocalDate(),
+              instance.getEndDateTime().toLocalDate()
+      );
     }
   }
 
@@ -151,7 +157,10 @@ public class CalendarCreationTest {
       assertTrue(validDays.contains(instance.getEndDateTime().getDayOfWeek()));
       assertEquals(subject, instance.getSubject());
 
-      assertEquals(instance.getStartDateTime().toLocalDate(), instance.getEndDateTime().toLocalDate());
+      assertEquals(
+              instance.getStartDateTime().toLocalDate(),
+              instance.getEndDateTime().toLocalDate()
+      );
     }
   }
 }

@@ -1,4 +1,4 @@
-package Model;
+package model;
 
 import java.time.LocalDateTime;
 
@@ -66,7 +66,11 @@ public class Event implements EventInterface {
    * @return a string describing the details of the event.
    */
   public String printEvent() {
-    String eventString = this.subject + " from " + this.startDateTime.toString() + " to " + this.endDateTime.toString();
+    String eventString = this.subject
+            + " from "
+            + this.startDateTime.toString()
+            + " to "
+            + this.endDateTime.toString();
 
     if (this.location != null) {
       eventString += " " + this.location;

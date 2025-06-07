@@ -2,8 +2,8 @@ package calendartests;
 
 import org.junit.Test;
 
-import Model.Location;
-import Model.Status;
+import model.Location;
+import model.Status;
 
 import static org.junit.Assert.assertThrows;
 

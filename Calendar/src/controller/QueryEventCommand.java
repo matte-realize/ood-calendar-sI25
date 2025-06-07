@@ -1,4 +1,4 @@
-package Controller;
+package controller;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import Model.Calendar;
-import Model.Event;
-import View.CalendarView;
+import model.Calendar;
+import model.Event;
+import view.CalendarView;
 
 /**
  * A command that extends the abstract command class which allows for the user
@@ -19,7 +19,8 @@ public class QueryEventCommand extends AbstractCommand {
           "^print events on (\\d{4}-\\d{2}-\\d{2})$");
 
   private static final Pattern PrintEventsWindow = Pattern.compile(
-          "^print events from (\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}) to (\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2})$");
+          "^print events from (\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}) "
+                  + "to (\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2})$");
 
   private static final Pattern ShowStatus = Pattern.compile(
           "^show status on (\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2})$");
@@ -28,7 +29,18 @@ public class QueryEventCommand extends AbstractCommand {
   private Calendar calendarModel;
   private CalendarView calendarView;
 
-  public QueryEventCommand(String tokensString, String command, Calendar calendarModel, CalendarView calendarView) {
+  /**
+   * Constructor for the query event command.
+   *
+   * @param tokensString  a string that determines the token.
+   * @param command       a string of the command.
+   * @param calendarModel a calendar model.
+   * @param calendarView  the calendar view.
+   */
+  public QueryEventCommand(String tokensString,
+                           String command,
+                           Calendar calendarModel,
+                           CalendarView calendarView) {
     this.tokensString = command + tokensString;
     this.calendarModel = calendarModel;
     this.calendarView = calendarView;
@@ -54,10 +66,14 @@ public class QueryEventCommand extends AbstractCommand {
     String date = m.group(1);
 
     if (!isValidDate(date)) {
-      throw new IllegalArgumentException("Invalid date format. Expected format: yyyy-MM-dd");
+      throw new IllegalArgumentException(
+              "Invalid date format. Expected format: yyyy-MM-dd"
+      );
     }
 
-    calendarView.printEvents(calendarModel.getEventsSingleDay(LocalDate.parse(date)), date);
+    calendarView.printEvents(
+            calendarModel.getEventsSingleDay(LocalDate.parse(date)),
+            date);
   }
 
   private void handlePrintEventsFromTo(Matcher m) {
@@ -65,10 +81,16 @@ public class QueryEventCommand extends AbstractCommand {
     String endDate = m.group(2);
 
     if (!isValidDateTime(startDate) || !isValidDateTime(endDate)) {
-      throw new IllegalArgumentException("Invalid datetime format. Expected format: yyyy-MM-ddTHH:mm");
+      throw new IllegalArgumentException(
+              "Invalid datetime format. Expected format: yyyy-MM-ddTHH:mm"
+      );
     }
 
-    calendarView.printEvents(calendarModel.getEventsWindow(LocalDateTime.parse(startDate), LocalDateTime.parse(endDate)), startDate + " to " + endDate);
+    calendarView.printEvents(
+            calendarModel.getEventsWindow(
+                    LocalDateTime.parse(startDate), LocalDateTime.parse(endDate)
+            ),
+            startDate + " to " + endDate);
 
   }
 

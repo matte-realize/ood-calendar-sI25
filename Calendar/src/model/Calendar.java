@@ -1,4 +1,4 @@
-package Model;
+package model;
 
 import java.time.DayOfWeek;
 import java.time.Duration;
@@ -97,8 +97,8 @@ public class Calendar implements CalendarInterface {
 
     LocalDateTime currentCheck = start;
 
-    while ((occurrences == null || count < occurrences) &&
-            (seriesEndDate == null || !currentCheck.toLocalDate().isAfter(seriesEndDate.toLocalDate()))) {
+    while ((occurrences == null || count < occurrences)
+            && (seriesEndDate == null || !currentCheck.toLocalDate().isAfter(seriesEndDate.toLocalDate()))) {
 
       if (repeatDays.contains(currentCheck.getDayOfWeek())) {
         LocalDateTime instanceStart = currentCheck.toLocalDate().atTime(start.toLocalTime());
@@ -114,7 +114,10 @@ public class Calendar implements CalendarInterface {
 
         Event instance = (Event) builder.build();
         series.addInstance(instance);
-        eventsByDate.computeIfAbsent(instanceStart.toLocalDate(), d -> new ArrayList<>()).add(instance);
+        eventsByDate.computeIfAbsent(
+                instanceStart.toLocalDate(),
+                d -> new ArrayList<>()
+        ).add(instance);
 
         count++;
 
@@ -146,8 +149,9 @@ public class Calendar implements CalendarInterface {
     EventSeries candidateSeries = mapSeries.get(subject);
     if (candidateSeries != null) {
       for (Event instance : candidateSeries.getInstances()) {
-        if (instance.getSubject().equals(subject) &&
-                instance.getStartDateTime().equals(start)) {
+        if (instance.getSubject().equals(subject)
+                && instance.getStartDateTime().equals(start)
+        ) {
           targetEvent = instance;
           parentSeries = candidateSeries;
           break;
@@ -193,7 +197,9 @@ public class Calendar implements CalendarInterface {
     }
   }
 
-  private void editSingleEventInSeries(EventSeries series, Event targetEvent, EventInterface updatedEvent) {
+  private void editSingleEventInSeries(EventSeries series,
+                                       Event targetEvent,
+                                       EventInterface updatedEvent) {
     eventReplacement(targetEvent, updatedEvent);
 
     List<Event> instances = series.getInstances();
@@ -205,7 +211,9 @@ public class Calendar implements CalendarInterface {
     }
   }
 
-  private void editFutureEventsInSeries(EventSeries series, Event targetEvent, EventInterface updatedEvent) {
+  private void editFutureEventsInSeries(EventSeries series,
+                                        Event targetEvent,
+                                        EventInterface updatedEvent) {
     LocalDateTime targetStart = targetEvent.getStartDateTime();
     List<Event> instances = series.getInstances();
 
@@ -288,9 +296,10 @@ public class Calendar implements CalendarInterface {
     List<Event> events = eventsByDate.getOrDefault(date, Collections.emptyList());
 
     for (Event e : events) {
-      if (e.getSubject().equals(subject) &&
-              e.getStartDateTime().equals(start) &&
-              ((end == null && e.getEndDateTime() == null) || (e.getEndDateTime() != null && e.getEndDateTime().equals(end)))) {
+      if (e.getSubject().equals(subject)
+              && e.getStartDateTime().equals(start)
+              && ((end == null && e.getEndDateTime() == null) ||
+              (e.getEndDateTime() != null && e.getEndDateTime().equals(end)))) {
         return e;
       }
     }
@@ -316,7 +325,8 @@ public class Calendar implements CalendarInterface {
       LocalDateTime eventEnd = e.getEndDateTime();
 
       if (eventStart.toLocalDate().equals(date) || eventEnd.toLocalDate().equals(date)
-              || (eventStart.toLocalDate().isBefore(date) && eventEnd.toLocalDate().isAfter(date))) {
+              || (eventStart.toLocalDate().isBefore(date)
+              && eventEnd.toLocalDate().isAfter(date))) {
         filteredEvents.add(e);
       }
     }
@@ -329,7 +339,7 @@ public class Calendar implements CalendarInterface {
    * as a list for retrieval.
    *
    * @param start the starting time for the time window.
-   * @param end the ending time for the time window.
+   * @param end   the ending time for the time window.
    * @return a list of events given through the time window.
    */
   public List<Event> getEventsWindow(LocalDateTime start, LocalDateTime end) {
@@ -344,9 +354,9 @@ public class Calendar implements CalendarInterface {
       LocalDateTime eventStart = e.getStartDateTime();
       LocalDateTime eventEnd = e.getEndDateTime();
 
-      if ((eventStart.isAfter(start) && eventStart.isBefore(end)) ||
-              (eventEnd.isAfter(start) && eventEnd.isBefore(end)) ||
-              (eventStart.isBefore(start) && eventEnd.isAfter(end))) {
+      if ((eventStart.isAfter(start) && eventStart.isBefore(end))
+              || (eventEnd.isAfter(start) && eventEnd.isBefore(end))
+              || (eventStart.isBefore(start) && eventEnd.isAfter(end))) {
         filteredEvents.add(e);
       }
     }

@@ -1,4 +1,4 @@
-package Controller;
+package controller;
 
 /**
  * This interface acts as the basis for a controller with the
@@ -12,5 +12,5 @@ public interface CalendarControllerInterface {
    * @param args the command line arguments passed to
    *             the application.
    */
-  void go(String[] args);
+  void play(String[] args);
 }

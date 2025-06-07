@@ -1,9 +1,9 @@
-package Controller;
+package controller;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import Model.Calendar;
+import model.Calendar;
 
 /**
  * A command that extends the abstract command class which allows for the user
@@ -12,20 +12,22 @@ import Model.Calendar;
  */
 public class EditEventCommand extends AbstractCommand {
   private static final Pattern EditSingleEvent = Pattern.compile(
-          "^edit event (subject|start|end|description|location|status) \"([^\"]+)\" from (\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}) to (\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}) with (.+)$");
+          "^edit event (subject|start|end|description|location|status) "
+                  + "\"([^\"]+)\" from (\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}) to "
+                  + "(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}) with (.+)$");
 
   private static final Pattern EditEvents = Pattern.compile(
-          "^edit events (subject|start|end|description|location|status) \"([^\"]+)\" from (\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}) with (.+)$");
+          "^edit events (subject|start|end|description|location|status) "
+                  + "\"([^\"]+)\" from (\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}) with (.+)$");
 
   private static final Pattern EditEventSeries = Pattern.compile(
-          "^edit series (subject|start|end|description|location|status) \"([^\"]+)\" from (\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}) with (.+)$");
+          "^edit series (subject|start|end|description|location|status) "
+                  + "\"([^\"]+)\" from (\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}) with (.+)$");
 
   private final String tokensString;
-  private Calendar calendarModel;
 
   public EditEventCommand(String tokensString, Calendar calendarModel) {
     this.tokensString = "edit" + tokensString;
-    this.calendarModel = calendarModel;
   }
 
   @Override
@@ -52,11 +54,15 @@ public class EditEventCommand extends AbstractCommand {
     String newValue = m.group(5);
 
     if (!isValidDateTime(from) || !isValidDateTime(to)) {
-      throw new IllegalArgumentException("Invalid datetime format. Expected format: yyyy-MM-ddTHH:mm");
+      throw new IllegalArgumentException(
+              "Invalid datetime format. Expected format: yyyy-MM-ddTHH:mm"
+      );
     }
 
     if (!isValidNewValue(property, newValue)) {
-      throw new IllegalArgumentException("Invalid new value format. Make sure the new value is of the same type as you are trying to edit");
+      throw new IllegalArgumentException(
+              "Invalid new value format. Make sure the new value is of the same type as you are trying to edit"
+      );
     }
 
     // calendarModel.editEvent(subject, LocalDateTime.parse(from), , EditMode.SINGLE);
@@ -69,11 +75,15 @@ public class EditEventCommand extends AbstractCommand {
     String newValue = m.group(4);
 
     if (!isValidDateTime(from)) {
-      throw new IllegalArgumentException("Invalid datetime format. Expected format: yyyy-MM-ddTHH:mm");
+      throw new IllegalArgumentException(
+              "Invalid datetime format. Expected format: yyyy-MM-ddTHH:mm"
+      );
     }
 
     if (!isValidNewValue(property, newValue)) {
-      throw new IllegalArgumentException("Invalid new value format. Make sure the new value is of the same type as you are trying to edit");
+      throw new IllegalArgumentException(
+              "Invalid new value format. Make sure the new value is of the same type as you are trying to edit"
+      );
     }
 
     System.out.printf("Editing SINGLE event \"%s\" (%s): %s -> %s%n",
@@ -87,11 +97,15 @@ public class EditEventCommand extends AbstractCommand {
     String newValue = m.group(4);
 
     if (!isValidDateTime(from)) {
-      throw new IllegalArgumentException("Invalid datetime format. Expected format: yyyy-MM-ddTHH:mm");
+      throw new IllegalArgumentException(
+              "Invalid datetime format. Expected format: yyyy-MM-ddTHH:mm"
+      );
     }
 
     if (!isValidNewValue(property, newValue)) {
-      throw new IllegalArgumentException("Invalid new value format. Make sure the new value is of the same type as you are trying to edit");
+      throw new IllegalArgumentException(
+              "Invalid new value format. Make sure the new value is of the same type as you are trying to edit"
+      );
     }
 
     System.out.printf("Editing SINGLE event \"%s\" (%s): %s -> %s%n",

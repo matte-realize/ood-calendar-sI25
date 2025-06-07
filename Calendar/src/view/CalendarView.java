@@ -1,8 +1,8 @@
-package View;
+package view;
 
 import java.util.List;
 
-import Model.Event;
+import model.Event;
 
 /**
  * Calendar view class that implements the CalenderViewInterface
@@ -14,8 +14,8 @@ public class CalendarView implements CalendarViewInterface {
   /**
    * Simple constructor for the calendar view.
    */
-  public CalendarView() {
-  }
+  /*public CalendarView() {
+  }*/
 
   @Override
   public void printEvents(List<Event> events, String day) {

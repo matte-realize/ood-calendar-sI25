@@ -1,4 +1,4 @@
-package Controller;
+package controller;
 
 /**
  * This interface serves as the basis for commands to be created

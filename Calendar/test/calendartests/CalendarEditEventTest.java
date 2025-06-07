@@ -4,11 +4,11 @@ import org.junit.Test;
 
 import java.time.LocalDateTime;
 
-import Model.EditMode;
-import Model.Event;
-import Model.EventInterface;
-import Model.Location;
-import Model.Status;
+import model.EditMode;
+import model.Event;
+import model.EventInterface;
+import model.Location;
+import model.Status;
 
 import static org.junit.Assert.assertEquals;
 

@@ -1,11 +1,15 @@
-import Controller.CalendarController;
-import Model.Calendar;
-import View.CalendarView;
+import controller.CalendarController;
+import model.Calendar;
+import view.CalendarView;
 
 /**
  * The application used to run the Calendar Application.
  */
 public class CalendarApp {
+  /**
+   * The main function for the calendar.
+   * @param args takes in string argumnets to execute commands.
+   */
   public static void main(String[] args) {
 
     if (args.length < 2 || !args[0].equalsIgnoreCase("--mode")) {
@@ -21,6 +25,6 @@ public class CalendarApp {
     Calendar model = new Calendar();
     CalendarView view = new CalendarView();
     CalendarController calendarController = new CalendarController(model, view);
-    calendarController.go(args);
+    calendarController.play(args);
   }
 }

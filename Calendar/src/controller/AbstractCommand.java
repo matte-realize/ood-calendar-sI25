@@ -1,4 +1,4 @@
-package Controller;
+package controller;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -7,8 +7,8 @@ import java.time.format.DateTimeParseException;
 import java.util.HashSet;
 import java.util.Set;
 
-import Model.Location;
-import Model.Status;
+import model.Location;
+import model.Status;
 
 /**
  * Abstract class that represents AbstractCommands that implement
@@ -60,7 +60,6 @@ public abstract class AbstractCommand implements Command {
 
   @Override
   public boolean isValidNewValue(String property, String newValue) {
-
     switch (property) {
       case "subject":
       case "description":
@@ -82,6 +81,8 @@ public abstract class AbstractCommand implements Command {
         } catch (IllegalArgumentException e) {
           return false;
         }
+      default:
+        break;
     }
 
     return true;

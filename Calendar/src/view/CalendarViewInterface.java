@@ -1,8 +1,8 @@
-package View;
+package view;
 
 import java.util.List;
 
-import Model.Event;
+import model.Event;
 
 /**
  * An interface that is able to define as the calendar view
