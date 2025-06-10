@@ -1,6 +1,9 @@
-package model;
+package model.event;
 
 import java.time.LocalDateTime;
+
+import model.enums.Location;
+import model.enums.Status;
 
 /**
  * An abstract class that is capable of creating event objects through

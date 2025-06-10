@@ -11,7 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import controller.AbstractCommand;
-import model.Calendar;
+import model.calendar.Calendar;
 
 /**
  * A command that extends the abstract command class which allows for the user

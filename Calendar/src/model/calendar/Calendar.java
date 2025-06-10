@@ -1,4 +1,4 @@
-package model;
+package model.calendar;
 
 import java.time.DayOfWeek;
 import java.time.Duration;
@@ -9,6 +9,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import model.enums.EditMode;
+import model.event.Event;
+import model.event.EventInterface;
+import model.event.EventSeries;
+import model.enums.Location;
+import model.enums.Status;
 
 /**
  * Calendar model class that implements the CalenderInterface in order to provide functions

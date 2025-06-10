@@ -9,12 +9,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
-import model.Calendar;
-import model.Event;
-import model.EventInterface;
-import model.EventSeries;
-import model.Location;
-import model.Status;
+import model.calendar.Calendar;
+import model.event.Event;
+import model.event.EventInterface;
+import model.event.EventSeries;
+import model.enums.Location;
+import model.enums.Status;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

@@ -1,4 +1,4 @@
-package model;
+package model.event;
 
 import java.time.LocalDateTime;
 import java.util.List;

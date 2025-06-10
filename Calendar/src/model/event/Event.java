@@ -1,6 +1,9 @@
-package model;
+package model.event;
 
 import java.time.LocalDateTime;
+
+import model.enums.Location;
+import model.enums.Status;
 
 /**
  * An event class that implements the event interface

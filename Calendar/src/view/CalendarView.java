@@ -2,7 +2,7 @@ package view;
 
 import java.util.List;
 
-import model.Event;
+import model.event.Event;
 
 /**
  * Calendar view class that implements the CalenderViewInterface

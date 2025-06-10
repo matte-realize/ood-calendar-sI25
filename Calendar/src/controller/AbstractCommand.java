@@ -7,8 +7,8 @@ import java.time.format.DateTimeParseException;
 import java.util.HashSet;
 import java.util.Set;
 
-import model.Location;
-import model.Status;
+import model.enums.Location;
+import model.enums.Status;
 
 /**
  * Abstract class that represents AbstractCommands that implement

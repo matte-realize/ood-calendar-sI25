@@ -3,7 +3,7 @@ package controller.eventCommands;
 import java.util.regex.Pattern;
 
 import controller.AbstractCommand;
-import model.Calendar;
+import model.calendar.Calendar;
 
 public class CopyEventCommand extends AbstractCommand {
 

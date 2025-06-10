@@ -6,10 +6,10 @@ import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import model.Calendar;
-import model.EventInterface;
-import model.Location;
-import model.Status;
+import model.calendar.Calendar;
+import model.event.EventInterface;
+import model.enums.Location;
+import model.enums.Status;
 
 /**
  * An abstract JUnit test class designed to set up and test all calendar

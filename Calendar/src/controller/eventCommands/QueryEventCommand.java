@@ -7,8 +7,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import controller.AbstractCommand;
-import model.Calendar;
-import model.Event;
+import model.calendar.Calendar;
+import model.event.Event;
 import view.CalendarView;
 
 /**

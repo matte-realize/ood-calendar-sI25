@@ -1,5 +1,5 @@
 import controller.CalendarController;
-import model.Calendar;
+import model.calendar.Calendar;
 import view.CalendarView;
 
 /**

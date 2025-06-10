@@ -2,7 +2,7 @@ package view;
 
 import java.util.List;
 
-import model.Event;
+import model.event.Event;
 
 /**
  * An interface that is able to define as the calendar view

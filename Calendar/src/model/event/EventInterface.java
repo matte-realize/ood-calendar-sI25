@@ -1,6 +1,9 @@
-package model;
+package model.event;
 
 import java.time.LocalDateTime;
+
+import model.enums.Location;
+import model.enums.Status;
 
 /**
  * This interface defines all the getters that an event

@@ -3,7 +3,7 @@ package controller;
 import controller.eventCommands.CreateEventCommand;
 import controller.eventCommands.EditEventCommand;
 import controller.eventCommands.QueryEventCommand;
-import model.Calendar;
+import model.calendar.Calendar;
 import view.CalendarView;
 
 import java.io.FileReader;

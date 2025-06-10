@@ -2,8 +2,8 @@ package calendarModelTests;
 
 import org.junit.Test;
 
-import model.Location;
-import model.Status;
+import model.enums.Location;
+import model.enums.Status;
 
 import static org.junit.Assert.assertThrows;
 

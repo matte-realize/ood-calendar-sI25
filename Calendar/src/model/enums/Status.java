@@ -1,4 +1,4 @@
-package model;
+package model.enums;
 
 /**
  * Enum class that determines the status

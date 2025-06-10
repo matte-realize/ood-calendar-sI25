@@ -5,10 +5,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import controller.AbstractCommand;
-import model.Calendar;
-import model.EditMode;
-import model.Event;
-import model.EventInterface;
+import model.calendar.Calendar;
+import model.enums.EditMode;
+import model.event.Event;
+import model.event.EventInterface;
 
 /**
  * A command that extends the abstract command class which allows for the user

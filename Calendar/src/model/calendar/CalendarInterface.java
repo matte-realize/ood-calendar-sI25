@@ -1,8 +1,15 @@
-package model;
+package model.calendar;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import model.enums.EditMode;
+import model.event.Event;
+import model.event.EventInterface;
+import model.event.EventSeries;
+import model.enums.Location;
+import model.enums.Status;
 
 /**
  * This interface defines all the model operations that
