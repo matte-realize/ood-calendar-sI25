@@ -1,7 +1,9 @@
 package controller;
 
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.HashSet;
@@ -56,6 +58,16 @@ public abstract class AbstractCommand implements Command {
     }
 
     return true;
+  }
+
+  @Override
+  public boolean isValidTimezone(String timezone) {
+    try {
+      ZoneId zoneId = ZoneId.of(timezone);
+      return true;
+    } catch (DateTimeException e) {
+      return false;
+    }
   }
 
   @Override

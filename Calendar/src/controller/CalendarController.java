@@ -4,6 +4,7 @@ import controller.eventCommands.CreateEventCommand;
 import controller.eventCommands.EditEventCommand;
 import controller.eventCommands.QueryEventCommand;
 import model.calendar.Calendar;
+import model.calendar.CalendarManagement;
 import view.CalendarView;
 
 import java.io.FileReader;
@@ -18,10 +19,10 @@ import java.util.Scanner;
  * mode to run commands.
  */
 public class CalendarController implements CalendarControllerInterface {
-  private final Calendar calendarModel;
+  private final CalendarManagement calendarModel;
   private final CalendarView calendarView;
 
-  public CalendarController(Calendar calendarModel, CalendarView calendarView) {
+  public CalendarController(CalendarManagement calendarModel, CalendarView calendarView) {
     this.calendarModel = calendarModel;
     this.calendarView = calendarView;
   }

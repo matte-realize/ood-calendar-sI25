@@ -2,6 +2,7 @@ package controller.eventCommands;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.regex.Pattern;
 
 import controller.AbstractCommand;
 import model.calendar.Calendar;
+import model.calendar.CalendarManagement;
 
 /**
  * A command that extends the abstract command class which allows for the user
@@ -52,11 +54,13 @@ public class CreateEventCommand extends AbstractCommand {
                   + "([A-Za-z_]+/[A-Za-z_]+)");
 
   private final String tokensString;
-  private final Calendar calendarModel;
+  private final CalendarManagement calendarModel;
+  private final Calendar selectedCalendar;
 
-  public CreateEventCommand(String tokensString, Calendar calendarModel) {
+  public CreateEventCommand(String tokensString, CalendarManagement calendarModel) {
     this.tokensString = "create" + tokensString;
     this.calendarModel = calendarModel;
+    this.selectedCalendar = calendarModel.getSelectedCalendar();
   }
 
   @Override
@@ -75,6 +79,8 @@ public class CreateEventCommand extends AbstractCommand {
       handleRepeatingEventNTimes(m, true);
     } else if ((m = AllDayEventSeriesUntil.matcher(tokensString)).matches()) {
       handleRepeatingEventUntil(m, true);
+    } else if ((m= CreateCalendar.matcher(tokensString)).matches()) {
+      handleCreateCalendar(m);
     } else {
       throw new IllegalArgumentException("Invalid command: \"" + tokensString + "\"");
     }
@@ -98,7 +104,7 @@ public class CreateEventCommand extends AbstractCommand {
       );
     }
 
-    calendarModel.createEvent(
+    selectedCalendar.createEvent(
             subject,
             LocalDateTime.parse(start),
             LocalDateTime.parse(end),
@@ -144,7 +150,8 @@ public class CreateEventCommand extends AbstractCommand {
       );
     }
 
-    calendarModel.createEventSeries(
+
+    selectedCalendar.createEventSeries(
             subject,
             LocalDateTime.parse(start),
             LocalDateTime.parse(end),
@@ -187,7 +194,7 @@ public class CreateEventCommand extends AbstractCommand {
       );
     }
 
-    calendarModel.createEventSeries(
+    selectedCalendar.createEventSeries(
             subject,
             LocalDateTime.parse(start),
             LocalDateTime.parse(end),
@@ -201,6 +208,17 @@ public class CreateEventCommand extends AbstractCommand {
             null,
             null
     );
+  }
+
+  private void handleCreateCalendar (Matcher m) {
+    String name = m.group(1);
+    String timezone = m.group(2);
+
+    if (!isValidDateTime(timezone)) {
+      throw new IllegalArgumentException("Timezone is of invalid format");
+    } else {
+      calendarModel.createCalendar(name, ZoneId.of(timezone));
+    }
   }
 
   private static final Map<Character, DayOfWeek> dayMap;

@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 
 import controller.AbstractCommand;
 import model.calendar.Calendar;
+import model.calendar.CalendarManagement;
 import model.enums.EditMode;
 import model.event.Event;
 import model.event.EventInterface;
@@ -34,11 +35,13 @@ public class EditEventCommand extends AbstractCommand {
                   + "(name|timezone) \"([^\"]+)\"$");
 
   private final String tokensString;
-  private final Calendar calendarModel;
+  private final CalendarManagement calendarModel;
+  private final Calendar selectedCalendar;
 
-  public EditEventCommand(String tokensString, Calendar calendarModel) {
+  public EditEventCommand(String tokensString, CalendarManagement calendarModel) {
     this.tokensString = "edit" + tokensString;
     this.calendarModel = calendarModel;
+    this.selectedCalendar = calendarModel.getSelectedCalendar();
   }
 
   @Override
@@ -78,7 +81,7 @@ public class EditEventCommand extends AbstractCommand {
       );
     }
 
-    calendarModel.editEvent(subject, LocalDateTime.parse(from), editEventHelper(subject, from, to, property, newValue), EditMode.SINGLE);
+    selectedCalendar.editEvent(subject, LocalDateTime.parse(from), editEventHelper(subject, from, to, property, newValue), EditMode.SINGLE);
   }
 
   private void handleEditEventsFrom(Matcher m) {
@@ -99,7 +102,7 @@ public class EditEventCommand extends AbstractCommand {
       );
     }
 
-    calendarModel.editEvent(subject, LocalDateTime.parse(from), editEventHelper(subject, from, null, property, newValue), EditMode.FUTURE);
+    selectedCalendar.editEvent(subject, LocalDateTime.parse(from), editEventHelper(subject, from, null, property, newValue), EditMode.FUTURE);
   }
 
   private void handleEditSeries(Matcher m) {
@@ -120,7 +123,7 @@ public class EditEventCommand extends AbstractCommand {
       );
     }
 
-    calendarModel.editEvent(subject, LocalDateTime.parse(from), editEventHelper(subject, from, null, property, newValue), EditMode.ALL);
+    selectedCalendar.editEvent(subject, LocalDateTime.parse(from), editEventHelper(subject, from, null, property, newValue), EditMode.ALL);
   }
 
   private void handleEditCalendar(Matcher m) {
@@ -143,7 +146,7 @@ public class EditEventCommand extends AbstractCommand {
     }
 
     try {
-      EventInterface oldEvent = calendarModel.getEvent(subject, LocalDateTime.parse(from), endDateTime);
+      EventInterface oldEvent = selectedCalendar.getEvent(subject, LocalDateTime.parse(from), endDateTime);
       if (oldEvent == null) {
         return null;
       }

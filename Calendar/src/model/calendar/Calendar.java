@@ -26,6 +26,7 @@ public class Calendar implements CalendarInterface {
   private final Map<LocalDate, List<Event>> eventsByDate = new HashMap<>();
   public final Map<String, EventSeries> mapSeries = new HashMap<>();
 
+
   @Override
   public Event createEvent(String subject,
                            LocalDateTime start,

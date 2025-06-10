@@ -1,5 +1,6 @@
 import controller.CalendarController;
 import model.calendar.Calendar;
+import model.calendar.CalendarManagement;
 import view.CalendarView;
 
 /**
@@ -22,7 +23,7 @@ public class CalendarApp {
       return;
     }
 
-    Calendar model = new Calendar();
+    CalendarManagement model = new CalendarManagement();
     CalendarView view = new CalendarView();
     CalendarController calendarController = new CalendarController(model, view);
     calendarController.play(args);

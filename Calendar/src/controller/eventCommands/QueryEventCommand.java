@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 
 import controller.AbstractCommand;
 import model.calendar.Calendar;
+import model.calendar.CalendarManagement;
 import model.event.Event;
 import view.CalendarView;
 
@@ -30,8 +31,9 @@ public class QueryEventCommand extends AbstractCommand {
           "^use calendar --name ([^\"]+)$");
 
   private final String tokensString;
-  private Calendar calendarModel;
+  private CalendarManagement calendarModel;
   private CalendarView calendarView;
+  private final Calendar selectedCalendar;
 
   /**
    * Constructor for the query event command.
@@ -43,11 +45,12 @@ public class QueryEventCommand extends AbstractCommand {
    */
   public QueryEventCommand(String tokensString,
                            String command,
-                           Calendar calendarModel,
+                           CalendarManagement calendarModel,
                            CalendarView calendarView) {
     this.tokensString = command + tokensString;
     this.calendarModel = calendarModel;
     this.calendarView = calendarView;
+    this.selectedCalendar = calendarModel.getSelectedCalendar();
   }
 
   @Override
@@ -78,7 +81,7 @@ public class QueryEventCommand extends AbstractCommand {
     }
 
     calendarView.printEvents(
-            calendarModel.getEventsSingleDay(LocalDate.parse(date)),
+            selectedCalendar.getEventsSingleDay(LocalDate.parse(date)),
             date);
   }
 
@@ -93,7 +96,7 @@ public class QueryEventCommand extends AbstractCommand {
     }
 
     calendarView.printEvents(
-            calendarModel.getEventsWindow(
+            selectedCalendar.getEventsWindow(
                     LocalDateTime.parse(startDate), LocalDateTime.parse(endDate)
             ),
             startDate + " to " + endDate);
@@ -107,7 +110,7 @@ public class QueryEventCommand extends AbstractCommand {
       throw new IllegalArgumentException("Invalid datetime format. Expected format: yyyy-MM-ddTHH:mm");
     }
 
-    List<Event> events = calendarModel.getEventsWindow(LocalDateTime.parse(dateTime), LocalDateTime.parse(dateTime));
+    List<Event> events = selectedCalendar.getEventsWindow(LocalDateTime.parse(dateTime), LocalDateTime.parse(dateTime));
     if (events.isEmpty()) {
       calendarView.printStatus("Available", dateTime);
     } else {

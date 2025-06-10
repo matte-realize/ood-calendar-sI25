@@ -3,7 +3,7 @@ package controller.eventCommands;
 import java.util.regex.Pattern;
 
 import controller.AbstractCommand;
-import model.calendar.Calendar;
+import model.calendar.CalendarManagement;
 
 public class CopyEventCommand extends AbstractCommand {
 
@@ -26,9 +26,9 @@ public class CopyEventCommand extends AbstractCommand {
                   + "(\\d{4}-\\d{2}-\\d{2})$");
 
   private final String tokensString;
-  private final Calendar calendarModel;
+  private final CalendarManagement calendarModel;
 
-  public CopyEventCommand(String tokensString, Calendar calendarModel) {
+  public CopyEventCommand(String tokensString, CalendarManagement calendarModel) {
     this.tokensString = "create" + tokensString;
     this.calendarModel = calendarModel;
   }
