@@ -86,5 +86,5 @@ public interface CalendarInterface {
    */
   EventInterface getEvent(String subject,
                           LocalDateTime start,
-                          LocalDateTime end);
+                          LocalDateTime end) throws IllegalArgumentException;
 }

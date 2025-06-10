@@ -103,6 +103,8 @@ public class CalendarController implements CalendarControllerInterface {
                 new QueryEventCommand(tokensString, "show", calendarModel, calendarView);
         showStatus.execute();
         break;
+      case "copy":
+
       case "exit":
         return true;
       default:

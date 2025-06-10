@@ -1,10 +1,14 @@
 package controller.eventCommands;
 
+import java.time.LocalDateTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import controller.AbstractCommand;
 import model.Calendar;
+import model.EditMode;
+import model.Event;
+import model.EventInterface;
 
 /**
  * A command that extends the abstract command class which allows for the user
@@ -25,10 +29,16 @@ public class EditEventCommand extends AbstractCommand {
           "^edit series (subject|start|end|description|location|status) "
                   + "\"([^\"]+)\" from (\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}) with (.+)$");
 
+  private static final Pattern EditCalendar = Pattern.compile(
+          "^edit calendar --name ([^\"]+) --property "
+                  + "(name|timezone) \"([^\"]+)\"$");
+
   private final String tokensString;
+  private final Calendar calendarModel;
 
   public EditEventCommand(String tokensString, Calendar calendarModel) {
     this.tokensString = "edit" + tokensString;
+    this.calendarModel = calendarModel;
   }
 
   @Override
@@ -42,6 +52,8 @@ public class EditEventCommand extends AbstractCommand {
       handleEditEventsFrom(m);
     } else if ((m = EditEventSeries.matcher(tokensString)).matches()) {
       handleEditSeries(m);
+    } else if ((m = EditCalendar.matcher(tokensString)).matches()) {
+      handleEditCalendar(m);
     } else {
       throw new IllegalArgumentException("Invalid edit command: \"" + tokensString + "\"\n");
     }
@@ -66,7 +78,7 @@ public class EditEventCommand extends AbstractCommand {
       );
     }
 
-    // calendarModel.editEvent(subject, LocalDateTime.parse(from), , EditMode.SINGLE);
+    calendarModel.editEvent(subject, LocalDateTime.parse(from), editEventHelper(subject, from, to, property, newValue), EditMode.SINGLE);
   }
 
   private void handleEditEventsFrom(Matcher m) {
@@ -87,8 +99,7 @@ public class EditEventCommand extends AbstractCommand {
       );
     }
 
-    System.out.printf("Editing SINGLE event \"%s\" (%s): %s -> %s%n",
-            subject, from, property, newValue);
+    calendarModel.editEvent(subject, LocalDateTime.parse(from), editEventHelper(subject, from, null, property, newValue), EditMode.FUTURE);
   }
 
   private void handleEditSeries(Matcher m) {
@@ -109,7 +120,66 @@ public class EditEventCommand extends AbstractCommand {
       );
     }
 
-    System.out.printf("Editing SINGLE event \"%s\" (%s): %s -> %s%n",
-            subject, from, property, newValue);
+    calendarModel.editEvent(subject, LocalDateTime.parse(from), editEventHelper(subject, from, null, property, newValue), EditMode.ALL);
+  }
+
+  private void handleEditCalendar(Matcher m) {
+    String name = m.group(1);
+    String property = m.group(2);
+    String newValue = m.group(3);
+
+    if (!isValidNewValue(property, newValue)) {
+      throw new IllegalArgumentException(
+              "Invalid new value format. Make sure the new value is of the same type as you are trying to edit"
+      );
+    }
+
+  }
+
+  private EventInterface editEventHelper(String subject, String from, String to, String property, String newValue) {
+    LocalDateTime endDateTime = null;
+    if (to != null) {
+      endDateTime = LocalDateTime.parse(to);
+    }
+
+    try {
+      EventInterface oldEvent = calendarModel.getEvent(subject, LocalDateTime.parse(from), endDateTime);
+      if (oldEvent == null) {
+        return null;
+      }
+      Event.CustomEventBuilder newEventBuilder = new Event.CustomEventBuilder().setSubject(oldEvent.getSubject())
+              .setDescription(oldEvent.getDescription())
+              .setLocation(oldEvent.getLocation())
+              .setEndDateTime(oldEvent.getEndDateTime())
+              .setStartDateTime(oldEvent.getStartDateTime())
+              .setStatus(oldEvent.getStatus());
+
+      switch (property) {
+        case "subject":
+          newEventBuilder.setSubject(newValue);
+          break;
+        case "start":
+          newEventBuilder.setStartDateTime(LocalDateTime.parse(newValue));
+          break;
+        case "end":
+          newEventBuilder.setEndDateTime(LocalDateTime.parse(newValue));
+          break;
+        case "description":
+          newEventBuilder.setDescription(newValue);
+          break;
+        case "location":
+          break;
+        case "status":
+          break;
+        default:
+          break;
+      }
+
+      return newEventBuilder.build();
+
+    } catch (IllegalArgumentException e) {
+      return null;
+    }
+
   }
 }

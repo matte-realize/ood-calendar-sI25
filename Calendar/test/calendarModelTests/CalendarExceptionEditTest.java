@@ -14,6 +14,7 @@ import model.Location;
 import model.Status;
 
 import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.fail;
 
 /**
  * JUnit test for testing exceptions when editing events independently
@@ -22,53 +23,42 @@ import static org.junit.Assert.assertThrows;
 public class CalendarExceptionEditTest extends AbstractCalendarTest {
   @Test
   public void testEditingSubjectToNull() {
-    EventInterface allDayEventEdit = new Event.CustomEventBuilder()
-            .setSubject(null)
-            .setStartDateTime(allDayTimeStart)
-            .build();
 
-    assertThrows(IllegalArgumentException.class, () -> {
-      calendar.editEvent(
-              "Wedding",
-              allDayTimeStart,
-              allDayEventEdit,
-              EditMode.SINGLE
-      );
-    });
+    try {
+      EventInterface allDayEventEdit = new Event.CustomEventBuilder()
+              .setSubject(null)
+              .setStartDateTime(allDayTimeStart)
+              .build();
+      fail("Subject cannot be null");
+    } catch (IllegalArgumentException e) {
+      // Should get here
+    }
   }
 
   @Test
   public void testEditingSubjectToEmpty() {
-    EventInterface allDayEventEdit = new Event.CustomEventBuilder()
-            .setSubject("")
-            .setStartDateTime(allDayTimeStart)
-            .build();
-
-    assertThrows(IllegalArgumentException.class, () -> {
-      calendar.editEvent(
-              "Wedding",
-              allDayTimeStart,
-              allDayEventEdit,
-              EditMode.SINGLE
-      );
-    });
+    try {
+      EventInterface allDayEventEdit = new Event.CustomEventBuilder()
+              .setSubject("")
+              .setStartDateTime(allDayTimeStart)
+              .build();
+      fail("Subject cannot be null");
+    } catch (IllegalArgumentException e) {
+      // Should get here
+    }
   }
 
   @Test
   public void testEditingStartDateToNull() {
-    EventInterface allDayEventEdit = new Event.CustomEventBuilder()
-            .setSubject("Wedding")
-            .setStartDateTime(null)
-            .build();
-
-    assertThrows(IllegalArgumentException.class, () -> {
-      calendar.editEvent(
-              "Wedding",
-              allDayTimeStart,
-              allDayEventEdit,
-              EditMode.SINGLE
-      );
-    });
+    try {
+      EventInterface allDayEventEdit = new Event.CustomEventBuilder()
+              .setSubject("Wedding")
+              .setStartDateTime(null)
+              .build();
+      fail("StartDate cannot be null");
+    } catch (IllegalArgumentException e) {
+      // Should get here
+    };
   }
 
   @Test

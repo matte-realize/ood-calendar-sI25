@@ -63,6 +63,7 @@ public abstract class AbstractCommand implements Command {
     switch (property) {
       case "subject":
       case "description":
+      case "name":
         return true;
       case "start":
       case "end":
@@ -81,6 +82,8 @@ public abstract class AbstractCommand implements Command {
         } catch (IllegalArgumentException e) {
           return false;
         }
+      case "timezone":
+        break;
       default:
         break;
     }

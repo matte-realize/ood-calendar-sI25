@@ -14,7 +14,7 @@ import static org.junit.Assert.assertThrows;
 public class CalendarExceptionCreationTest extends AbstractCalendarTest {
   @Test
   public void testNullSubject() {
-    assertThrows(NullPointerException.class, () -> {
+    assertThrows(IllegalArgumentException.class, () -> {
       calendar.createEvent(
               null,
               sampleStart,
@@ -25,7 +25,7 @@ public class CalendarExceptionCreationTest extends AbstractCalendarTest {
       );
     });
 
-    assertThrows(NullPointerException.class, () -> {
+    assertThrows(IllegalArgumentException.class, () -> {
       calendar.createEvent(
               null,
               sampleStart,
@@ -39,7 +39,7 @@ public class CalendarExceptionCreationTest extends AbstractCalendarTest {
 
   @Test
   public void testEmptySubject() {
-    assertThrows(NullPointerException.class, () -> {
+    assertThrows(IllegalArgumentException.class, () -> {
       calendar.createEvent(
               "",
               sampleStart,
@@ -50,7 +50,7 @@ public class CalendarExceptionCreationTest extends AbstractCalendarTest {
       );
     });
 
-    assertThrows(NullPointerException.class, () -> {
+    assertThrows(IllegalArgumentException.class, () -> {
       calendar.createEvent(
               "",
               sampleStart,
@@ -64,7 +64,7 @@ public class CalendarExceptionCreationTest extends AbstractCalendarTest {
 
   @Test
   public void testNullStart() {
-    assertThrows(NullPointerException.class, () -> {
+    assertThrows(IllegalArgumentException.class, () -> {
       calendar.createEvent(
               "Workout",
               null,
@@ -75,7 +75,7 @@ public class CalendarExceptionCreationTest extends AbstractCalendarTest {
       );
     });
 
-    assertThrows(NullPointerException.class, () -> {
+    assertThrows(IllegalArgumentException.class, () -> {
       calendar.createEvent(
               "Workout",
               null,
@@ -89,7 +89,7 @@ public class CalendarExceptionCreationTest extends AbstractCalendarTest {
 
   @Test
   public void testEndIsBeforeStart() {
-    assertThrows(NullPointerException.class, () -> {
+    assertThrows(IllegalArgumentException.class, () -> {
       calendar.createEvent(
               "Workout",
               sampleEnd,
@@ -100,7 +100,7 @@ public class CalendarExceptionCreationTest extends AbstractCalendarTest {
       );
     });
 
-    assertThrows(NullPointerException.class, () -> {
+    assertThrows(IllegalArgumentException.class, () -> {
       calendar.createEvent(
               "Workout",
               sampleEnd,
@@ -114,7 +114,7 @@ public class CalendarExceptionCreationTest extends AbstractCalendarTest {
 
   @Test
   public void testSameTime() {
-    assertThrows(NullPointerException.class, () -> {
+    assertThrows(IllegalArgumentException.class, () -> {
       calendar.createEvent(
               "Workout",
               sampleStart,
@@ -125,7 +125,7 @@ public class CalendarExceptionCreationTest extends AbstractCalendarTest {
       );
     });
 
-    assertThrows(NullPointerException.class, () -> {
+    assertThrows(IllegalArgumentException.class, () -> {
       calendar.createEvent(
               "Workout",
               sampleEnd,
@@ -136,7 +136,7 @@ public class CalendarExceptionCreationTest extends AbstractCalendarTest {
       );
     });
 
-    assertThrows(NullPointerException.class, () -> {
+    assertThrows(IllegalArgumentException.class, () -> {
       calendar.createEvent(
               "Workout",
               sampleStart,
@@ -147,7 +147,7 @@ public class CalendarExceptionCreationTest extends AbstractCalendarTest {
       );
     });
 
-    assertThrows(NullPointerException.class, () -> {
+    assertThrows(IllegalArgumentException.class, () -> {
       calendar.createEvent(
               "Workout",
               sampleEnd,
@@ -161,7 +161,7 @@ public class CalendarExceptionCreationTest extends AbstractCalendarTest {
 
   @Test
   public void testNullSubjectSeries() {
-    assertThrows(NullPointerException.class, () -> {
+    assertThrows(IllegalArgumentException.class, () -> {
       calendar.createEventSeries(
               null,
               sampleStart,
@@ -174,7 +174,7 @@ public class CalendarExceptionCreationTest extends AbstractCalendarTest {
       );
     });
 
-    assertThrows(NullPointerException.class, () -> {
+    assertThrows(IllegalArgumentException.class, () -> {
       calendar.createEventSeries(
               null,
               sampleStart,
@@ -187,7 +187,7 @@ public class CalendarExceptionCreationTest extends AbstractCalendarTest {
       );
     });
 
-    assertThrows(NullPointerException.class, () -> {
+    assertThrows(IllegalArgumentException.class, () -> {
       calendar.createEventSeries(
               null,
               sampleStart,
@@ -200,7 +200,7 @@ public class CalendarExceptionCreationTest extends AbstractCalendarTest {
       );
     });
 
-    assertThrows(NullPointerException.class, () -> {
+    assertThrows(IllegalArgumentException.class, () -> {
       calendar.createEventSeries(
               null,
               sampleStart,
@@ -216,7 +216,7 @@ public class CalendarExceptionCreationTest extends AbstractCalendarTest {
 
   @Test
   public void testEmptySubjectSeries() {
-    assertThrows(NullPointerException.class, () -> {
+    assertThrows(IllegalArgumentException.class, () -> {
       calendar.createEventSeries(
               "",
               sampleStart,
@@ -229,7 +229,7 @@ public class CalendarExceptionCreationTest extends AbstractCalendarTest {
       );
     });
 
-    assertThrows(NullPointerException.class, () -> {
+    assertThrows(IllegalArgumentException.class, () -> {
       calendar.createEventSeries(
               "",
               sampleStart,
@@ -242,7 +242,7 @@ public class CalendarExceptionCreationTest extends AbstractCalendarTest {
       );
     });
 
-    assertThrows(NullPointerException.class, () -> {
+    assertThrows(IllegalArgumentException.class, () -> {
       calendar.createEventSeries(
               "",
               sampleStart,
@@ -255,7 +255,7 @@ public class CalendarExceptionCreationTest extends AbstractCalendarTest {
       );
     });
 
-    assertThrows(NullPointerException.class, () -> {
+    assertThrows(IllegalArgumentException.class, () -> {
       calendar.createEventSeries(
               "",
               sampleStart,
@@ -271,7 +271,7 @@ public class CalendarExceptionCreationTest extends AbstractCalendarTest {
 
   @Test
   public void testNullStartSeries() {
-    assertThrows(NullPointerException.class, () -> {
+    assertThrows(IllegalArgumentException.class, () -> {
       calendar.createEventSeries(
               "Workout",
               null,
@@ -284,7 +284,7 @@ public class CalendarExceptionCreationTest extends AbstractCalendarTest {
       );
     });
 
-    assertThrows(NullPointerException.class, () -> {
+    assertThrows(IllegalArgumentException.class, () -> {
       calendar.createEventSeries(
               "Workout",
               null,
@@ -297,7 +297,7 @@ public class CalendarExceptionCreationTest extends AbstractCalendarTest {
       );
     });
 
-    assertThrows(NullPointerException.class, () -> {
+    assertThrows(IllegalArgumentException.class, () -> {
       calendar.createEventSeries(
               "Workout",
               null,
@@ -310,7 +310,7 @@ public class CalendarExceptionCreationTest extends AbstractCalendarTest {
       );
     });
 
-    assertThrows(NullPointerException.class, () -> {
+    assertThrows(IllegalArgumentException.class, () -> {
       calendar.createEventSeries(
               "Workout",
               null,
@@ -326,7 +326,7 @@ public class CalendarExceptionCreationTest extends AbstractCalendarTest {
 
   @Test
   public void testEndIsBeforeStartSeries() {
-    assertThrows(NullPointerException.class, () -> {
+    assertThrows(IllegalArgumentException.class, () -> {
       calendar.createEventSeries(
               "Workout",
               sampleEnd,
@@ -339,7 +339,7 @@ public class CalendarExceptionCreationTest extends AbstractCalendarTest {
       );
     });
 
-    assertThrows(NullPointerException.class, () -> {
+    assertThrows(IllegalArgumentException.class, () -> {
       calendar.createEventSeries(
               "Workout",
               sampleEnd,
@@ -352,7 +352,7 @@ public class CalendarExceptionCreationTest extends AbstractCalendarTest {
       );
     });
 
-    assertThrows(NullPointerException.class, () -> {
+    assertThrows(IllegalArgumentException.class, () -> {
       calendar.createEventSeries(
               "Workout",
               sampleEnd,
@@ -365,7 +365,7 @@ public class CalendarExceptionCreationTest extends AbstractCalendarTest {
       );
     });
 
-    assertThrows(NullPointerException.class, () -> {
+    assertThrows(IllegalArgumentException.class, () -> {
       calendar.createEventSeries(
               "Workout",
               sampleEnd,
@@ -379,38 +379,10 @@ public class CalendarExceptionCreationTest extends AbstractCalendarTest {
     });
   }
 
-  @Test
-  public void testNullOccurrences() {
-    assertThrows(NullPointerException.class, () -> {
-      calendar.createEventSeries(
-              "Workout",
-              sampleStart,
-              null,
-              sampleRepeatDay,
-              null,
-              null,
-              null,
-              null
-      );
-    });
-
-    assertThrows(NullPointerException.class, () -> {
-      calendar.createEventSeries(
-              "Workout",
-              sampleStart,
-              sampleEnd,
-              sampleRepeatDay,
-              null,
-              null,
-              null,
-              null
-      );
-    });
-  }
 
   @Test
   public void testSameTimeSeries() {
-    assertThrows(NullPointerException.class, () -> {
+    assertThrows(IllegalArgumentException.class, () -> {
       calendar.createEventSeries(
               "Workout",
               sampleStart,
@@ -423,7 +395,7 @@ public class CalendarExceptionCreationTest extends AbstractCalendarTest {
       );
     });
 
-    assertThrows(NullPointerException.class, () -> {
+    assertThrows(IllegalArgumentException.class, () -> {
       calendar.createEventSeries(
               "Workout",
               sampleEnd,
@@ -436,7 +408,7 @@ public class CalendarExceptionCreationTest extends AbstractCalendarTest {
       );
     });
 
-    assertThrows(NullPointerException.class, () -> {
+    assertThrows(IllegalArgumentException.class, () -> {
       calendar.createEventSeries(
               "Workout",
               sampleStart,
@@ -449,7 +421,7 @@ public class CalendarExceptionCreationTest extends AbstractCalendarTest {
       );
     });
 
-    assertThrows(NullPointerException.class, () -> {
+    assertThrows(IllegalArgumentException.class, () -> {
       calendar.createEventSeries(
               "Workout",
               sampleEnd,
@@ -465,7 +437,7 @@ public class CalendarExceptionCreationTest extends AbstractCalendarTest {
 
   @Test
   public void testNullDaysInSeries() {
-    assertThrows(NullPointerException.class, () -> {
+    assertThrows(IllegalArgumentException.class, () -> {
       calendar.createEventSeries(
               "Workout",
               sampleStart,

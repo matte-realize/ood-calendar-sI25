@@ -47,6 +47,10 @@ public class CreateEventCommand extends AbstractCommand {
           "^create event \"([^\"]+)\" on (\\d{4}-\\d{2}-\\d{2}) "
                   + "repeats ([MTWRFSU]+) until (\\d{4}-\\d{2}-\\d{2})$");
 
+  private static final Pattern CreateCalendar = Pattern.compile(
+          "^create calendar --name ([^\"]+) --timezone "
+                  + "([A-Za-z_]+/[A-Za-z_]+)");
+
   private final String tokensString;
   private final Calendar calendarModel;
 

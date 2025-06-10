@@ -34,8 +34,8 @@ public class Calendar implements CalendarInterface {
       end = start.toLocalDate().atTime(17, 0);
     }
 
-    if (end.isBefore(start)) {
-      throw new IllegalArgumentException("End time can not be before start time.");
+    if (end.isBefore(start) || end.isEqual(start)) {
+      throw new IllegalArgumentException("End time can not be before or on start time.");
     }
 
     Event.CustomEventBuilder builder = new Event.CustomEventBuilder()
@@ -67,6 +67,10 @@ public class Calendar implements CalendarInterface {
 
     if (repeatDays == null || repeatDays.isEmpty()) {
       throw new IllegalArgumentException("Repeat days cannot be null or empty.");
+    }
+
+    if (end.isBefore(start) || end.isEqual(start)) {
+      throw new IllegalArgumentException("End time can not be before or on start time.");
     }
 
     EventSeries series = new EventSeries(subject, start);
@@ -291,19 +295,26 @@ public class Calendar implements CalendarInterface {
   }
 
   @Override
-  public EventInterface getEvent(String subject, LocalDateTime start, LocalDateTime end) {
+  public EventInterface getEvent(String subject, LocalDateTime start, LocalDateTime end) throws IllegalArgumentException {
     LocalDate date = start.toLocalDate();
     List<Event> events = eventsByDate.getOrDefault(date, Collections.emptyList());
+    boolean found = false;
+    EventInterface returnEvent = null;
 
     for (Event e : events) {
       if (e.getSubject().equals(subject)
               && e.getStartDateTime().equals(start)
               && ((end == null && e.getEndDateTime() == null) ||
               (e.getEndDateTime() != null && e.getEndDateTime().equals(end)))) {
-        return e;
+        if (found) {
+          throw new IllegalArgumentException("Multiple Events with the same Start and Subject");
+        } else {
+          found = true;
+          returnEvent = e;
+        }
       }
     }
-    return null;
+    return returnEvent;
   }
 
   /**

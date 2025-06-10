@@ -25,7 +25,13 @@ public class Event implements EventInterface {
    * @throws IllegalArgumentException if any of the parameters given are invalid.
    */
   public Event(String subject, LocalDateTime startDateTime) throws IllegalArgumentException {
+    if (subject == null || subject.isEmpty()) {
+      throw new IllegalArgumentException("Subject cannot be null or empty");
+    }
     this.subject = subject;
+    if (startDateTime == null) {
+      throw new IllegalArgumentException("StartDateTime cannot be null");
+    }
     this.startDateTime = startDateTime;
   }
 

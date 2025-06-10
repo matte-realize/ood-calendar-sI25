@@ -26,6 +26,9 @@ public class QueryEventCommand extends AbstractCommand {
   private static final Pattern ShowStatus = Pattern.compile(
           "^show status on (\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2})$");
 
+  private static final Pattern UseCalendar = Pattern.compile(
+          "^use calendar --name ([^\"]+)$");
+
   private final String tokensString;
   private Calendar calendarModel;
   private CalendarView calendarView;
@@ -58,6 +61,8 @@ public class QueryEventCommand extends AbstractCommand {
       handlePrintEventsFromTo(m);
     } else if ((m = ShowStatus.matcher(tokensString)).matches()) {
       handleShowStatusOn(m);
+    } else if ((m = UseCalendar.matcher(tokensString)).matches()) {
+
     } else {
       throw new IllegalArgumentException("Invalid query command: \"" + tokensString + "\"\n");
     }
