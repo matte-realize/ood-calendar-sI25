@@ -303,7 +303,9 @@ public class Calendar implements CalendarInterface {
   }
 
   @Override
-  public EventInterface getEvent(String subject, LocalDateTime start, LocalDateTime end) throws IllegalArgumentException {
+  public EventInterface getEvent(String subject,
+                                 LocalDateTime start,
+                                 LocalDateTime end) throws IllegalArgumentException {
     LocalDate date = start.toLocalDate();
     List<Event> events = eventsByDate.getOrDefault(date, Collections.emptyList());
     boolean found = false;

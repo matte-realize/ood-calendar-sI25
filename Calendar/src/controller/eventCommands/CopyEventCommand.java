@@ -5,6 +5,11 @@ import java.util.regex.Pattern;
 import controller.AbstractCommand;
 import model.calendar.CalendarManagement;
 
+/**
+ * A command that extends the abstract command class which allows for the user
+ * to be able to copy events through single events or a series through the
+ * calendar controller.
+ */
 public class CopyEventCommand extends AbstractCommand {
 
   private static final Pattern CopySingleEvent = Pattern.compile(

@@ -34,12 +34,26 @@ public class CalendarManagement {
     calendarModels.put(calendarName, newCalendar);
   }
 
-  public void selectCalendar() {
-
+  public void selectCalendar(String calendarName) {
+    CalendarModel calendarModel = calendarModels.get(calendarName);
+    this.selectedCalendar = calendarModel.getCalendar();
   }
 
-  public void editCalendar() {
+  public void editCalendar(String calendarName,
+                           String updatedCalendarName,
+                           ZoneId updatedZoneId) {
+    CalendarModel calendarToEdit = calendarModels.get(calendarName);
 
+    CalendarModel.CustomCalendarBuilder builder = new CalendarModel.CustomCalendarBuilder()
+            .setCalendar(calendarToEdit.getCalendar());
+
+    builder.setName(updatedCalendarName);
+    builder.setTimeZone(updatedZoneId);
+
+    CalendarModel updatedCalendar = builder.build();
+
+    calendarModels.remove(calendarName);
+    calendarModels.put(updatedCalendarName, updatedCalendar);
   }
 }
 
