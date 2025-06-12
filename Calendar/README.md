@@ -2,7 +2,22 @@
 
 The program runs through Intellij using the CalendarApp class. After the
 prompt "Type commands to view/edit calendar (type 'exit' to quit):" comes
-up, users will be able to create events using the follow prompts:
+up, users will be able to create calendars using the following prompt:
+
+- create calendar --name (name of the calendar) --timezone (valid time zone format)
+
+*Valid time zone formats are written in IANA Time Zone database format (eg. America/Chicago).*
+
+After creating a calendar, users can use the following prompt during any state of the program
+to access a different calendar.
+
+- use calendar --name (name of the calendar)
+
+Calendars can also be edited using the following prompt.
+
+- edit calendar --name (name of calendar) --property (name/timezone) "(edited prompt)"
+
+After entering a calendar, users can create events or a series of events using the following prompts:
 
 - create event "(name of the event)" from (XXXX-XX-XX)
 - create event "(name of the event)" from (XXXX-XX-XX)T(XX:XX) to (XXXX-XX-XX)T(XX:XX)
@@ -20,6 +35,20 @@ with MTWRFSU being the only valid characters (can be used consecutively, eg. WR)
 
 *R represents any number of times for repetition*
 
+After events are created, users are able to edit events, independently, inclusive with the future, or all within a series, 
+using the following prompts:
+
+- edit event (choice selection) "(name of the event)" from (XXXX-XX-XX)T(XX:XX) to (XXXX-XX-XX)T(XX:XX) with (edited prompt)
+- edit events (choice selection) "(name of the event)" from (XXXX-XX-XX)T(XX:XX) with (edited prompt)
+- edit series (choice selection) "(name of the event)" from (XXXX-XX-XX)T(XX:XX) with (edited prompt)
+
+*Choice selection range from subject, start, end, description, location, status*
+
+*Ensure the name and time stamp matches exactly as the one that is wanted to be edited.*
+
+*Edited prompt must also follow the correct guideline for edit (eg. editing a timezone still must be in (XXXX-XX-XX)T(XX:XX) format, 
+status can only switch between public and private)*
+
 To use query commands, the following commands are valid:
 
 - print events on (XXXX-XX-XX)
@@ -30,12 +59,10 @@ To exit the program, the input is "exit."
 
 ## Features
 
-The creation and query features for the calendar works. The edit feature does not work
-as it has not been integrated within the project yet, however, it has been proven possible
-through the tests.
+
 
 ## Work Distribution: 
 
 Paul - Created the controller/Command Parsing and started the view
 
-Matthew - Created the model and Tests for the Calendar
+Matthew - Created the model and tests for the Calendar

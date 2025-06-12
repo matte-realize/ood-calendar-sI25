@@ -24,4 +24,11 @@ public interface CalendarViewInterface {
    * @param day    the day which the event is associated with.
    */
   void printStatus(String status, String day);
+
+  /**
+   * Displays a message based on the error presented.
+   *
+   * @param message the message to display.
+   */
+  void printError(String message);
 }

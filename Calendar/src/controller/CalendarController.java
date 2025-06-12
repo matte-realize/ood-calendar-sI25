@@ -1,5 +1,6 @@
 package controller;
 
+import controller.eventCommands.CopyEventCommand;
 import controller.eventCommands.CreateEventCommand;
 import controller.eventCommands.EditEventCommand;
 import controller.eventCommands.QueryEventCommand;
@@ -12,8 +13,6 @@ import java.io.IOException;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-import javax.management.Query;
-
 /**
  * Controller class that implements the CalendarControllerInterface and
  * acts as the controller for the Calendar in order to be able to process
@@ -24,6 +23,17 @@ public class CalendarController implements CalendarControllerInterface {
   private final CalendarManagement calendarModel;
   private final CalendarView calendarView;
 
+  /**
+   * A calendar constructor for the controller that takes in a
+   * CalendarManagement and CalendarView instance to create a controller
+   * that manages the interactions between the CalendarManagement and
+   * the CalendarView.
+   *
+   * @param calendarModel a calendar management instance that represents the logic
+   *                      for the calendar.
+   * @param calendarView  a calendar view that represents the view for the user to interact
+   *                      with for the calendar.
+   */
   public CalendarController(CalendarManagement calendarModel, CalendarView calendarView) {
     this.calendarModel = calendarModel;
     this.calendarView = calendarView;
@@ -88,12 +98,12 @@ public class CalendarController implements CalendarControllerInterface {
     switch (command) {
       case "create":
         CreateEventCommand createEvent =
-                new CreateEventCommand(tokensString, calendarModel);
+                new CreateEventCommand(tokensString, calendarModel, calendarView);
         createEvent.execute();
         break;
       case "edit":
         EditEventCommand editEvent =
-                new EditEventCommand(tokensString, calendarModel);
+                new EditEventCommand(tokensString, calendarModel, calendarView);
         editEvent.execute();
         break;
       case "print":
@@ -107,7 +117,9 @@ public class CalendarController implements CalendarControllerInterface {
         showStatus.execute();
         break;
       case "copy":
-
+        CopyEventCommand copyEvent =
+                new CopyEventCommand(tokensString, calendarModel);
+        copyEvent.execute();
       case "use":
         QueryEventCommand useCalendar =
                 new QueryEventCommand(tokensString, "use", calendarModel, calendarView);
@@ -116,7 +128,7 @@ public class CalendarController implements CalendarControllerInterface {
       case "exit":
         return true;
       default:
-        throw new IllegalArgumentException("Invalid command");
+        calendarView.printError("Invalid command.");
     }
 
     return false;

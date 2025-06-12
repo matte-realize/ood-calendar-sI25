@@ -10,7 +10,6 @@ import model.event.Event;
  * calendar.
  */
 public class CalendarView implements CalendarViewInterface {
-
   /**
    * Simple constructor for the calendar view.
    */
@@ -32,5 +31,10 @@ public class CalendarView implements CalendarViewInterface {
   @Override
   public void printStatus(String status, String day) {
     System.out.println(status + " on " + day);
+  }
+
+  @Override
+  public void printError(String message) {
+    System.out.println(message);
   }
 }

@@ -44,6 +44,13 @@ public class CopyEventCommand extends AbstractCommand {
   private final CalendarManagement calendarModel;
   private final Calendar selectedCalendar;
 
+
+  /**
+   * A constructor for the copy command.
+   *
+   * @param tokensString  a string that determines the token.
+   * @param calendarModel a calendar model.
+   */
   public CopyEventCommand(String tokensString, CalendarManagement calendarModel) {
     this.tokensString = "create" + tokensString;
     this.calendarModel = calendarModel;

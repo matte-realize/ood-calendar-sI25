@@ -26,7 +26,6 @@ public class Calendar implements CalendarInterface {
   private final Map<LocalDate, List<Event>> eventsByDate = new HashMap<>();
   public final Map<String, EventSeries> mapSeries = new HashMap<>();
 
-
   @Override
   public Event createEvent(String subject,
                            LocalDateTime start,
@@ -46,6 +45,17 @@ public class Calendar implements CalendarInterface {
       throw new IllegalArgumentException("End time can not be before or on start time.");
     }
 
+    LocalDate dateKey = start.toLocalDate();
+    List<Event> eventsOnDate = eventsByDate.getOrDefault(dateKey, Collections.emptyList());
+
+    for (Event e : eventsOnDate) {
+      if (e.getSubject().equals(subject)
+              && e.getStartDateTime().equals(start)
+              && e.getEndDateTime().equals(end)) {
+        throw new IllegalArgumentException("An event with the same subject, start, and end time already exists.");
+      }
+    }
+
     Event.CustomEventBuilder builder = new Event.CustomEventBuilder()
             .setSubject(subject)
             .setStartDateTime(start)
@@ -56,7 +66,6 @@ public class Calendar implements CalendarInterface {
 
     EventInterface eventBuilt = builder.build();
 
-    LocalDate dateKey = start.toLocalDate();
     eventsByDate.computeIfAbsent(dateKey, d -> new ArrayList<>()).add((Event) eventBuilt);
 
     return (Event) eventBuilt;

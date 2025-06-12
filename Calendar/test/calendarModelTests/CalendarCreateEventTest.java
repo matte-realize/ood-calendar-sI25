@@ -23,7 +23,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * A JUnit test that tests the creation methods within the Calendar class.
  */
-public class CalendarCreationTest {
+public class CalendarCreateEventTest {
   private Calendar calendar;
 
   @Before

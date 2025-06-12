@@ -3,14 +3,22 @@ package model.calendar;
 import java.time.ZoneId;
 
 /**
- * A class of a calendar model that represents calendar model interface
- *
+ * A class of a calendar model that implements the CalendarModelInterface
+ * and utilizes the name, time zone, and calendar object to manage
+ * calendar operations.
  */
 public class CalendarModel implements CalendarModelInterface {
   private String name;
   private ZoneId timeZone;
   private Calendar calendar;
 
+  /**
+   * A constructor that represents the calendar model based on the
+   * name and time zone given.
+   *
+   * @param name the name of the calendar model.
+   * @param timeZone the zone id of the calendar model.
+   */
   public CalendarModel(String name, ZoneId timeZone) {
     this.name = name;
     this.timeZone = timeZone;

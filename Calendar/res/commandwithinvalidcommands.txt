@@ -1,4 +1,14 @@
+Invalid command:
+aaaaaaa
+
+Invalid Time Zone:
+create calendar --name Invalid --timezone America/Paris
+
+Duplicate event:
 create event "Event One" from 2025-08-10T09:00 to 2025-08-10T10:00
+create event "Event One" from 2025-08-10T09:00 to 2025-08-10T10:00
+
+
 create event "Event Two" from 2025-06-10T09:30 to 2025-06-10T11:00
 create event "Event Three" from 2025-07-10T12:00 to 2025-06-10T12:00
 create event "Event Four" from 2025-06-10T23:00 to 2025-06-11T07:00
