@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 import controller.AbstractCommand;
 import model.calendar.Calendar;
 import model.calendar.CalendarManagement;
+import view.CalendarView;
 
 /**
  * A command that extends the abstract command class which allows for the user
@@ -56,6 +57,7 @@ public class CreateEventCommand extends AbstractCommand {
   private final String tokensString;
   private final CalendarManagement calendarModel;
   private final Calendar selectedCalendar;
+  private CalendarView calendarView;
 
   /**
    * Constructor for the create command.
@@ -63,10 +65,11 @@ public class CreateEventCommand extends AbstractCommand {
    * @param tokensString  a string that determines the token.
    * @param calendarModel a calendar model.
    */
-  public CreateEventCommand(String tokensString, CalendarManagement calendarModel) {
+  public CreateEventCommand(String tokensString, CalendarManagement calendarModel, CalendarView calendarView) {
     this.tokensString = "create" + tokensString;
     this.calendarModel = calendarModel;
     this.selectedCalendar = calendarModel.getSelectedCalendar();
+    this.calendarView = calendarView;
   }
 
   @Override
@@ -87,7 +90,7 @@ public class CreateEventCommand extends AbstractCommand {
     } else if ((m = CreateCalendar.matcher(tokensString)).matches()) {
       handleCreateCalendar(m);
     } else {
-      throw new IllegalArgumentException("Invalid command: \"" + tokensString + "\"");
+      calendarView.printError("Invalid command: \"" + tokensString + "\"");
     }
   }
 
@@ -104,9 +107,8 @@ public class CreateEventCommand extends AbstractCommand {
     }
 
     if (!isValidDateTime(start) || !isValidDateTime(end)) {
-      throw new IllegalArgumentException(
-              "Invalid datetime format. Expected format: yyyy-MM-ddTHH:mm"
-      );
+      calendarView.printError("Invalid datetime format. Expected format: yyyy-MM-ddTHH:mm");
+      return;
     }
 
     selectedCalendar.createEvent(
@@ -138,21 +140,18 @@ public class CreateEventCommand extends AbstractCommand {
     }
 
     if (!isValidDateTime(start) || !isValidDateTime(end)) {
-      throw new IllegalArgumentException(
-              "Invalid datetime format. Expected format: yyyy-MM-ddTHH:mm"
-      );
+      calendarView.printError("Invalid datetime format. Expected format: yyyy-MM-ddTHH:mm");
+      return;
     }
 
     if (!isValidWeekdayFormat(weekdays)) {
-      throw new IllegalArgumentException(
-              "Invalid weekday format. Expected subset of MTWRFSU"
-      );
+      calendarView.printError("Invalid weekday format. Expected subset of MTWRFSU");
+      return;
     }
 
     if (Integer.parseInt(repeatNum) < 1) {
-      throw new IllegalArgumentException(
-              "Invalid repeat number. Must be greater than 0"
-      );
+      calendarView.printError("Invalid repeat number. Must be greater than 0");
+      return;
     }
 
 
@@ -188,15 +187,13 @@ public class CreateEventCommand extends AbstractCommand {
     }
 
     if (!isValidDateTime(start) || !isValidDateTime(end)) {
-      throw new IllegalArgumentException(
-              "Invalid datetime format. Expected format: yyyy-MM-ddTHH:mm"
-      );
+      calendarView.printError("Invalid datetime format. Expected format: yyyy-MM-ddTHH:mm");
+      return;
     }
 
     if (!isValidWeekdayFormat(weekdays)) {
-      throw new IllegalArgumentException(
-              "Invalid weekday format. Expected subset of MTWRFSU"
-      );
+      calendarView.printError("Invalid weekday format. Expected subset of MTWRFSU");
+      return;
     }
 
     selectedCalendar.createEventSeries(
@@ -220,7 +217,7 @@ public class CreateEventCommand extends AbstractCommand {
     String timezone = m.group(2);
 
     if (!isValidZoneId(timezone)) {
-      throw new IllegalArgumentException("Timezone is of invalid format");
+      calendarView.printError("Timezone is of invalid format");
     } else {
       calendarModel.createCalendar(name, ZoneId.of(timezone));
     }

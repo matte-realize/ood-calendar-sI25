@@ -10,6 +10,7 @@ import model.calendar.CalendarManagement;
 import model.enums.EditMode;
 import model.event.Event;
 import model.event.EventInterface;
+import view.CalendarView;
 
 /**
  * A command that extends the abstract command class which allows for the user
@@ -37,6 +38,7 @@ public class EditEventCommand extends AbstractCommand {
   private final String tokensString;
   private final CalendarManagement calendarModel;
   private final Calendar selectedCalendar;
+  private CalendarView calendarView;
 
   /**
    * Constructor for the edit command.
@@ -44,10 +46,11 @@ public class EditEventCommand extends AbstractCommand {
    * @param tokensString  a string that determines the token.
    * @param calendarModel a calendar model.
    */
-  public EditEventCommand(String tokensString, CalendarManagement calendarModel) {
+  public EditEventCommand(String tokensString, CalendarManagement calendarModel, CalendarView calendarView) {
     this.tokensString = "edit" + tokensString;
     this.calendarModel = calendarModel;
     this.selectedCalendar = calendarModel.getSelectedCalendar();
+    this.calendarView = calendarView;
   }
 
   @Override
@@ -63,7 +66,7 @@ public class EditEventCommand extends AbstractCommand {
     } else if ((m = EditCalendar.matcher(tokensString)).matches()) {
       handleEditCalendar(m);
     } else {
-      throw new IllegalArgumentException("Invalid edit command: \"" + tokensString + "\"\n");
+      calendarView.printError("Invalid edit command: \"" + tokensString + "\"\n");
     }
   }
 
@@ -75,15 +78,14 @@ public class EditEventCommand extends AbstractCommand {
     String newValue = m.group(5);
 
     if (!isValidDateTime(from) || !isValidDateTime(to)) {
-      throw new IllegalArgumentException(
-              "Invalid datetime format. Expected format: yyyy-MM-ddTHH:mm"
-      );
+      calendarView.printError("Invalid datetime format. Expected format: yyyy-MM-ddTHH:mm");
+      return;
     }
 
     if (!isValidNewValue(property, newValue)) {
-      throw new IllegalArgumentException(
-              "Invalid new value format. Make sure the new value is of the same type as you are trying to edit"
-      );
+      calendarView.printError("Invalid new value format. Make sure the new "
+              + "value is of the same type as you are trying to edit");
+      return;
     }
 
     selectedCalendar.editEvent(subject, LocalDateTime.parse(from), editEventHelper(subject, from, to, property, newValue), EditMode.SINGLE);
@@ -96,15 +98,14 @@ public class EditEventCommand extends AbstractCommand {
     String newValue = m.group(4);
 
     if (!isValidDateTime(from)) {
-      throw new IllegalArgumentException(
-              "Invalid datetime format. Expected format: yyyy-MM-ddTHH:mm"
-      );
+      calendarView.printError("Invalid datetime format. Expected format: yyyy-MM-ddTHH:mm");
+      return;
     }
 
     if (!isValidNewValue(property, newValue)) {
-      throw new IllegalArgumentException(
-              "Invalid new value format. Make sure the new value is of the same type as you are trying to edit"
-      );
+      calendarView.printError("Invalid new value format. Make sure the new value is of "
+              + "the same type as you are trying to edit");
+      return;
     }
 
     selectedCalendar.editEvent(subject, LocalDateTime.parse(from), editEventHelper(subject, from, null, property, newValue), EditMode.FUTURE);
@@ -117,15 +118,14 @@ public class EditEventCommand extends AbstractCommand {
     String newValue = m.group(4);
 
     if (!isValidDateTime(from)) {
-      throw new IllegalArgumentException(
-              "Invalid datetime format. Expected format: yyyy-MM-ddTHH:mm"
-      );
+      calendarView.printError("Invalid datetime format. Expected format: yyyy-MM-ddTHH:mm");
+      return;
     }
 
     if (!isValidNewValue(property, newValue)) {
-      throw new IllegalArgumentException(
-              "Invalid new value format. Make sure the new value is of the same type as you are trying to edit"
-      );
+      calendarView.printError("Invalid new value format. Make sure the new value "
+              + "is of the same type as you are trying to edit");
+      return;
     }
 
     selectedCalendar.editEvent(subject, LocalDateTime.parse(from), editEventHelper(subject, from, null, property, newValue), EditMode.ALL);
@@ -137,9 +137,9 @@ public class EditEventCommand extends AbstractCommand {
     String newValue = m.group(3);
 
     if (!isValidNewValue(property, newValue)) {
-      throw new IllegalArgumentException(
-              "Invalid new value format. Make sure the new value is of the same type as you are trying to edit"
-      );
+      calendarView.printError("Invalid new value format. Make sure the new value is "
+              + "of the same type as you are trying to edit");
+      return;
     }
 
   }

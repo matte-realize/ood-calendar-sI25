@@ -2,8 +2,11 @@ package calendarModelTests;
 
 import org.junit.Test;
 
+import java.time.LocalDateTime;
+
 import model.enums.Location;
 import model.enums.Status;
+import model.event.EventInterface;
 
 import static org.junit.Assert.assertThrows;
 
@@ -453,6 +456,16 @@ public class CalendarExceptionCreationTest extends AbstractCalendarTest {
 
   @Test
   public void testSameIdentifiers() {
-
+    // event was already created within abstract class for setup
+    assertThrows(IllegalArgumentException.class, () -> {
+      calendar.createEvent(
+              "Wedding",
+              LocalDateTime.of(2025, 6, 10, 0, 0),
+              null,
+              null,
+              null,
+              null
+      );
+    });
   }
 }

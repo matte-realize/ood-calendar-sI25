@@ -39,7 +39,6 @@ public class CalendarManagement {
    * @param timeZone     the time zone for the respective calendar.
    */
   public void createCalendar(String calendarName, ZoneId timeZone) {
-
     for (CalendarModel c : this.calendarModels.values()) {
       if (c.getName().equals(calendarName)) {
         throw new IllegalArgumentException("Calendar already exists with that name!");
@@ -98,5 +97,5 @@ public class CalendarManagement {
 }
 
 
-// handle exceptions + name + ensure subjects != subject
+// handle exceptions + name
 // syntax

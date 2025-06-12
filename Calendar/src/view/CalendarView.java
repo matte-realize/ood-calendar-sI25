@@ -32,4 +32,9 @@ public class CalendarView implements CalendarViewInterface {
   public void printStatus(String status, String day) {
     System.out.println(status + " on " + day);
   }
+
+  @Override
+  public void printError(String message) {
+    System.out.println(message);
+  }
 }

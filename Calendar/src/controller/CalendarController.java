@@ -97,12 +97,12 @@ public class CalendarController implements CalendarControllerInterface {
     switch (command) {
       case "create":
         CreateEventCommand createEvent =
-                new CreateEventCommand(tokensString, calendarModel);
+                new CreateEventCommand(tokensString, calendarModel, calendarView);
         createEvent.execute();
         break;
       case "edit":
         EditEventCommand editEvent =
-                new EditEventCommand(tokensString, calendarModel);
+                new EditEventCommand(tokensString, calendarModel, calendarView);
         editEvent.execute();
         break;
       case "print":
@@ -125,7 +125,7 @@ public class CalendarController implements CalendarControllerInterface {
       case "exit":
         return true;
       default:
-        throw new IllegalArgumentException("Invalid command");
+        calendarView.printError("Invalid command.");
     }
 
     return false;

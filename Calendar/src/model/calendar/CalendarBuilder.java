@@ -19,8 +19,7 @@ public abstract class CalendarBuilder<T extends CalendarBuilder<T>> {
    * @param calendarName the string representing the calendar name.
    * @return a T type based on the name of the calendar.
    */
-  public T setName(String calendarName)
-  {
+  public T setName(String calendarName) {
     this.calendarName = calendarName;
     return this.returnBuilder();
   }
@@ -50,7 +49,7 @@ public abstract class CalendarBuilder<T extends CalendarBuilder<T>> {
   /**
    * The abstract method that allows for the building of an calendar.
    *
-   * @return an CalendarModel taht represents the calendar created.
+   * @return an CalendarModel that represents the calendar created.
    */
   public abstract CalendarModel build();
 

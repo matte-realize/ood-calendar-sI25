@@ -54,7 +54,7 @@ public class QueryEventCommand extends AbstractCommand {
   }
 
   @Override
-  public void execute() throws IllegalArgumentException {
+  public void execute() {
     Matcher m;
 
     if ((m = PrintEvents.matcher(tokensString)).matches()) {
@@ -66,7 +66,7 @@ public class QueryEventCommand extends AbstractCommand {
     } else if ((m = UseCalendar.matcher(tokensString)).matches()) {
       handleUserCalendar(m);
     } else {
-      throw new IllegalArgumentException("Invalid query command: \"" + tokensString + "\"\n");
+      calendarView.printError("Invalid query command: \"" + tokensString + "\"\n");
     }
   }
 
@@ -74,9 +74,8 @@ public class QueryEventCommand extends AbstractCommand {
     String date = m.group(1);
 
     if (!isValidDate(date)) {
-      throw new IllegalArgumentException(
-              "Invalid date format. Expected format: yyyy-MM-dd"
-      );
+      calendarView.printError("Invalid date format. Expected format: yyyy-MM-dd");
+      return;
     }
 
     calendarView.printEvents(
@@ -89,9 +88,8 @@ public class QueryEventCommand extends AbstractCommand {
     String endDate = m.group(2);
 
     if (!isValidDateTime(startDate) || !isValidDateTime(endDate)) {
-      throw new IllegalArgumentException(
-              "Invalid datetime format. Expected format: yyyy-MM-ddTHH:mm"
-      );
+      calendarView.printError("Invalid datetime format. Expected format: yyyy-MM-ddTHH:mm");
+      return;
     }
 
     calendarView.printEvents(
@@ -106,7 +104,8 @@ public class QueryEventCommand extends AbstractCommand {
     String dateTime = m.group(1);
 
     if (!isValidDateTime(dateTime)) {
-      throw new IllegalArgumentException("Invalid datetime format. Expected format: yyyy-MM-ddTHH:mm");
+      calendarView.printError("Invalid datetime format. Expected format: yyyy-MM-ddTHH:mm");
+      return;
     }
 
     List<Event> events = selectedCalendar.getEventsWindow(LocalDateTime.parse(dateTime), LocalDateTime.parse(dateTime));
