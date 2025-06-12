@@ -105,7 +105,12 @@ public abstract class AbstractCommand implements Command {
           return false;
         }
       case "timezone":
-        break;
+        try {
+          ZoneId.of(newValue.trim());
+          return true;
+        } catch (DateTimeException e) {
+          return false;
+        }
       default:
         break;
     }

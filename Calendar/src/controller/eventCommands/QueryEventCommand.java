@@ -65,7 +65,7 @@ public class QueryEventCommand extends AbstractCommand {
     } else if ((m = ShowStatus.matcher(tokensString)).matches()) {
       handleShowStatusOn(m);
     } else if ((m = UseCalendar.matcher(tokensString)).matches()) {
-      handleUserCalendar(m);
+      handelUseCalendar(m);
     } else {
       throw new IllegalArgumentException("Invalid query command: \"" + tokensString + "\"\n");
     }
@@ -118,7 +118,7 @@ public class QueryEventCommand extends AbstractCommand {
     }
   }
 
-  private void handleUserCalendar(Matcher m) {
+  private void handelUseCalendar(Matcher m) {
     String calendarName = m.group(1);
 
     calendarModel.selectCalendar(calendarName);

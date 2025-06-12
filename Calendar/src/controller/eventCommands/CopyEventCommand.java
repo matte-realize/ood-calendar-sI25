@@ -1,9 +1,19 @@
 package controller.eventCommands;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import controller.AbstractCommand;
+import model.calendar.Calendar;
 import model.calendar.CalendarManagement;
+import model.event.Event;
+import model.event.EventInterface;
 
 /**
  * A command that extends the abstract command class which allows for the user
@@ -32,15 +42,110 @@ public class CopyEventCommand extends AbstractCommand {
 
   private final String tokensString;
   private final CalendarManagement calendarModel;
+  private final Calendar selectedCalendar;
 
   public CopyEventCommand(String tokensString, CalendarManagement calendarModel) {
     this.tokensString = "create" + tokensString;
     this.calendarModel = calendarModel;
+    this.selectedCalendar = calendarModel.getSelectedCalendar();
   }
 
   @Override
   public void execute() throws IllegalArgumentException {
 
 
+    Matcher m;
+    if ((m = CopySingleEvent.matcher(tokensString)).matches()) {
+      handleCopyEvent(m);
+    } else if ((m = CopyDayEvents.matcher(tokensString)).matches()) {
+      handleCopyEventsDay(m);
+    } else if ((m = CopyWindowEvents.matcher(tokensString)).matches()) {
+      handleCopyEventsWindow(m);
+    } else {
+      throw new IllegalArgumentException("Invalid command: \"" + tokensString + "\"");
+    }
+
   }
+
+  private void handleCopyEvent(Matcher m) {
+    String eventName = m.group(1);
+    String eventDate = m.group(2);
+    String targetCalendar = m.group(3);
+    String targetDate = m.group(4);
+
+    if (!isValidDateTime(eventDate) || !isValidDateTime(targetDate)) {
+      throw new IllegalArgumentException("Invalid date format");
+    }
+
+    calendarModel.copyEvent(selectedCalendar.getEvent(eventName, LocalDateTime.parse(eventDate), null),
+            targetCalendar,
+            LocalDateTime.parse(targetDate));
+  }
+
+  private void handleCopyEventsDay(Matcher m) {
+    String eventsDate = m.group(1);
+    String targetCalendar = m.group(2);
+    String targetDate = m.group(3);
+
+    if (!isValidDate(eventsDate) || !isValidDate(targetDate)) {
+      throw new IllegalArgumentException("Invalid date format");
+    }
+
+    calendarModel.copyEvents(convertEvents(selectedCalendar.getEventsSingleDay(LocalDate.parse(eventsDate)),
+            LocalDate.parse(targetDate),
+                    calendarModel.getCalendarTimezone(null),
+                    calendarModel.getCalendarTimezone(targetCalendar)),
+            targetCalendar);
+  }
+
+  private void handleCopyEventsWindow(Matcher m) {
+    String eventsStartDate = m.group(1);
+    String eventsEndDate = m.group(2);
+    String targetCalendar = m.group(3);
+    String targetDate = m.group(4);
+
+    if (!isValidDate(eventsStartDate) || !isValidDate(eventsEndDate) || !isValidDate(targetDate)) {
+      throw new IllegalArgumentException("Invalid date format");
+    }
+
+    calendarModel.copyEvents(convertEvents(selectedCalendar.getEventsWindow(LocalDateTime.parse(eventsStartDate + "T00:00"),
+            LocalDateTime.parse(eventsEndDate + "T23:59")),
+            LocalDate.parse(targetDate),
+            calendarModel.getCalendarTimezone(null),
+            calendarModel.getCalendarTimezone(targetCalendar)),
+            targetCalendar);
+  }
+
+  private List<EventInterface> convertEvents(List<Event> events, LocalDate targetDate, ZoneId oldZoneId, ZoneId newZoneId) {
+
+    List<EventInterface> convertedEventList = new ArrayList<>(events.size());
+
+    for (Event event : events) {
+
+      LocalDateTime tempTargetDate = LocalDateTime.of(targetDate, event.getStartDateTime().toLocalTime());
+      ZonedDateTime sourceDateTime = tempTargetDate.atZone(oldZoneId);
+      ZonedDateTime targetDateTime = sourceDateTime.withZoneSameInstant(newZoneId);
+      LocalDateTime targetLocalDateTime = targetDateTime.toLocalDateTime();
+
+      LocalDateTime tempTargetEndDate = LocalDateTime.of(targetDate, event.getEndDateTime().toLocalTime());
+      ZonedDateTime sourceEndDateTime = tempTargetEndDate.atZone(oldZoneId);
+      ZonedDateTime targetEndDateTime = sourceEndDateTime.withZoneSameInstant(newZoneId);
+      LocalDateTime targetEndLocalDateTime = targetEndDateTime.toLocalDateTime();
+
+      EventInterface updatedEvent = new Event.CustomEventBuilder().setSubject(event.getSubject())
+              .setStartDateTime(targetLocalDateTime)
+              .setEndDateTime(targetEndLocalDateTime)
+              .setDescription(event.getDescription())
+              .setLocation(event.getLocation())
+              .setStatus(event.getStatus())
+              .build();
+
+      convertedEventList.add(updatedEvent);
+
+
+    }
+
+    return convertedEventList;
+  }
+
 }

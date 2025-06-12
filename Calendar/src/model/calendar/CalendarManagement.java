@@ -1,8 +1,13 @@
 package model.calendar;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import model.event.EventInterface;
 
 public class CalendarManagement {
   private final Map<String, CalendarModel> calendarModels;
@@ -15,6 +20,18 @@ public class CalendarManagement {
 
   public Calendar getSelectedCalendar() {
     return selectedCalendar;
+  }
+
+  public ZoneId getCalendarTimezone(String calendarName) {
+
+    for (CalendarModel calendarModel : calendarModels.values()) {
+      if (calendarName == null && this.selectedCalendar.equals(calendarModel.getCalendar())) {
+        return calendarModel.getTimeZone();
+      } else if (calendarModel.getName().equals(calendarName)) {
+        return calendarModel.getTimeZone();
+      }
+    }
+    return null;
   }
 
   public void createCalendar(String calendarName, ZoneId timeZone) {
@@ -34,31 +51,113 @@ public class CalendarManagement {
     calendarModels.put(calendarName, newCalendar);
   }
 
-  public void selectCalendar(String calendarName) {
-    CalendarModel calendarModel = calendarModels.get(calendarName);
+  public void selectCalendar(String calendarName) throws IllegalArgumentException {
 
-    if (calendarModel == null) {
-      throw new IllegalArgumentException("Calendar '" + calendarName + "' does not exist.");
+    boolean found = false;
+
+    for (CalendarModel c : this.calendarModels.values()) {
+      if (c.getName().equals(calendarName)) {
+        this.selectedCalendar = c.getCalendar();
+        found = true;
+        break;
+      }
     }
 
-    this.selectedCalendar = calendarModel.getCalendar();
+    if (!found) {
+      throw new IllegalArgumentException("There does not exist a calendar with the name " + calendarName);
+    }
   }
 
-  public void editCalendar(String calendarName,
-                           String updatedCalendarName,
-                           ZoneId updatedZoneId) {
-    CalendarModel calendarToEdit = calendarModels.get(calendarName);
+  public void editCalendar(String calendarName, String property, String newValue) throws IllegalArgumentException {
 
-    CalendarModel.CustomCalendarBuilder builder = new CalendarModel.CustomCalendarBuilder()
-            .setCalendar(calendarToEdit.getCalendar());
+    CalendarModel calenderToUpdate = null;
+    boolean found = false;
+    CalendarModel newCalendar;
 
-    builder.setName(updatedCalendarName);
-    builder.setTimeZone(updatedZoneId);
+    switch (property) {
+      case "name":
+        for (CalendarModel c : this.calendarModels.values()) {
+          if (c.getName().equals(newValue)) {
+            throw new IllegalArgumentException("There already exists a calendar with the name " + newValue);
+          } else if (c.getName().equals(calendarName)) {
+            found = true;
+            calenderToUpdate = c;
+          }
+        }
 
-    CalendarModel updatedCalendar = builder.build();
+        if (!found) {
+          throw new IllegalArgumentException("There does not exist a calendar with the name " + calendarName);
+        }
 
-    calendarModels.remove(calendarName);
-    calendarModels.put(updatedCalendarName, updatedCalendar);
+        newCalendar = new CalendarModel.CustomCalendarBuilder()
+                .setName(newValue)
+                .setTimeZone(calenderToUpdate.getTimeZone())
+                .setCalendar(calenderToUpdate.getCalendar())
+                .build();
+
+        calendarModels.remove(calendarName);
+        calendarModels.put(newValue, newCalendar);
+        break;
+      case "timezone":
+
+        for (CalendarModel c : this.calendarModels.values()) {
+          if (c.getName().equals(calendarName)) {
+            found = true;
+            calenderToUpdate = c;
+          }
+
+          if (!found) {
+            throw new IllegalArgumentException("There does not exist a calendar with the name " + calendarName);
+          }
+
+          calendarModels.remove(calendarName);
+
+          newCalendar = new CalendarModel.CustomCalendarBuilder()
+                  .setName(calendarName)
+                  .setTimeZone(ZoneId.of(newValue))
+                  .setCalendar(calenderToUpdate.getCalendar())
+                  .build();
+
+          calendarModels.put(calendarName, newCalendar);
+        }
+        break;
+      default:
+        throw new IllegalArgumentException("Invalid property " + property);
+    }
+
+  }
+
+  public void copyEvent(EventInterface event, String targetCalendar, LocalDateTime targetDate) {
+
+    for (CalendarModel c : this.calendarModels.values()) {
+
+      if (c.getName().equals(targetCalendar)) {
+        c.getCalendar().createEvent(event.getSubject(),
+                targetDate,
+                null,
+                event.getDescription(),
+                event.getLocation(),
+                event.getStatus());
+      }
+    }
+  }
+
+  public void copyEvents(List<EventInterface> events, String targetCalendar) {
+
+    for (CalendarModel c : this.calendarModels.values()) {
+
+      if (c.getName().equals(targetCalendar)) {
+        for (EventInterface e : events) {
+          c.getCalendar().createEvent(e.getSubject(),
+                  e.getStartDateTime(),
+                  e.getEndDateTime(),
+                  e.getDescription(),
+                  e.getLocation(),
+                  e.getStatus());
+        }
+      }
+    }
+
   }
 }
 
