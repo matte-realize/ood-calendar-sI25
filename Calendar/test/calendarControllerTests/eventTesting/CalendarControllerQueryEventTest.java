@@ -1,8 +1,11 @@
-package calendarControllerTests;
+package calendarControllerTests.eventTesting;
 
 import org.junit.Test;
 
-public class CalendarControllerQueryEventTest extends AbstractControllerTest {
+/**
+ * A JUnit test that tests for the controller being able to query events.
+ */
+public class CalendarControllerQueryEventTest extends AbstractControllerEventTest {
   @Test
   public void testQueryEventsOnADay() {
 

@@ -450,4 +450,9 @@ public class CalendarExceptionCreationTest extends AbstractCalendarTest {
       );
     });
   }
+
+  @Test
+  public void testSameIdentifiers() {
+
+  }
 }

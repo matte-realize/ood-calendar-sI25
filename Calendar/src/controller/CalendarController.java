@@ -12,8 +12,6 @@ import java.io.IOException;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-import javax.management.Query;
-
 /**
  * Controller class that implements the CalendarControllerInterface and
  * acts as the controller for the Calendar in order to be able to process
@@ -24,6 +22,17 @@ public class CalendarController implements CalendarControllerInterface {
   private final CalendarManagement calendarModel;
   private final CalendarView calendarView;
 
+  /**
+   * A calendar constructor for the controller that takes in a
+   * CalendarManagement and CalendarView instance to create a controller
+   * that manages the interactions between the CalendarManagement and
+   * the CalendarView.
+   *
+   * @param calendarModel a calendar management instance that represents the logic
+   *                      for the calendar.
+   * @param calendarView  a calendar view that represents the view for the user to interact
+   *                      with for the calendar.
+   */
   public CalendarController(CalendarManagement calendarModel, CalendarView calendarView) {
     this.calendarModel = calendarModel;
     this.calendarView = calendarView;

@@ -36,7 +36,7 @@ public class QueryEventCommand extends AbstractCommand {
   private final Calendar selectedCalendar;
 
   /**
-   * Constructor for the query event command.
+   * Constructor for the query command.
    *
    * @param tokensString  a string that determines the token.
    * @param command       a string of the command.
@@ -55,7 +55,6 @@ public class QueryEventCommand extends AbstractCommand {
 
   @Override
   public void execute() throws IllegalArgumentException {
-
     Matcher m;
 
     if ((m = PrintEvents.matcher(tokensString)).matches()) {

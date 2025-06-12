@@ -38,6 +38,12 @@ public class EditEventCommand extends AbstractCommand {
   private final CalendarManagement calendarModel;
   private final Calendar selectedCalendar;
 
+  /**
+   * Constructor for the edit command.
+   *
+   * @param tokensString  a string that determines the token.
+   * @param calendarModel a calendar model.
+   */
   public EditEventCommand(String tokensString, CalendarManagement calendarModel) {
     this.tokensString = "edit" + tokensString;
     this.calendarModel = calendarModel;
@@ -46,7 +52,6 @@ public class EditEventCommand extends AbstractCommand {
 
   @Override
   public void execute() throws IllegalArgumentException {
-
     Matcher m;
 
     if ((m = EditSingleEvent.matcher(tokensString)).matches()) {

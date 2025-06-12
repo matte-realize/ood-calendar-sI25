@@ -1,3 +1,13 @@
+create calendar --name EventCalendar --timezone America/New_York
+create calendar --name Paris --timezone Europe/Paris
+create calendar --name Tokyo --timezone Asia/Tokyo
+create calendar --name LosAngeles --timezone America/Los_Angeles
+create calendar --name Harare --timezone Africa/Harare
+
+edit calendar --name LosAngeles --property
+
+use calendar
+
 create event "Event One" from 2025-08-10T09:00 to 2025-08-10T10:00
 create event "Event Two" from 2025-06-10T09:30 to 2025-06-10T11:00
 create event "Event Three" from 2025-06-10T12:00 to 2025-06-10T12:00
@@ -14,8 +24,6 @@ create event "Event Thirteen" on 2025-06-09 repeats MW for 6 times
 create event "Event Fourteen" on 2025-06-14 repeats SU until 2025-08-30
 create event "Event Fifteen" on 2025-06-15 repeats U until 2025-07-01
 
-
-
 print events on 2025-06-10
 print events on 2025-12-25
 print events on 2026-01-01
@@ -23,5 +31,7 @@ print events from 2025-06-10T00:00 to 2025-06-11T00:00
 print events from 2025-06-10T09:00 to 2025-06-10T09:01
 show status on 2025-06-10T09:00
 show status on 2025-06-10T23:59
+
+edit event
 
 exit

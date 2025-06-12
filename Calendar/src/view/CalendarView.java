@@ -10,7 +10,6 @@ import model.event.Event;
  * calendar.
  */
 public class CalendarView implements CalendarViewInterface {
-
   /**
    * Simple constructor for the calendar view.
    */

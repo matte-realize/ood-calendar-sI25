@@ -2,7 +2,13 @@
 
 The program runs through Intellij using the CalendarApp class. After the
 prompt "Type commands to view/edit calendar (type 'exit' to quit):" comes
-up, users will be able to create events using the follow prompts:
+up, users will be able to create calendars using the follow prompt:
+
+- create calendar --name (name of the calendar) --timezone (valid time zone format)
+
+*Valid time zone formats are written in IANA Time Zone database format (eg. America/Chicago).*
+
+events using the follow prompts:
 
 - create event "(name of the event)" from (XXXX-XX-XX)
 - create event "(name of the event)" from (XXXX-XX-XX)T(XX:XX) to (XXXX-XX-XX)T(XX:XX)

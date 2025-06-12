@@ -6,9 +6,8 @@ import model.enums.Location;
 import model.enums.Status;
 
 /**
- * This interface defines all the getters that an event
- * should be supported by, including that of: subject,
- * start time, date time, description, location, and
+ * This interface defines all the getters that an event should be supported by,
+ * including that of: subject, start time, date time, description, location, and
  * status.
  */
 public interface EventInterface {

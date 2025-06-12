@@ -8,7 +8,6 @@ import java.time.ZoneId;
  * distinctly from each other.
  */
 public interface CalendarModelInterface {
-
   /**
    * Gets the name of the calendar.
    *
@@ -24,5 +23,10 @@ public interface CalendarModelInterface {
    */
   ZoneId getTimeZone();
 
+  /**
+   * Gets the calendar for the current instance.
+   *
+   * @return a calendar based on the instance given.
+   */
   Calendar getCalendar();
 }

@@ -1,4 +1,4 @@
-package calendarControllerTests;
+package calendarControllerTests.eventTesting;
 
 import org.junit.Before;
 
@@ -8,7 +8,11 @@ import controller.CalendarController;
 import model.calendar.CalendarManagement;
 import view.CalendarView;
 
-public abstract class AbstractControllerTest {
+/**
+ * An abstract test that sets up the baseline to be used for all controller tests after
+ * creating and entering the calendar for testing the commands for events.
+ */
+public abstract class AbstractControllerEventTest {
   protected CalendarManagement calendarManagement;
   protected CalendarView calendarView;
   protected CalendarController controller;

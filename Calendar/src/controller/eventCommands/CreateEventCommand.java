@@ -57,6 +57,12 @@ public class CreateEventCommand extends AbstractCommand {
   private final CalendarManagement calendarModel;
   private final Calendar selectedCalendar;
 
+  /**
+   * Constructor for the create command.
+   *
+   * @param tokensString  a string that determines the token.
+   * @param calendarModel a calendar model.
+   */
   public CreateEventCommand(String tokensString, CalendarManagement calendarModel) {
     this.tokensString = "create" + tokensString;
     this.calendarModel = calendarModel;
@@ -65,7 +71,6 @@ public class CreateEventCommand extends AbstractCommand {
 
   @Override
   public void execute() throws IllegalArgumentException {
-
     Matcher m;
     if ((m = CreateSingleEvent.matcher(tokensString)).matches()) {
       handleSingleEvent(m, false);
@@ -79,7 +84,7 @@ public class CreateEventCommand extends AbstractCommand {
       handleRepeatingEventNTimes(m, true);
     } else if ((m = AllDayEventSeriesUntil.matcher(tokensString)).matches()) {
       handleRepeatingEventUntil(m, true);
-    } else if ((m= CreateCalendar.matcher(tokensString)).matches()) {
+    } else if ((m = CreateCalendar.matcher(tokensString)).matches()) {
       handleCreateCalendar(m);
     } else {
       throw new IllegalArgumentException("Invalid command: \"" + tokensString + "\"");
@@ -210,7 +215,7 @@ public class CreateEventCommand extends AbstractCommand {
     );
   }
 
-  private void handleCreateCalendar (Matcher m) {
+  private void handleCreateCalendar(Matcher m) {
     String name = m.group(1);
     String timezone = m.group(2);
 
