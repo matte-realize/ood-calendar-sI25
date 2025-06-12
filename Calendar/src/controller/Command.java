@@ -21,6 +21,14 @@ public interface Command {
   boolean isValidDateTime(String input);
 
   /**
+   * Determines a boolean whether the timezone is a valid timezone.
+   *
+   * @param timezone the string of the timezone to be checked.
+   * @return a boolena based on the validity of the given input.
+   */
+  boolean isValidZoneId(String timezone);
+
+  /**
    * '
    * Determines a boolean whether the input is a valid date.
    *

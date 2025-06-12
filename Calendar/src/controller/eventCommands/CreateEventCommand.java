@@ -214,7 +214,7 @@ public class CreateEventCommand extends AbstractCommand {
     String name = m.group(1);
     String timezone = m.group(2);
 
-    if (!isValidDateTime(timezone)) {
+    if (!isValidZoneId(timezone)) {
       throw new IllegalArgumentException("Timezone is of invalid format");
     } else {
       calendarModel.createCalendar(name, ZoneId.of(timezone));

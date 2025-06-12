@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
+import javax.management.Query;
+
 /**
  * Controller class that implements the CalendarControllerInterface and
  * acts as the controller for the Calendar in order to be able to process
@@ -106,6 +108,11 @@ public class CalendarController implements CalendarControllerInterface {
         break;
       case "copy":
 
+      case "use":
+        QueryEventCommand useCalendar =
+                new QueryEventCommand(tokensString, "use", calendarModel, calendarView);
+        useCalendar.execute();
+        break;
       case "exit":
         return true;
       default:

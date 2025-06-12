@@ -30,6 +30,16 @@ public abstract class AbstractCommand implements Command {
   }
 
   @Override
+  public boolean isValidZoneId(String timezone) {
+    try {
+      ZoneId.of(timezone);
+      return true;
+    } catch (DateTimeException e) {
+      return false;
+    }
+  }
+
+  @Override
   public boolean isValidDate(String input) {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     try {

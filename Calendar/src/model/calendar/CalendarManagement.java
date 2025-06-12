@@ -36,6 +36,11 @@ public class CalendarManagement {
 
   public void selectCalendar(String calendarName) {
     CalendarModel calendarModel = calendarModels.get(calendarName);
+
+    if (calendarModel == null) {
+      throw new IllegalArgumentException("Calendar '" + calendarName + "' does not exist.");
+    }
+
     this.selectedCalendar = calendarModel.getCalendar();
   }
 

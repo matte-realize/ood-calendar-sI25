@@ -1,4 +1,4 @@
 package calendarControllerTests;
 
-public class CalendarControllerEditEventTest {
+public class CalendarControllerEditEventTest extends AbstractControllerTest {
 }

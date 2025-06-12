@@ -2,7 +2,7 @@ package calendarControllerTests;
 
 import org.junit.Test;
 
-public class CalendarControllerQueryEventTest {
+public class CalendarControllerQueryEventTest extends AbstractControllerTest {
   @Test
   public void testQueryEventsOnADay() {
 
