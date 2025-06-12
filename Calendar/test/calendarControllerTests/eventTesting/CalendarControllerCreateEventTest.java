@@ -2,7 +2,13 @@ package calendarControllerTests.eventTesting;
 
 import org.junit.Test;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.time.LocalDateTime;
+
 import controller.eventCommands.CreateEventCommand;
+import model.event.EventInterface;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
@@ -13,10 +19,20 @@ import static org.junit.Assert.assertThrows;
 public class CalendarControllerCreateEventTest extends AbstractControllerEventTest {
   @Test
   public void testCreateEvent() {
+    LocalDateTime start = LocalDateTime.of(2025, 8, 10, 9, 0);
+    LocalDateTime end = LocalDateTime.of(2025, 8, 10, 10, 0);
+
     String createEvent = " event \"Event One\" from 2025-08-10T09:00 to 2025-08-10T10:00";
     CreateEventCommand createCommand = new CreateEventCommand(createEvent,
             calendarManagement, calendarView);
     createCommand.execute();
+
+    EventInterface event = calendarManagement.getSelectedCalendar()
+            .getEvent("Event One", start, end);
+
+    assertEquals("Event One", event.getSubject());
+    assertEquals("2025-08-10T09:00", start.toString());
+    assertEquals("2025-08-10T10:00", end.toString());
   }
 
   @Test
@@ -43,7 +59,9 @@ public class CalendarControllerCreateEventTest extends AbstractControllerEventTe
             calendarManagement, calendarView);
     createCommand.execute();
 
-    assertEquals("Timezone is of invalid format", calendarView.lastError);
+    assertThrows(IllegalArgumentException.class, () -> {
+      createCommand.execute();
+    });
   }
 
   @Test

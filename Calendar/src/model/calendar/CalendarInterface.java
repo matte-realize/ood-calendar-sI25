@@ -1,6 +1,7 @@
 package model.calendar;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -94,4 +95,22 @@ public interface CalendarInterface {
   EventInterface getEvent(String subject,
                           LocalDateTime start,
                           LocalDateTime end) throws IllegalArgumentException;
+
+  /**
+   * Returns the events of a single day as a list for retrieval.
+   *
+   * @param date the date given for the retrieval.
+   * @return a list of events for the given day.
+   */
+  List<Event> getEventsSingleDay(LocalDate date);
+
+  /**
+   * Returns the events of a given time window based on the start and end times
+   * as a list for retrieval.
+   *
+   * @param start the starting time for the time window.
+   * @param end   the ending time for the time window.
+   * @return a list of events given through the time window.
+   */
+  List<Event> getEventsWindow(LocalDateTime start, LocalDateTime end);
 }

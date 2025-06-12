@@ -143,7 +143,6 @@ public class EditEventCommand extends AbstractCommand {
     }
 
     calendarModel.editCalendar(name, property, newValue);
-
   }
 
   private EventInterface editEventHelper(String subject, String from, String to, String property, String newValue) {

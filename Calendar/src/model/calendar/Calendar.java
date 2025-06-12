@@ -160,67 +160,88 @@ public class Calendar implements CalendarInterface {
                         EventInterface updatedEvent,
                         EditMode mode) {
     baseExceptions(subject, start);
-    if (updatedEvent == null) {
-      throw new IllegalArgumentException("Updated event cannot be null!");
-    }
+    validateUpdatedEvent(updatedEvent);
 
-    Event targetEvent = null;
-    EventSeries parentSeries = null;
-
-    EventSeries candidateSeries = mapSeries.get(subject);
-    if (candidateSeries != null) {
-      for (Event instance : candidateSeries.getInstances()) {
-        if (instance.getSubject().equals(subject)
-                && instance.getStartDateTime().equals(start)
-        ) {
-          targetEvent = instance;
-          parentSeries = candidateSeries;
-          break;
-        }
-      }
-    }
-
-    if (targetEvent == null) {
-      LocalDate originalDate = start.toLocalDate();
-      List<Event> candidates = eventsByDate.getOrDefault(originalDate, Collections.emptyList());
-      for (Event e : candidates) {
-        if (e.getSubject().equals(subject) && e.getStartDateTime().equals(start)) {
-          targetEvent = e;
-          break;
-        }
-      }
-    }
-
-    if (targetEvent == null) {
-      throw new IllegalArgumentException("Event not found: " + subject + " at " + start);
-    }
+    Event targetEvent = findTargetEvent(subject, start);
+    EventSeries parentSeries = findParentSeries(subject, start, targetEvent);
 
     if (parentSeries == null) {
       eventReplacement(targetEvent, updatedEvent);
       return;
     }
 
+    editEventInSeries(mode, parentSeries, targetEvent, updatedEvent);
+  }
+
+  private void validateUpdatedEvent(EventInterface updatedEvent) {
+    if (updatedEvent == null) {
+      throw new IllegalArgumentException("Updated event cannot be null!");
+    }
+  }
+
+  private Event findTargetEvent(String subject, LocalDateTime start) {
+    Event targetEvent = findEventInSeries(subject, start);
+    if (targetEvent == null) {
+      targetEvent = findEventInDate(subject, start);
+    }
+    if (targetEvent == null) {
+      throw new IllegalArgumentException("Event not found: " + subject + " at " + start);
+    }
+    return targetEvent;
+  }
+
+  private Event findEventInSeries(String subject, LocalDateTime start) {
+    EventSeries candidateSeries = mapSeries.get(subject);
+    if (candidateSeries != null) {
+      for (Event instance : candidateSeries.getInstances()) {
+        if (instance.getSubject().equals(subject) && instance.getStartDateTime().equals(start)) {
+          return instance;
+        }
+      }
+    }
+    return null;
+  }
+
+  private Event findEventInDate(String subject, LocalDateTime start) {
+    LocalDate originalDate = start.toLocalDate();
+    List<Event> candidates = eventsByDate.getOrDefault(originalDate, Collections.emptyList());
+    for (Event e : candidates) {
+      if (e.getSubject().equals(subject) && e.getStartDateTime().equals(start)) {
+        return e;
+      }
+    }
+    return null;
+  }
+
+  private EventSeries findParentSeries(String subject, LocalDateTime start, Event targetEvent) {
+    EventSeries candidateSeries = mapSeries.get(subject);
+    if (candidateSeries != null) {
+      for (Event instance : candidateSeries.getInstances()) {
+        if (instance.equals(targetEvent)) {
+          return candidateSeries;
+        }
+      }
+    }
+    return null;
+  }
+
+  private void editEventInSeries(EditMode mode, EventSeries parentSeries, Event targetEvent, EventInterface updatedEvent) {
     switch (mode) {
       case SINGLE:
         editSingleEventInSeries(parentSeries, targetEvent, updatedEvent);
         break;
-
       case FUTURE:
         editFutureEventsInSeries(parentSeries, targetEvent, updatedEvent);
         break;
-
       case ALL:
         editAllEventsInSeries(parentSeries, updatedEvent);
         break;
-
       default:
         throw new IllegalArgumentException("Unsupported edit mode: " + mode);
     }
   }
 
-  private void editSingleEventInSeries(EventSeries series,
-                                       Event targetEvent,
-                                       EventInterface updatedEvent) {
+  private void editSingleEventInSeries(EventSeries series, Event targetEvent, EventInterface updatedEvent) {
     eventReplacement(targetEvent, updatedEvent);
 
     List<Event> instances = series.getInstances();
@@ -232,9 +253,7 @@ public class Calendar implements CalendarInterface {
     }
   }
 
-  private void editFutureEventsInSeries(EventSeries series,
-                                        Event targetEvent,
-                                        EventInterface updatedEvent) {
+  private void editFutureEventsInSeries(EventSeries series, Event targetEvent, EventInterface updatedEvent) {
     LocalDateTime targetStart = targetEvent.getStartDateTime();
     List<Event> instances = series.getInstances();
 
@@ -280,13 +299,7 @@ public class Calendar implements CalendarInterface {
             template.getEndDateTime()
     );
 
-    Duration newDuration;
-    if (templateDuration.equals(Duration.ZERO)) {
-      newDuration = originalDuration;
-    } else {
-      newDuration = templateDuration;
-    }
-
+    Duration newDuration = templateDuration.isZero() ? originalDuration : templateDuration;
     LocalDateTime newEnd = originalInstance.getStartDateTime().plus(newDuration);
 
     Event.CustomEventBuilder builder = new Event.CustomEventBuilder()
@@ -310,6 +323,7 @@ public class Calendar implements CalendarInterface {
     LocalDate newDate = updatedEvent.getStartDateTime().toLocalDate();
     eventsByDate.computeIfAbsent(newDate, d -> new ArrayList<>()).add((Event) updatedEvent);
   }
+
 
   @Override
   public EventInterface getEvent(String subject,
@@ -336,12 +350,7 @@ public class Calendar implements CalendarInterface {
     return returnEvent;
   }
 
-  /**
-   * Returns the events of a single day as a list for retrieval.
-   *
-   * @param date the date given for the retrieval.
-   * @return a list of events for the given day.
-   */
+  @Override
   public List<Event> getEventsSingleDay(LocalDate date) {
     List<Event> filteredEvents = new ArrayList<>();
     List<Event> allEvents = new ArrayList<>();
@@ -364,14 +373,7 @@ public class Calendar implements CalendarInterface {
     return filteredEvents;
   }
 
-  /**
-   * Returns the events of a given time window based on the start and end times
-   * as a list for retrieval.
-   *
-   * @param start the starting time for the time window.
-   * @param end   the ending time for the time window.
-   * @return a list of events given through the time window.
-   */
+  @Override
   public List<Event> getEventsWindow(LocalDateTime start, LocalDateTime end) {
     List<Event> filteredEvents = new ArrayList<>();
     List<Event> allEvents = new ArrayList<>();
