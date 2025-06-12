@@ -82,6 +82,16 @@ public class Calendar implements CalendarInterface {
                                        Status status) {
     baseExceptions(subject, start);
 
+    for (EventSeries events : mapSeries.values()) {
+      if (events.getSubject().equals(subject) || events.getStartDateTime().equals(start)) {
+        throw new IllegalArgumentException("Subject and start time cannot be the same as an existing series!");
+      }
+    }
+
+    if (end == null) {
+      end = start.toLocalDate().atTime(17, 0);
+    }
+
     if (repeatDays == null || repeatDays.isEmpty()) {
       throw new IllegalArgumentException("Repeat days cannot be null or empty.");
     }
