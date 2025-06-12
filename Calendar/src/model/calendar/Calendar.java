@@ -396,9 +396,9 @@ public class Calendar implements CalendarInterface {
       LocalDateTime eventStart = e.getStartDateTime();
       LocalDateTime eventEnd = e.getEndDateTime();
 
-      if ((eventStart.isAfter(start) && eventStart.isBefore(end))
-              || (eventEnd.isAfter(start) && eventEnd.isBefore(end))
-              || (eventStart.isBefore(start) && eventEnd.isAfter(end))) {
+      if (((eventStart.isAfter(start) || eventStart.isEqual(start)) && (eventStart.isBefore(end) || eventStart.isEqual(end)))
+              || ((eventEnd.isAfter(start) || eventEnd.isEqual(start)) && (eventEnd.isBefore(end) || eventEnd.isEqual(end)))
+              || ((eventStart.isBefore(start) || eventStart.isEqual(start)) && (eventEnd.isAfter(end) || eventEnd.isEqual(end)))) {
         filteredEvents.add(e);
       }
     }

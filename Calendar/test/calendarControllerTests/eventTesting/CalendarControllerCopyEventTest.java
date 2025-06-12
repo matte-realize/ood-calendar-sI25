@@ -19,16 +19,18 @@ public class CalendarControllerCopyEventTest extends AbstractControllerEventTest
 
     createCommand.execute();
 
-    createCalendar = " calendar --name emptyCalendar --timezone Europe/Paris";
+    createCalendar = " calendar --name emptyCalendar --timezone America/New_York";
     createCommand = new CreateEventCommand(createCalendar,
             calendarManagement, calendarView);
 
     createCommand.execute();
+
+    String createEvent
   }
 
   @Test
-  public void testCopyEvents() {
-    String createCalendar = " calendar --name newCalendar --timezone Europe/Paris";
+  public void testCopySingleEvent() {
+    String copyEvent = " event --name newCalendar --timezone Europe/Paris";
     CreateEventCommand createCommand = new CreateEventCommand(createCalendar,
             calendarManagement, calendarView);
 
