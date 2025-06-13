@@ -14,6 +14,7 @@ import model.calendar.Calendar;
 import model.calendar.CalendarManagement;
 import model.event.Event;
 import model.event.EventInterface;
+import view.CalendarView;
 
 /**
  * A command that extends the abstract command class which allows for the user
@@ -21,7 +22,6 @@ import model.event.EventInterface;
  * calendar controller.
  */
 public class CopyEventCommand extends AbstractCommand {
-
   private static final Pattern CopySingleEvent = Pattern.compile(
           "^copy event \"([^\"]+)\" on "
                   + "(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}) --target "
@@ -43,24 +43,24 @@ public class CopyEventCommand extends AbstractCommand {
   private final String tokensString;
   private final CalendarManagement calendarModel;
   private final Calendar selectedCalendar;
-
+  private CalendarView calendarView;
 
   /**
    * A constructor for the copy command.
    *
    * @param tokensString  a string that determines the token.
    * @param calendarModel a calendar model.
+   * @param calendarView  a calendarView
    */
-  public CopyEventCommand(String tokensString, CalendarManagement calendarModel) {
+  public CopyEventCommand(String tokensString, CalendarManagement calendarModel, CalendarView calendarView) {
     this.tokensString = "copy" + tokensString;
     this.calendarModel = calendarModel;
     this.selectedCalendar = calendarModel.getSelectedCalendar();
+    this.calendarView = calendarView;
   }
 
   @Override
   public void execute() throws IllegalArgumentException {
-
-
     Matcher m;
     if ((m = CopySingleEvent.matcher(tokensString)).matches()) {
       handleCopyEvent(m);
@@ -69,9 +69,8 @@ public class CopyEventCommand extends AbstractCommand {
     } else if ((m = CopyWindowEvents.matcher(tokensString)).matches()) {
       handleCopyEventsWindow(m);
     } else {
-      throw new IllegalArgumentException("Invalid command: \"" + tokensString + "\"");
+      calendarView.printError("Invalid command: \"" + tokensString + "\"");
     }
-
   }
 
   private void handleCopyEvent(Matcher m) {
@@ -81,7 +80,8 @@ public class CopyEventCommand extends AbstractCommand {
     String targetDate = m.group(4);
 
     if (!isValidDateTime(eventDate) || !isValidDateTime(targetDate)) {
-      throw new IllegalArgumentException("Invalid date format");
+      calendarView.printError("Invalid date format");
+      return;
     }
 
     calendarModel.copyEvent(selectedCalendar.getEvent(eventName, LocalDateTime.parse(eventDate), null),
@@ -95,11 +95,12 @@ public class CopyEventCommand extends AbstractCommand {
     String targetDate = m.group(3);
 
     if (!isValidDate(eventsDate) || !isValidDate(targetDate)) {
-      throw new IllegalArgumentException("Invalid date format");
+      calendarView.printError("Invalid date format");
+      return;
     }
 
     calendarModel.copyEvents(convertEvents(selectedCalendar.getEventsSingleDay(LocalDate.parse(eventsDate)),
-            LocalDate.parse(targetDate),
+                    LocalDate.parse(targetDate),
                     calendarModel.getCalendarTimezone(null),
                     calendarModel.getCalendarTimezone(targetCalendar)),
             targetCalendar);
@@ -112,14 +113,15 @@ public class CopyEventCommand extends AbstractCommand {
     String targetDate = m.group(4);
 
     if (!isValidDate(eventsStartDate) || !isValidDate(eventsEndDate) || !isValidDate(targetDate)) {
-      throw new IllegalArgumentException("Invalid date format");
+      calendarView.printError("Invalid date format");
+      return;
     }
 
     calendarModel.copyEvents(convertEvents(selectedCalendar.getEventsWindow(LocalDateTime.parse(eventsStartDate + "T00:00"),
-            LocalDateTime.parse(eventsEndDate + "T23:59")),
-            LocalDate.parse(targetDate),
-            calendarModel.getCalendarTimezone(null),
-            calendarModel.getCalendarTimezone(targetCalendar)),
+                            LocalDateTime.parse(eventsEndDate + "T23:59")),
+                    LocalDate.parse(targetDate),
+                    calendarModel.getCalendarTimezone(null),
+                    calendarModel.getCalendarTimezone(targetCalendar)),
             targetCalendar);
   }
 

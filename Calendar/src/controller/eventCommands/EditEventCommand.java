@@ -46,6 +46,7 @@ public class EditEventCommand extends AbstractCommand {
    *
    * @param tokensString  a string that determines the token.
    * @param calendarModel a calendar model.
+   * @param calendarView  a calendar view.
    */
   public EditEventCommand(String tokensString, CalendarManagement calendarModel, CalendarView calendarView) {
     this.tokensString = "edit" + tokensString;

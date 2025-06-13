@@ -64,6 +64,7 @@ public class CreateEventCommand extends AbstractCommand {
    *
    * @param tokensString  a string that determines the token.
    * @param calendarModel a calendar model.
+   * @param calendarView  a calendar view.
    */
   public CreateEventCommand(String tokensString, CalendarManagement calendarModel, CalendarView calendarView) {
     this.tokensString = "create" + tokensString;
