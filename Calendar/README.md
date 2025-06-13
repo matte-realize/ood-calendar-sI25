@@ -49,6 +49,12 @@ using the following prompts:
 *Edited prompt must also follow the correct guideline for edit (eg. editing a timezone still must be in (XXXX-XX-XX)T(XX:XX) format, 
 status can only switch between public and private)*
 
+Users are also able to copy events using the following prompts:
+
+- copy event "(name of the event)" on (XXXX-XX-XX)T(XX:XX) --target (name of the event) to (XXXX-XX-XX)T(XX:XX)
+- copy events on (XXXX-XX-XX)T(XX:XX) --target (name of the event) to (XXXX-XX-XX)T(XX:XX)
+- copy events between (XXXX-XX-XX)T(XX:XX) and (XXXX-XX-XX)T(XX:XX) --target (name of the event) to (XXXX-XX-XX)T(XX:XX)
+
 To use query commands, the following commands are valid:
 
 - print events on (XXXX-XX-XX)

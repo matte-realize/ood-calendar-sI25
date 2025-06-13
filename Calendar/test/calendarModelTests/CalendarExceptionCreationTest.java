@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 
 import model.enums.Location;
 import model.enums.Status;
-import model.event.EventInterface;
 
 import static org.junit.Assert.assertThrows;
 

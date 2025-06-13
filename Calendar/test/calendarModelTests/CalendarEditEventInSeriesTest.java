@@ -22,7 +22,6 @@ import static org.junit.Assert.assertNull;
  * within the Calendar class.
  */
 public class CalendarEditEventInSeriesTest extends AbstractCalendarTest {
-
   @Test
   public void testEditSingleEventInSeries() {
     EventSeries multiDaySeries = calendar.createEventSeries(

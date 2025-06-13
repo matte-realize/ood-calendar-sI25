@@ -1,6 +1,7 @@
 package controller.eventCommands;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -146,9 +147,18 @@ public class EditEventCommand extends AbstractCommand {
   }
 
   private EventInterface editEventHelper(String subject, String from, String to, String property, String newValue) {
+    LocalDateTime startDateTime = LocalDateTime.parse(from);
     LocalDateTime endDateTime = null;
     if (to != null) {
       endDateTime = LocalDateTime.parse(to);
+    } else {
+      List<Event> eventsOnDate = selectedCalendar.getEventsSingleDay(startDateTime.toLocalDate());
+      for (Event e : eventsOnDate) {
+        if (e.getSubject().equals(subject) && e.getStartDateTime().equals(startDateTime)) {
+          endDateTime = e.getEndDateTime();
+          break;
+        }
+      }
     }
 
     try {

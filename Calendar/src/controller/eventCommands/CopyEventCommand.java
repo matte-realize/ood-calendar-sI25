@@ -150,8 +150,6 @@ public class CopyEventCommand extends AbstractCommand {
               .build();
 
       convertedEventList.add(updatedEvent);
-
-
     }
 
     return convertedEventList;

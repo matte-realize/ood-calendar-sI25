@@ -3,9 +3,12 @@ package calendarControllerTests.eventTesting;
 import org.junit.Test;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.time.LocalDateTime;
+import java.util.Scanner;
 
 import controller.eventCommands.CreateEventCommand;
 import model.event.EventInterface;
@@ -37,8 +40,15 @@ public class CalendarControllerCreateEventTest extends AbstractControllerEventTe
 
   @Test
   public void testCreateEventSeriesByRange() {
+    LocalDateTime start1 = LocalDateTime.of(2025, 6, 8, 9, 0);
+    LocalDateTime end1 = LocalDateTime.of(2025, 6, 8, 10, 0);
+    LocalDateTime start2 = LocalDateTime.of(2025, 6, 15, 9, 0);
+    LocalDateTime end2 = LocalDateTime.of(2025, 6, 15, 10, 0);
+    LocalDateTime start3 = LocalDateTime.of(2025, 6, 22, 9, 0);
+    LocalDateTime end3 = LocalDateTime.of(2025, 6, 22, 10, 0);
+
     String createEventSeriesByRange = " event \"Event Nine\" from 2025-06-08T08:00 to 2025-06-08T09:00"
-            + " repeats U until 2025-07-01";
+            + " repeats U until 2025-06-22";
     CreateEventCommand createCommand = new CreateEventCommand(createEventSeriesByRange,
             calendarManagement, calendarView);
     createCommand.execute();
@@ -82,5 +92,24 @@ public class CalendarControllerCreateEventTest extends AbstractControllerEventTe
     assertThrows(IllegalArgumentException.class, () -> {
       createCommand2.execute();
     });
+  }
+  @Test
+  public void testInvalidWeekday() {
+    String invalidWeekday = " event \"Event Nine\" from 2025-06-08T08:00 to 2025-06-08T09:00"
+            + " repeats a until 2025-07-01";
+    CreateEventCommand createCommand = new CreateEventCommand(invalidWeekday,
+            calendarManagement, calendarView);
+    createCommand.execute();
+
+    String simulatedInput = "Invalid command: create event \"Event Nine\" from 2025-06-08T08:00 to "
+            + "2025-06-08T09:00 repeats a until 2025-07-01\n";
+    InputStream in = new ByteArrayInputStream(simulatedInput.getBytes());
+    System.setIn(in);
+    Scanner scanner = new Scanner(System.in);
+    String firstLine = scanner.nextLine();
+    scanner.close();
+
+    assertEquals("Invalid command: create event \"Event Nine\" from 2025-06-08T08:00 to "
+                        + "2025-06-08T09:00 repeats a until 2025-07-01", firstLine);
   }
 }

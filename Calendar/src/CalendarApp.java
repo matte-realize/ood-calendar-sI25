@@ -9,7 +9,7 @@ import view.CalendarView;
 public class CalendarApp {
   /**
    * The main function for the calendar.
-   * @param args takes in string argumnets to execute commands.
+   * @param args takes in string arguments to execute commands.
    */
   public static void main(String[] args) {
 
