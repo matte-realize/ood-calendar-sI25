@@ -113,7 +113,7 @@ public class CalendarController implements CalendarControllerInterface {
         break;
       case "copy":
         CopyEventCommand copyEvent =
-                new CopyEventCommand(tokensString, calendarModel);
+                new CopyEventCommand(tokensString, calendarModel, calendarView);
         copyEvent.execute();
       case "use":
         QueryCommand useCalendar =

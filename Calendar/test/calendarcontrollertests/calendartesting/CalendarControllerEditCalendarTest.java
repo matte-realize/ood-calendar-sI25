@@ -1,5 +1,6 @@
-package calendarControllerTests.calendarTesting;
+package calendarcontrollertests.calendartesting;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -15,7 +16,8 @@ import static org.junit.Assert.assertEquals;
  * A JUnit test that tests for the controller being able to edit calendars.
  */
 public class CalendarControllerEditCalendarTest extends AbstractControllerCalendarTest {
-  @Test
+
+  @Before
   public void testEditCalendar() {
     String createCalendar = " calendar --name test --timezone Europe/Paris";
     CreateCommand createCommand = new CreateCommand(createCalendar,

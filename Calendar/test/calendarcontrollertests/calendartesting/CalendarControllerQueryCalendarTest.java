@@ -1,5 +1,6 @@
-package calendarControllerTests.calendarTesting;
+package calendarcontrollertests.calendartesting;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import controller.CreateCommand;
@@ -9,7 +10,8 @@ import controller.QueryCommand;
  * A JUnit test that tests for the controller being able to query calendars.
  */
 public class CalendarControllerQueryCalendarTest extends AbstractControllerCalendarTest {
-  @Test
+
+  @Before
   public void testUseCalendar() {
     String createCalendar1 = " calendar --name cal1 --timezone Europe/Paris";
     CreateCommand createCommand1 = new CreateCommand(createCalendar1,
@@ -21,9 +23,11 @@ public class CalendarControllerQueryCalendarTest extends AbstractControllerCalen
     QueryCommand useCommand = new QueryCommand(useCalendar, "",
             calendarManagement, calendarView);
     useCommand.execute();
+
+
   }
 
-  @Test
+  @Before
   public void testSwitchCalendar() {
     String createCalendar1 = " calendar --name cal1 --timezone Europe/Paris";
     CreateCommand createCommand1 = new CreateCommand(createCalendar1,

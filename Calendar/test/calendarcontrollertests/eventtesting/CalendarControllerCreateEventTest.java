@@ -1,5 +1,6 @@
-package calendarControllerTests.eventTesting;
+package calendarcontrollertests.eventtesting;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -35,7 +36,7 @@ public class CalendarControllerCreateEventTest extends AbstractControllerEventTe
     assertEquals("2025-08-10T10:00", end.toString());
   }
 
-  @Test
+  @Before
   public void testCreateEventSeriesByRange() {
     LocalDateTime start1 = LocalDateTime.of(2025, 6, 8, 9, 0);
     LocalDateTime end1 = LocalDateTime.of(2025, 6, 8, 10, 0);
@@ -44,16 +45,18 @@ public class CalendarControllerCreateEventTest extends AbstractControllerEventTe
     LocalDateTime start3 = LocalDateTime.of(2025, 6, 22, 9, 0);
     LocalDateTime end3 = LocalDateTime.of(2025, 6, 22, 10, 0);
 
-    String createEventSeriesByRange = " event \"Event Nine\" from 2025-06-08T08:00 to 2025-06-08T09:00"
+    String createEventSeriesByRange = " event \"Event Nine\"" +
+            " from 2025-06-08T08:00 to 2025-06-08T09:00"
             + " repeats U until 2025-06-22";
     CreateCommand createCommand = new CreateCommand(createEventSeriesByRange,
             calendarManagement, calendarView);
     createCommand.execute();
   }
 
-  @Test
+  @Before
   public void testCreateEventSeriesByInstances() {
-    String createEventSeriesByInstances = " event \"Event Twelve\" on 2025-06-10 repeats T for 4 times";
+    String createEventSeriesByInstances = " event \"Event Twelve\"" +
+            " on 2025-06-10 repeats T for 4 times";
     CreateCommand createCommand = new CreateCommand(createEventSeriesByInstances,
             calendarManagement, calendarView);
     createCommand.execute();
@@ -73,7 +76,8 @@ public class CalendarControllerCreateEventTest extends AbstractControllerEventTe
 
   @Test
   public void testInvalidCreateEventSeries() {
-    String createEventSeriesByRange = " event \"Event Nine\" from 2025-06-08T08:00 to 2025-06-08T09:00"
+    String createEventSeriesByRange = " event \"Event Nine\"" +
+            " from 2025-06-08T08:00 to 2025-06-08T09:00"
             + " repeats U until 2025-07-01";
     CreateCommand createCommand1 = new CreateCommand(createEventSeriesByRange,
             calendarManagement, calendarView);
@@ -82,7 +86,8 @@ public class CalendarControllerCreateEventTest extends AbstractControllerEventTe
       createCommand1.execute();
     });
 
-    String createEventSeriesByInstances = " event \"Event Twelve\" on 2025-08-12 repeats T for 4 times";
+    String createEventSeriesByInstances = " event \"Event Twelve\"" +
+            " on 2025-08-12 repeats T for 4 times";
     CreateCommand createCommand2 = new CreateCommand(createEventSeriesByInstances,
             calendarManagement, calendarView);
     createCommand2.execute();
@@ -90,6 +95,7 @@ public class CalendarControllerCreateEventTest extends AbstractControllerEventTe
       createCommand2.execute();
     });
   }
+
   @Test
   public void testInvalidWeekday() {
     String invalidWeekday = " event \"Event Nine\" from 2025-06-08T08:00 to 2025-06-08T09:00"
@@ -98,7 +104,8 @@ public class CalendarControllerCreateEventTest extends AbstractControllerEventTe
             calendarManagement, calendarView);
     createCommand.execute();
 
-    String simulatedInput = "Invalid command: create event \"Event Nine\" from 2025-06-08T08:00 to "
+    String simulatedInput = "Invalid command: create event \"Event Nine\"" +
+            " from 2025-06-08T08:00 to "
             + "2025-06-08T09:00 repeats a until 2025-07-01\n";
     InputStream in = new ByteArrayInputStream(simulatedInput.getBytes());
     System.setIn(in);

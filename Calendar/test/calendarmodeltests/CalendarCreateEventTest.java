@@ -1,4 +1,4 @@
-package calendarModelTests;
+package calendarmodeltests;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -43,8 +43,10 @@ public class CalendarCreateEventTest {
             null
     );
 
-    String expectedWeddingDateStartTime = LocalDateTime.of(2025, 6, 10, 8, 0).toString();
-    String expectedWeddingDateEndTime = LocalDateTime.of(2025, 6, 10, 17, 0).toString();
+    String expectedWeddingDateStartTime = LocalDateTime.of(2025, 6, 10,
+            8, 0).toString();
+    String expectedWeddingDateEndTime = LocalDateTime.of(2025, 6, 10,
+            17, 0).toString();
 
     assertNotNull(allDayEvent);
     assertEquals("Wedding", allDayEvent.getSubject());
@@ -52,7 +54,7 @@ public class CalendarCreateEventTest {
     assertEquals(expectedWeddingDateEndTime, allDayEvent.getEndDateTime().toString());
 
     EventInterface detailedEvent = calendar.createEvent(
-      "Meeting",
+            "Meeting",
             LocalDateTime.of(2025, 7, 14, 9, 0),
             LocalDateTime.of(2025, 7, 14, 10, 0),
             "Discussion about ethics.",
@@ -60,8 +62,10 @@ public class CalendarCreateEventTest {
             Status.PRIVATE
     );
 
-    String expectedDetailedStartDateTime = LocalDateTime.of(2025, 7, 14, 9, 0).toString();
-    String expectedDetailedEndDateTime = LocalDateTime.of(2025, 7, 14, 10, 0).toString();
+    String expectedDetailedStartDateTime = LocalDateTime.of(2025, 7, 14,
+            9, 0).toString();
+    String expectedDetailedEndDateTime = LocalDateTime.of(2025, 7, 14,
+            10, 0).toString();
 
     assertNotNull(detailedEvent);
     assertEquals("Wedding", allDayEvent.getSubject());

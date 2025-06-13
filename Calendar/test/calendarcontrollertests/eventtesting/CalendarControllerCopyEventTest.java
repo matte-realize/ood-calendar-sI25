@@ -1,4 +1,4 @@
-package calendarControllerTests.eventTesting;
+package calendarcontrollertests.eventtesting;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -57,7 +57,8 @@ public class CalendarControllerCopyEventTest extends AbstractControllerEventTest
 
   @Test
   public void testCopySingleEvent() {
-    String copyEvent = " event \"Test Event 1\" on 2005-12-12T08:00 --target emptyCalendar to 2005-12-14T10:00";
+    String copyEvent = " event \"Test Event 1\" on 2005-12-12T08:00 " +
+            "--target emptyCalendar to 2005-12-14T10:00";
     CopyEventCommand copyEventCommand = new CopyEventCommand(copyEvent,
             calendarManagement, calendarView);
 

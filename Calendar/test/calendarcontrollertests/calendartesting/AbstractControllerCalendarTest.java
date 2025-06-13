@@ -1,18 +1,16 @@
-package calendarControllerTests.eventTesting;
+package calendarcontrollertests.calendartesting;
 
 import org.junit.Before;
-
-import java.time.ZoneId;
 
 import controller.CalendarController;
 import model.calendar.CalendarManagement;
 import view.CalendarView;
 
 /**
- * An abstract test that sets up the baseline to be used for all controller tests after
- * creating and entering the calendar for testing the commands for events.
+ * An abstract test that sets up the baseline with the calendar management and view
+ * to be used for all controller tests for calendar commands.
  */
-public abstract class AbstractControllerEventTest {
+public abstract class AbstractControllerCalendarTest {
   protected CalendarManagement calendarManagement;
   protected CalendarView calendarView;
   protected CalendarController controller;
@@ -22,8 +20,5 @@ public abstract class AbstractControllerEventTest {
     calendarManagement = new CalendarManagement();
     calendarView = new CalendarView();
     controller = new CalendarController(calendarManagement, calendarView);
-
-    calendarManagement.createCalendar("test", ZoneId.of("America/New_York"));
-    calendarManagement.selectCalendar("test");
   }
 }

@@ -1,14 +1,22 @@
-package calendarControllerTests.eventTesting;
+package calendarcontrollertests.eventtesting;
 
+import org.junit.Before;
 import org.junit.Test;
+
+import java.time.LocalDate;
+import java.util.List;
 
 import controller.CreateCommand;
 import controller.EditCommand;
+import model.event.Event;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * A JUnit test that tests for the controller being able to edit events.
  */
 public class CalendarControllerEditEventTest extends AbstractControllerEventTest {
+
   @Test
   public void testEditSingleEvent() {
     String createEvent = " event \"Event One\" from 2025-08-10T09:00 to 2025-08-10T10:00";
@@ -21,6 +29,11 @@ public class CalendarControllerEditEventTest extends AbstractControllerEventTest
     EditCommand editCommand = new EditCommand(editEvent,
             calendarManagement, calendarView);
     editCommand.execute();
+
+    List<Event> events = calendarManagement
+            .getSelectedCalendar().getEventsSingleDay(LocalDate.parse("2025-08-10"));
+
+    assertEquals("Edited Event One", events.get(0).getSubject());
   }
 
   @Test
@@ -31,11 +44,16 @@ public class CalendarControllerEditEventTest extends AbstractControllerEventTest
             calendarManagement, calendarView);
     createCommand.execute();
 
-    String editEventSeriesIncludingAndFuture = "edit series subject \"Event Five\" "
+    String editEventSeriesIncludingAndFuture = " series subject \"Event Five\" "
             + "from 2025-06-09T07:00 with edit";
     EditCommand editCommand = new EditCommand(editEventSeriesIncludingAndFuture,
             calendarManagement, calendarView);
     editCommand.execute();
+
+    List<Event> events = calendarManagement
+            .getSelectedCalendar().getEventsSingleDay(LocalDate.parse("2025-06-09"));
+
+    assertEquals("edit", events.get(0).getSubject());
   }
 
   @Test
@@ -46,9 +64,14 @@ public class CalendarControllerEditEventTest extends AbstractControllerEventTest
             calendarManagement, calendarView);
     createCommand.execute();
 
-    String editEventSeriesAll = "edit events subject \"edit\" from 2025-06-16T07:00 with edit2";
+    String editEventSeriesAll = " events subject \"Event Five\" from 2025-06-16T07:00 with edit2";
     EditCommand editCommand = new EditCommand(editEventSeriesAll,
             calendarManagement, calendarView);
     editCommand.execute();
+
+    List<Event> events = calendarManagement
+            .getSelectedCalendar().getEventsSingleDay(LocalDate.parse("2025-06-16"));
+
+    assertEquals("edit2", events.get(0).getSubject());
   }
 }
