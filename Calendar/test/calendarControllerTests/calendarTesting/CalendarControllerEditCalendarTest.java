@@ -6,8 +6,8 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Scanner;
 
-import controller.eventCommands.CreateEventCommand;
-import controller.eventCommands.EditEventCommand;
+import controller.CreateCommand;
+import controller.EditCommand;
 
 import static org.junit.Assert.assertEquals;
 
@@ -18,27 +18,27 @@ public class CalendarControllerEditCalendarTest extends AbstractControllerCalend
   @Test
   public void testEditCalendar() {
     String createCalendar = " calendar --name test --timezone Europe/Paris";
-    CreateEventCommand createCommand = new CreateEventCommand(createCalendar,
+    CreateCommand createCommand = new CreateCommand(createCalendar,
             calendarManagement, calendarView);
     createCommand.execute();
 
     String editCalendar = " calendar --name test --property name \"test_edit\"";
-    EditEventCommand editEventCommand = new EditEventCommand(editCalendar,
+    EditCommand editCommand = new EditCommand(editCalendar,
             calendarManagement, calendarView);
-    editEventCommand.execute();
+    editCommand.execute();
   }
 
   @Test
   public void testInvalidEditOnCalendar() {
     String createCalendar = " calendar --name test --timezone Europe/Paris";
-    CreateEventCommand createCommand = new CreateEventCommand(createCalendar,
+    CreateCommand createCommand = new CreateCommand(createCalendar,
             calendarManagement, calendarView);
     createCommand.execute();
 
     String editCalendar = " calendar --name test --property timezone \"test_edit\"";
-    EditEventCommand editEventCommand = new EditEventCommand(editCalendar,
+    EditCommand editCommand = new EditCommand(editCalendar,
             calendarManagement, calendarView);
-    editEventCommand.execute();
+    editCommand.execute();
 
     String simulatedInput = "Invalid new value format. Make sure the new value "
             + "is of the same type as you are trying to edit\n";

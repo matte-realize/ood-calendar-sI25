@@ -2,15 +2,12 @@ package calendarControllerTests.eventTesting;
 
 import org.junit.Test;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.time.LocalDateTime;
 import java.util.Scanner;
 
-import controller.eventCommands.CreateEventCommand;
+import controller.CreateCommand;
 import model.event.EventInterface;
 
 import static org.junit.Assert.assertEquals;
@@ -26,7 +23,7 @@ public class CalendarControllerCreateEventTest extends AbstractControllerEventTe
     LocalDateTime end = LocalDateTime.of(2025, 8, 10, 10, 0);
 
     String createEvent = " event \"Event One\" from 2025-08-10T09:00 to 2025-08-10T10:00";
-    CreateEventCommand createCommand = new CreateEventCommand(createEvent,
+    CreateCommand createCommand = new CreateCommand(createEvent,
             calendarManagement, calendarView);
     createCommand.execute();
 
@@ -49,7 +46,7 @@ public class CalendarControllerCreateEventTest extends AbstractControllerEventTe
 
     String createEventSeriesByRange = " event \"Event Nine\" from 2025-06-08T08:00 to 2025-06-08T09:00"
             + " repeats U until 2025-06-22";
-    CreateEventCommand createCommand = new CreateEventCommand(createEventSeriesByRange,
+    CreateCommand createCommand = new CreateCommand(createEventSeriesByRange,
             calendarManagement, calendarView);
     createCommand.execute();
   }
@@ -57,7 +54,7 @@ public class CalendarControllerCreateEventTest extends AbstractControllerEventTe
   @Test
   public void testCreateEventSeriesByInstances() {
     String createEventSeriesByInstances = " event \"Event Twelve\" on 2025-06-10 repeats T for 4 times";
-    CreateEventCommand createCommand = new CreateEventCommand(createEventSeriesByInstances,
+    CreateCommand createCommand = new CreateCommand(createEventSeriesByInstances,
             calendarManagement, calendarView);
     createCommand.execute();
   }
@@ -65,7 +62,7 @@ public class CalendarControllerCreateEventTest extends AbstractControllerEventTe
   @Test
   public void testInvalidCreateEvent() {
     String createEvent = " event \"Event One\" from 2025-08-10T09:00 to 2025-08-10T10:00";
-    CreateEventCommand createCommand = new CreateEventCommand(createEvent,
+    CreateCommand createCommand = new CreateCommand(createEvent,
             calendarManagement, calendarView);
     createCommand.execute();
 
@@ -78,7 +75,7 @@ public class CalendarControllerCreateEventTest extends AbstractControllerEventTe
   public void testInvalidCreateEventSeries() {
     String createEventSeriesByRange = " event \"Event Nine\" from 2025-06-08T08:00 to 2025-06-08T09:00"
             + " repeats U until 2025-07-01";
-    CreateEventCommand createCommand1 = new CreateEventCommand(createEventSeriesByRange,
+    CreateCommand createCommand1 = new CreateCommand(createEventSeriesByRange,
             calendarManagement, calendarView);
     createCommand1.execute();
     assertThrows(IllegalArgumentException.class, () -> {
@@ -86,7 +83,7 @@ public class CalendarControllerCreateEventTest extends AbstractControllerEventTe
     });
 
     String createEventSeriesByInstances = " event \"Event Twelve\" on 2025-08-12 repeats T for 4 times";
-    CreateEventCommand createCommand2 = new CreateEventCommand(createEventSeriesByInstances,
+    CreateCommand createCommand2 = new CreateCommand(createEventSeriesByInstances,
             calendarManagement, calendarView);
     createCommand2.execute();
     assertThrows(IllegalArgumentException.class, () -> {
@@ -97,7 +94,7 @@ public class CalendarControllerCreateEventTest extends AbstractControllerEventTe
   public void testInvalidWeekday() {
     String invalidWeekday = " event \"Event Nine\" from 2025-06-08T08:00 to 2025-06-08T09:00"
             + " repeats a until 2025-07-01";
-    CreateEventCommand createCommand = new CreateEventCommand(invalidWeekday,
+    CreateCommand createCommand = new CreateCommand(invalidWeekday,
             calendarManagement, calendarView);
     createCommand.execute();
 

@@ -1,10 +1,5 @@
 package controller;
 
-import controller.eventCommands.CopyEventCommand;
-import controller.eventCommands.CreateEventCommand;
-import controller.eventCommands.EditEventCommand;
-import controller.eventCommands.QueryEventCommand;
-import model.calendar.Calendar;
 import model.calendar.CalendarManagement;
 import view.CalendarView;
 
@@ -97,23 +92,23 @@ public class CalendarController implements CalendarControllerInterface {
   private boolean processCommand(String command, String tokensString) throws IllegalArgumentException {
     switch (command) {
       case "create":
-        CreateEventCommand createEvent =
-                new CreateEventCommand(tokensString, calendarModel, calendarView);
+        CreateCommand createEvent =
+                new CreateCommand(tokensString, calendarModel, calendarView);
         createEvent.execute();
         break;
       case "edit":
-        EditEventCommand editEvent =
-                new EditEventCommand(tokensString, calendarModel, calendarView);
+        EditCommand editEvent =
+                new EditCommand(tokensString, calendarModel, calendarView);
         editEvent.execute();
         break;
       case "print":
-        QueryEventCommand printEvent =
-                new QueryEventCommand(tokensString, "print", calendarModel, calendarView);
+        QueryCommand printEvent =
+                new QueryCommand(tokensString, "print", calendarModel, calendarView);
         printEvent.execute();
         break;
       case "show":
-        QueryEventCommand showStatus =
-                new QueryEventCommand(tokensString, "show", calendarModel, calendarView);
+        QueryCommand showStatus =
+                new QueryCommand(tokensString, "show", calendarModel, calendarView);
         showStatus.execute();
         break;
       case "copy":
@@ -121,8 +116,8 @@ public class CalendarController implements CalendarControllerInterface {
                 new CopyEventCommand(tokensString, calendarModel);
         copyEvent.execute();
       case "use":
-        QueryEventCommand useCalendar =
-                new QueryEventCommand(tokensString, "use", calendarModel, calendarView);
+        QueryCommand useCalendar =
+                new QueryCommand(tokensString, "use", calendarModel, calendarView);
         useCalendar.execute();
         break;
       case "exit":

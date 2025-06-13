@@ -1,4 +1,4 @@
-package controller.eventCommands;
+package controller;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import controller.AbstractCommand;
 import model.calendar.Calendar;
 import model.calendar.CalendarManagement;
 import model.event.Event;
@@ -16,7 +15,7 @@ import view.CalendarView;
  * A command that extends the abstract command class which allows for the user
  * to be able to query events through the calendar controller.
  */
-public class QueryEventCommand extends AbstractCommand {
+public class QueryCommand extends AbstractCommand {
   private static final Pattern PrintEvents = Pattern.compile(
           "^print events on (\\d{4}-\\d{2}-\\d{2})$");
 
@@ -43,10 +42,10 @@ public class QueryEventCommand extends AbstractCommand {
    * @param calendarModel a calendar model.
    * @param calendarView  the calendar view.
    */
-  public QueryEventCommand(String tokensString,
-                           String command,
-                           CalendarManagement calendarModel,
-                           CalendarView calendarView) {
+  public QueryCommand(String tokensString,
+                      String command,
+                      CalendarManagement calendarModel,
+                      CalendarView calendarView) {
     this.tokensString = command + tokensString;
     this.calendarModel = calendarModel;
     this.calendarView = calendarView;

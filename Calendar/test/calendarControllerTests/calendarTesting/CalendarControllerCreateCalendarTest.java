@@ -6,7 +6,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Scanner;
 
-import controller.eventCommands.CreateEventCommand;
+import controller.CreateCommand;
 
 import static org.junit.Assert.assertEquals;
 
@@ -17,7 +17,7 @@ public class CalendarControllerCreateCalendarTest extends AbstractControllerCale
   @Test
   public void testCreateCalendar() {
     String createCalendar = " calendar --name test --timezone Europe/Paris";
-    CreateEventCommand createCommand = new CreateEventCommand(createCalendar,
+    CreateCommand createCommand = new CreateCommand(createCalendar,
             calendarManagement, calendarView);
 
     createCommand.execute();
@@ -27,7 +27,7 @@ public class CalendarControllerCreateCalendarTest extends AbstractControllerCale
   public void testInvalidNameCreateCalendar() {
     String invalidTimeZone = " calendar --name invalid --timezone America/Shanghai";
 
-    CreateEventCommand createCommand1 = new CreateEventCommand(invalidTimeZone,
+    CreateCommand createCommand1 = new CreateCommand(invalidTimeZone,
             calendarManagement, calendarView);
 
     String simulatedInput = "Timezone is of invalid format\n";
@@ -48,7 +48,7 @@ public class CalendarControllerCreateCalendarTest extends AbstractControllerCale
   public void testInvalidTimeZoneCreateCalendar() {
     String invalidTimeZone = " calendar --name invalid --timezone America/Shanghai";
 
-    CreateEventCommand createCommand1 = new CreateEventCommand(invalidTimeZone,
+    CreateCommand createCommand1 = new CreateCommand(invalidTimeZone,
             calendarManagement, calendarView);
 
     String simulatedInput = "Timezone is of invalid format\n";

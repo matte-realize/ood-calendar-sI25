@@ -1,4 +1,4 @@
-package controller.eventCommands;
+package controller;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import controller.AbstractCommand;
 import model.calendar.Calendar;
 import model.calendar.CalendarManagement;
 import view.CalendarView;
@@ -21,7 +20,7 @@ import view.CalendarView;
  * to be able to create events through single events or a series through the
  * calendar controller.
  */
-public class CreateEventCommand extends AbstractCommand {
+public class CreateCommand extends AbstractCommand {
   private static final Pattern CreateSingleEvent = Pattern.compile(
           "^create event \"([^\"]+)\" from "
                   + "(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}) to "
@@ -66,7 +65,7 @@ public class CreateEventCommand extends AbstractCommand {
    * @param calendarModel a calendar model.
    * @param calendarView  a calendar view.
    */
-  public CreateEventCommand(String tokensString, CalendarManagement calendarModel, CalendarView calendarView) {
+  public CreateCommand(String tokensString, CalendarManagement calendarModel, CalendarView calendarView) {
     this.tokensString = "create" + tokensString;
     this.calendarModel = calendarModel;
     this.selectedCalendar = calendarModel.getSelectedCalendar();
