@@ -22,7 +22,7 @@ public class CalendarModel implements CalendarModelInterface {
   public CalendarModel(String name, ZoneId timeZone) {
     this.name = name;
     this.timeZone = timeZone;
-    this.calendar = calendar;
+    this.calendar = new Calendar();
   }
 
   @Override

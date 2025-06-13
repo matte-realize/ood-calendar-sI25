@@ -154,7 +154,6 @@ public class CreateEventCommand extends AbstractCommand {
       return;
     }
 
-
     selectedCalendar.createEventSeries(
             subject,
             LocalDateTime.parse(start),

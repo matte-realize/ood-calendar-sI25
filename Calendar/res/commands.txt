@@ -1,20 +1,26 @@
+Creating calendars:
 create calendar --name EventCalendar --timezone America/New_York
 create calendar --name Paris --timezone Europe/Paris
 create calendar --name Tokyo --timezone Asia/Tokyo
 create calendar --name Los_Angeles --timezone America/Los_Angeles
 create calendar --name Harare --timezone Africa/Harare
 
+Using Paris calendar and creating events:
 use calendar --name Paris
 create event "Event One" from 2025-08-10T09:00 to 2025-08-10T10:00
 print events on 2025-08-10
 show status on 2025-08-10T09:00
 
+Editing EventCalendar's name property:
 edit calendar --name EventCalendar --property name "NY"
 
+Switching calendar use:
 use calendar --name NY
 
+Displays different calendar with no event on the same date as Paris calendar:
 print events on 2025-08-10
 
+Creating events within NY calendar:
 create event "Event One" from 2025-08-10T09:00 to 2025-08-10T10:00
 create event "Event Two" from 2025-06-10T09:30 to 2025-06-10T11:00
 create event "Event Three" from 2025-06-10T12:00 to 2025-06-10T12:00
@@ -31,6 +37,7 @@ create event "Event Thirteen" on 2025-06-09 repeats MW for 6 times
 create event "Event Fourteen" on 2025-06-14 repeats SU until 2025-08-30
 create event "Event Fifteen" on 2025-06-15 repeats U until 2025-07-01
 
+Displaying events within NY calendar:
 print events on 2025-08-10
 print events on 2025-06-10
 print events on 2025-12-25
@@ -41,18 +48,10 @@ print events from 2025-06-09T00:00 to 2025-06-25T00:00
 show status on 2025-06-10T09:00
 show status on 2025-06-10T23:59
 
+Editing events:
 edit event subject "Event One" from 2025-08-10T09:00 to 2025-08-10T10:00 with Edited Event One
-print events on 2025-08-10
 
-edit series subject "Event Five" from 2025-06-09T07:00 with edit
-print events from 2025-06-09T07:00 to 2025-06-25T08:00
-
-edit events subject "Event Six" from 2025-06-17T10:00 with future
-print events from 2025-06-10T07:00 to 2025-06-24T08:00
-
-edit events subject "edit" from 2025-06-16T07:00 with edit2
-print events from 2025-06-09T07:00 to 2025-06-25T08:00
-
+Displaying edited events:
 print events on 2025-08-10
 show status on 2025-08-10
 
