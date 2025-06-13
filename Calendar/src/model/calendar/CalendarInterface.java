@@ -70,8 +70,9 @@ public interface CalendarInterface {
   ) throws IllegalArgumentException;
 
   /**
-   * Edits a single event and applies modifications
-   * whether it's an independent event or part of a series.
+   * Edits a single event, part of an event series, or the event series and applies
+   * modifications whether it's an independent event or part of a series based on
+   * the edit mode.
    *
    * @param subject      the subject provided that uniquely identifies an event.
    * @param start        the starting time for the event.

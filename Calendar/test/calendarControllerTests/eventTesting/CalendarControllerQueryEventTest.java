@@ -10,16 +10,6 @@ import controller.eventCommands.QueryEventCommand;
  */
 public class CalendarControllerQueryEventTest extends AbstractControllerEventTest {
   @Test
-  public void testQueryEventsOnADay() {
-
-  }
-
-  @Test
-  public void testQueryEventsOnARange() {
-    
-  }
-
-  @Test
   public void testPrintEventsOnADay() {
     String createEvent = " event \"Event One\" from 2025-08-10T09:00 to 2025-08-10T10:00";
     CreateEventCommand createCommand = new CreateEventCommand(createEvent, calendarManagement, calendarView);

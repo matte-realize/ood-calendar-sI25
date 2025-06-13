@@ -10,6 +10,7 @@ import java.util.ArrayList;
  */
 public class EventSeries extends Event {
   private List<Event> instances = new ArrayList<>();
+  public String subject;
   public List<java.time.DayOfWeek> repeatDays;
   public Integer occurrences;
   public LocalDateTime endDateTimeOfSeries;
@@ -25,6 +26,9 @@ public class EventSeries extends Event {
     super(subject, startDateTime);
   }
 
+  public void setSubject(String subject) {
+    this.subject = subject;
+  }
   /**
    * Sets the days of the week which the event should repeat.
    *

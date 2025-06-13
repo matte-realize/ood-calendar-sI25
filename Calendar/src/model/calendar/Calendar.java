@@ -264,6 +264,8 @@ public class Calendar implements CalendarInterface {
   }
 
   private void editFutureEventsInSeries(EventSeries series, Event targetEvent, EventInterface updatedEvent) {
+    String oldSubject = series.getSubject();
+    String newSubject = updatedEvent.getSubject();
     LocalDateTime targetStart = targetEvent.getStartDateTime();
     List<Event> instances = series.getInstances();
 
@@ -280,9 +282,18 @@ public class Calendar implements CalendarInterface {
         }
       }
     }
+
+    if (!oldSubject.equals(newSubject)) {
+      mapSeries.remove(oldSubject);
+      series.setSubject(newSubject);
+      mapSeries.put(newSubject, series);
+    }
   }
 
   private void editAllEventsInSeries(EventSeries series, EventInterface updatedEvent) {
+    String oldSubject = series.getSubject();
+    String newSubject = updatedEvent.getSubject();
+
     List<Event> instances = new ArrayList<>(series.getInstances());
 
     for (Event instance : instances) {
@@ -297,9 +308,18 @@ public class Calendar implements CalendarInterface {
         }
       }
     }
+
+    if (!oldSubject.equals(newSubject)) {
+      mapSeries.remove(oldSubject);
+      series.setSubject(newSubject);
+      mapSeries.put(newSubject, series);
+    }
   }
 
   private Event buildReplacementFrom(Event originalInstance, EventInterface template) {
+    LocalDateTime newStart = originalInstance.getStartDateTime();
+    LocalDateTime newEnd = originalInstance.getEndDateTime();
+
     Duration originalDuration = Duration.between(
             originalInstance.getStartDateTime(),
             originalInstance.getEndDateTime()
@@ -309,12 +329,16 @@ public class Calendar implements CalendarInterface {
             template.getEndDateTime()
     );
 
-    Duration newDuration = templateDuration.isZero() ? originalDuration : templateDuration;
-    LocalDateTime newEnd = originalInstance.getStartDateTime().plus(newDuration);
+    if (!template.getStartDateTime().equals(originalInstance.getStartDateTime())) {
+      if (templateDuration.equals(originalDuration)) {
+        newStart = originalInstance.getStartDateTime();
+        newEnd = originalInstance.getEndDateTime();
+      }
+    }
 
     Event.CustomEventBuilder builder = new Event.CustomEventBuilder()
             .setSubject(template.getSubject())
-            .setStartDateTime(originalInstance.getStartDateTime())
+            .setStartDateTime(newStart)
             .setEndDateTime(newEnd)
             .setDescription(template.getDescription())
             .setLocation(template.getLocation())
@@ -333,7 +357,6 @@ public class Calendar implements CalendarInterface {
     LocalDate newDate = updatedEvent.getStartDateTime().toLocalDate();
     eventsByDate.computeIfAbsent(newDate, d -> new ArrayList<>()).add((Event) updatedEvent);
   }
-
 
   @Override
   public EventInterface getEvent(String subject,
