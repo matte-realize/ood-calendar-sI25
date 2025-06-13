@@ -144,6 +144,7 @@ public class Calendar implements CalendarInterface {
                 .setStatus(status);
 
         Event instance = (Event) builder.build();
+
         series.addInstance(instance);
         eventsByDate.computeIfAbsent(
                 instanceStart.toLocalDate(),
@@ -347,7 +348,7 @@ public class Calendar implements CalendarInterface {
     for (Event e : events) {
       if (e.getSubject().equals(subject)
               && e.getStartDateTime().equals(start)
-              && ((end == null && e.getEndDateTime() == null) ||
+              && ((end == null) ||
               (e.getEndDateTime() != null && e.getEndDateTime().equals(end)))) {
         if (found) {
           throw new IllegalArgumentException("Multiple Events with the same Start and Subject");

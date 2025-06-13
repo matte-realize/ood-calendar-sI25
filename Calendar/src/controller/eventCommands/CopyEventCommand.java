@@ -52,7 +52,7 @@ public class CopyEventCommand extends AbstractCommand {
    * @param calendarModel a calendar model.
    */
   public CopyEventCommand(String tokensString, CalendarManagement calendarModel) {
-    this.tokensString = "create" + tokensString;
+    this.tokensString = "copy" + tokensString;
     this.calendarModel = calendarModel;
     this.selectedCalendar = calendarModel.getSelectedCalendar();
   }
@@ -128,6 +128,8 @@ public class CopyEventCommand extends AbstractCommand {
     List<EventInterface> convertedEventList = new ArrayList<>(events.size());
 
     for (Event event : events) {
+
+      LocalDateTime test = event.getEndDateTime();
 
       LocalDateTime tempTargetDate = LocalDateTime.of(targetDate, event.getStartDateTime().toLocalTime());
       ZonedDateTime sourceDateTime = tempTargetDate.atZone(oldZoneId);

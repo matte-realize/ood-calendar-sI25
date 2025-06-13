@@ -1,6 +1,5 @@
 package model.calendar;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.HashMap;
@@ -64,10 +63,12 @@ public class CalendarManagement {
       }
     }
 
+    Calendar tempCalendar = new Calendar();
+
     CalendarModel newCalendar = new CalendarModel.CustomCalendarBuilder()
             .setName(calendarName)
             .setTimeZone(timeZone)
-            .setCalendar(new Calendar())
+            .setCalendar(tempCalendar)
             .build();
 
     calendarModels.put(calendarName, newCalendar);
@@ -171,7 +172,7 @@ public class CalendarManagement {
       if (c.getName().equals(targetCalendar)) {
         c.getCalendar().createEvent(event.getSubject(),
                 targetDate,
-                null,
+                targetDate.toLocalDate().atTime(event.getEndDateTime().toLocalTime()),
                 event.getDescription(),
                 event.getLocation(),
                 event.getStatus());
