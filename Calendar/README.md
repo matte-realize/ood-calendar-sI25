@@ -65,7 +65,9 @@ To exit the program, the input is "exit."
 
 ## Features
 
-
+The calendar is able to create and edit a calendar before being able to access the calendar to individually create event
+or event series. These events or event series can be edited or copied to make other events that were modified and then be
+able to be displayed on screen. There are a few edge cases that were not handled or tested.
 
 ## Work Distribution: 
 
@@ -73,10 +75,10 @@ Paul - Created the controller/Command Parsing and started the view
 
 Matthew - Created the model and tests for the Calendar
 
-
 ## Changes:
 
 - Changed Model from being just a Calendar to a CalendarManagement which holds a list of CalendarModels
 - - A Calendar model has a name, timezone, and Calendar - The reason for this change was so that it we could best use our existing Calendar class and just work with a list of them in the top level model
 - Since we changed the model, we had to change how the controller uses it slightly
 - - An example of this was adding a selected calendar variable to each command so it knows which calendar it is working with
+- The program will terminate on some edge cases but has soft handling unlike before.
