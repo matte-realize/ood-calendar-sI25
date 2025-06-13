@@ -67,7 +67,7 @@ To exit the program, the input is "exit."
 
 The calendar is able to create and edit a calendar before being able to access the calendar to individually create event
 or event series. These events or event series can be edited or copied to make other events that were modified and then be
-able to be displayed on screen. There are a few edge cases that were not handled or tested.
+able to be displayed on screen. 
 
 ## Work Distribution: 
 
@@ -82,3 +82,14 @@ Matthew - Created the model and tests for the Calendar
 - Since we changed the model, we had to change how the controller uses it slightly
 - - An example of this was adding a selected calendar variable to each command so it knows which calendar it is working with
 - The program will terminate on some edge cases but has soft handling unlike before.
+
+## Additional:
+
+Invalid commands within our commandwithinvaildcommands.txt are to be followed in order to prompt invalid commands or prompts. Some such reasoning are:
+- the command was not a valid command due to invalid syntax
+- attempts to make duplicate events or series
+- attempting to create an event before using a calendar
+- editing with an invalid property
+- editing to nonexistent events
+- copying nonexistent events
+- creating events with the same start and end time

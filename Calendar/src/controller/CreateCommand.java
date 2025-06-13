@@ -77,6 +77,15 @@ public class CreateCommand extends AbstractCommand {
   @Override
   public void execute() throws IllegalArgumentException {
     Matcher m;
+    if ((m = CreateCalendar.matcher(tokensString)).matches()) {
+      handleCreateCalendar(m);
+      return;
+    }
+
+    if (!checkCalendarSelected(selectedCalendar, calendarView)) {
+      return;
+    }
+
     if ((m = CreateSingleEvent.matcher(tokensString)).matches()) {
       handleSingleEvent(m, false);
     } else if ((m = CreateEventSeriesNum.matcher(tokensString)).matches()) {
@@ -89,8 +98,6 @@ public class CreateCommand extends AbstractCommand {
       handleRepeatingEventNTimes(m, true);
     } else if ((m = AllDayEventSeriesUntil.matcher(tokensString)).matches()) {
       handleRepeatingEventUntil(m, true);
-    } else if ((m = CreateCalendar.matcher(tokensString)).matches()) {
-      handleCreateCalendar(m);
     } else {
       calendarView.printError("Invalid command: \"" + tokensString + "\"");
     }
@@ -113,14 +120,18 @@ public class CreateCommand extends AbstractCommand {
       return;
     }
 
-    selectedCalendar.createEvent(
-            subject,
-            LocalDateTime.parse(start),
-            LocalDateTime.parse(end),
-            "",
-            null,
-            null
-    );
+    try {
+      selectedCalendar.createEvent(
+              subject,
+              LocalDateTime.parse(start),
+              LocalDateTime.parse(end),
+              "",
+              null,
+              null
+      );
+    } catch (Exception e) {
+      calendarView.printError(e.getMessage());
+    }
   }
 
   private void handleRepeatingEventNTimes(Matcher m, boolean isAllDayEvent) {
@@ -156,16 +167,20 @@ public class CreateCommand extends AbstractCommand {
       return;
     }
 
-    selectedCalendar.createEventSeries(
-            subject,
-            LocalDateTime.parse(start),
-            LocalDateTime.parse(end),
-            parseDays(weekdays),
-            Integer.parseInt(repeatNum),
-            null,
-            null,
-            null
-    );
+    try {
+      selectedCalendar.createEventSeries(
+              subject,
+              LocalDateTime.parse(start),
+              LocalDateTime.parse(end),
+              parseDays(weekdays),
+              Integer.parseInt(repeatNum),
+              null,
+              null,
+              null
+      );
+    } catch (Exception e) {
+      calendarView.printError(e.getMessage());
+    }
   }
 
   private void handleRepeatingEventUntil(Matcher m, boolean isALlDayEvent) {
@@ -197,30 +212,38 @@ public class CreateCommand extends AbstractCommand {
       return;
     }
 
-    selectedCalendar.createEventSeries(
-            subject,
-            LocalDateTime.parse(start),
-            LocalDateTime.parse(end),
-            parseDays(weekdays),
-            calculateWeeksNeeded(
-                    LocalDateTime.parse(start),
-                    LocalDateTime.parse(untilDate),
-                    parseDays(weekdays)
-            ),
-            null,
-            null,
-            null
-    );
+    try {
+      selectedCalendar.createEventSeries(
+              subject,
+              LocalDateTime.parse(start),
+              LocalDateTime.parse(end),
+              parseDays(weekdays),
+              calculateWeeksNeeded(
+                      LocalDateTime.parse(start),
+                      LocalDateTime.parse(untilDate),
+                      parseDays(weekdays)
+              ),
+              null,
+              null,
+              null
+      );
+    } catch (Exception e) {
+      calendarView.printError(e.getMessage());
+    }
   }
 
   private void handleCreateCalendar(Matcher m) {
     String name = m.group(1);
     String timezone = m.group(2);
 
-    if (!isValidZoneId(timezone)) {
-      calendarView.printError("Timezone is of invalid format");
-    } else {
-      calendarModel.createCalendar(name, ZoneId.of(timezone));
+    try {
+      if (!isValidZoneId(timezone)) {
+        calendarView.printError("Timezone is of invalid format");
+      } else {
+        calendarModel.createCalendar(name, ZoneId.of(timezone));
+      }
+    } catch (Exception e) {
+      calendarView.printError(e.getMessage());
     }
   }
 

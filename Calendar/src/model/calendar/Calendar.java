@@ -52,7 +52,9 @@ public class Calendar implements CalendarInterface {
       if (e.getSubject().equals(subject)
               && e.getStartDateTime().equals(start)
               && e.getEndDateTime().equals(end)) {
-        throw new IllegalArgumentException("An event with the same subject, start, and end time already exists.");
+        throw new IllegalArgumentException(
+                "An event with the same subject, start, and end time already exists."
+        );
       }
     }
 
@@ -84,11 +86,14 @@ public class Calendar implements CalendarInterface {
 
     for (EventSeries events : mapSeries.values()) {
       if (events.getSubject().equals(subject) || events.getStartDateTime().equals(start)) {
-        throw new IllegalArgumentException("Subject and start time cannot be the same as an existing series!");
+        throw new IllegalArgumentException(
+                "Subject and start time cannot be the same as an existing series!"
+        );
       }
     }
 
     if (end == null) {
+      start = start.toLocalDate().atTime(8, 0);
       end = start.toLocalDate().atTime(17, 0);
     }
 
@@ -107,29 +112,20 @@ public class Calendar implements CalendarInterface {
 
     int count = 0;
 
-    Duration eventDuration;
+    Duration eventDuration = Duration.between(start, end);
     LocalDateTime seriesEndDate;
 
     if (occurrences != null && occurrences > 0) {
       seriesEndDate = null;
-      if (start.getHour() == 8 && start.getMinute() == 0) {
-        eventDuration = Duration.ofHours(9);
-      } else {
-        eventDuration = Duration.ofHours(1);
-      }
     } else {
       seriesEndDate = end;
-      if (start.getHour() == 8 && start.getMinute() == 0) {
-        eventDuration = Duration.ofHours(9);
-      } else {
-        eventDuration = Duration.ofHours(1);
-      }
     }
 
     LocalDateTime currentCheck = start;
 
     while ((occurrences == null || count < occurrences)
-            && (seriesEndDate == null || !currentCheck.toLocalDate().isAfter(seriesEndDate.toLocalDate()))) {
+            && (seriesEndDate == null ||
+            !currentCheck.toLocalDate().isAfter(seriesEndDate.toLocalDate()))) {
 
       if (repeatDays.contains(currentCheck.getDayOfWeek())) {
         LocalDateTime instanceStart = currentCheck.toLocalDate().atTime(start.toLocalTime());
@@ -201,7 +197,8 @@ public class Calendar implements CalendarInterface {
     return targetEvent;
   }
 
-  private Event findEventInSeries(String subject, LocalDateTime start) {
+  private Event findEventInSeries(String subject,
+                                  LocalDateTime start) {
     EventSeries candidateSeries = mapSeries.get(subject);
     if (candidateSeries != null) {
       for (Event instance : candidateSeries.getInstances()) {
@@ -213,7 +210,8 @@ public class Calendar implements CalendarInterface {
     return null;
   }
 
-  private Event findEventInDate(String subject, LocalDateTime start) {
+  private Event findEventInDate(String subject,
+                                LocalDateTime start) {
     LocalDate originalDate = start.toLocalDate();
     List<Event> candidates = eventsByDate.getOrDefault(originalDate, Collections.emptyList());
     for (Event e : candidates) {
@@ -224,7 +222,9 @@ public class Calendar implements CalendarInterface {
     return null;
   }
 
-  private EventSeries findParentSeries(String subject, LocalDateTime start, Event targetEvent) {
+  private EventSeries findParentSeries(String subject,
+                                       LocalDateTime start,
+                                       Event targetEvent) {
     EventSeries candidateSeries = mapSeries.get(subject);
     if (candidateSeries != null) {
       for (Event instance : candidateSeries.getInstances()) {
@@ -236,7 +236,10 @@ public class Calendar implements CalendarInterface {
     return null;
   }
 
-  private void editEventInSeries(EditMode mode, EventSeries parentSeries, Event targetEvent, EventInterface updatedEvent) {
+  private void editEventInSeries(EditMode mode,
+                                 EventSeries parentSeries,
+                                 Event targetEvent,
+                                 EventInterface updatedEvent) {
     switch (mode) {
       case SINGLE:
         editSingleEventInSeries(parentSeries, targetEvent, updatedEvent);
@@ -252,7 +255,9 @@ public class Calendar implements CalendarInterface {
     }
   }
 
-  private void editSingleEventInSeries(EventSeries series, Event targetEvent, EventInterface updatedEvent) {
+  private void editSingleEventInSeries(EventSeries series,
+                                       Event targetEvent,
+                                       EventInterface updatedEvent) {
     eventReplacement(targetEvent, updatedEvent);
 
     List<Event> instances = series.getInstances();
@@ -264,7 +269,9 @@ public class Calendar implements CalendarInterface {
     }
   }
 
-  private void editFutureEventsInSeries(EventSeries series, Event targetEvent, EventInterface updatedEvent) {
+  private void editFutureEventsInSeries(EventSeries series,
+                                        Event targetEvent,
+                                        EventInterface updatedEvent) {
     String oldSubject = series.getSubject();
     String newSubject = updatedEvent.getSubject();
     LocalDateTime targetStart = targetEvent.getStartDateTime();
@@ -291,7 +298,8 @@ public class Calendar implements CalendarInterface {
     }
   }
 
-  private void editAllEventsInSeries(EventSeries series, EventInterface updatedEvent) {
+  private void editAllEventsInSeries(EventSeries series,
+                                     EventInterface updatedEvent) {
     String oldSubject = series.getSubject();
     String newSubject = updatedEvent.getSubject();
 
@@ -420,9 +428,12 @@ public class Calendar implements CalendarInterface {
       LocalDateTime eventStart = e.getStartDateTime();
       LocalDateTime eventEnd = e.getEndDateTime();
 
-      if (((eventStart.isAfter(start) || eventStart.isEqual(start)) && (eventStart.isBefore(end) || eventStart.isEqual(end)))
-              || ((eventEnd.isAfter(start) || eventEnd.isEqual(start)) && (eventEnd.isBefore(end) || eventEnd.isEqual(end)))
-              || ((eventStart.isBefore(start) || eventStart.isEqual(start)) && (eventEnd.isAfter(end) || eventEnd.isEqual(end)))) {
+      if (((eventStart.isAfter(start) || eventStart.isEqual(start))
+              && (eventStart.isBefore(end) || eventStart.isEqual(end)))
+              || ((eventEnd.isAfter(start) || eventEnd.isEqual(start))
+              && (eventEnd.isBefore(end) || eventEnd.isEqual(end)))
+              || ((eventStart.isBefore(start) || eventStart.isEqual(start))
+              && (eventEnd.isAfter(end) || eventEnd.isEqual(end)))) {
         filteredEvents.add(e);
       }
     }
@@ -430,7 +441,8 @@ public class Calendar implements CalendarInterface {
     return filteredEvents;
   }
 
-  private void baseExceptions(String subject, LocalDateTime start) throws IllegalArgumentException {
+  private void baseExceptions(String subject,
+                              LocalDateTime start) throws IllegalArgumentException {
     if (subject == null || subject.isEmpty()) {
       throw new IllegalArgumentException("Subject must contain a string!");
     }

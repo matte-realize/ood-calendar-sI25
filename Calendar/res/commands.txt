@@ -17,7 +17,6 @@ print events on 2025-08-10
 
 create event "Event One" from 2025-08-10T09:00 to 2025-08-10T10:00
 create event "Event Two" from 2025-06-10T09:30 to 2025-06-10T11:00
-create event "Event Three" from 2025-06-10T12:00 to 2025-06-10T12:00
 create event "Event Four" from 2025-06-10T23:00 to 2025-06-11T07:00
 create event "Event Five" from 2025-06-09T07:00 to 2025-06-09T08:00 repeats MW for 10 times
 create event "Event Six" from 2025-06-10T10:00 to 2025-06-10T11:00 repeats T for 3 times
@@ -26,7 +25,6 @@ create event "Event Eight" from 2025-05-10T09:00 to 2025-05-10T23:30 repeats MTW
 create event "Event Nine" from 2025-06-08T08:00 to 2025-06-08T09:00 repeats U until 2025-07-01
 create event "Event Ten" on 2025-12-25
 create event "Event Eleven" on 2025-08-15
-create event "Event Twelve" on 2025-06-10 repeats T for 4 times
 create event "Event Thirteen" on 2025-06-09 repeats MW for 6 times
 create event "Event Fourteen" on 2025-06-14 repeats SU until 2025-08-30
 create event "Event Fifteen" on 2025-06-15 repeats U until 2025-07-01
@@ -48,6 +46,10 @@ edit events subject "edit" from 2025-06-16T07:00 with edit2
 print events from 2025-06-09T07:00 to 2025-06-25T08:00
 
 print events on 2025-08-10
-show status on 2025-08-10
+show status on 2025-08-10T09:00
+
+copy event "Event Ten" on 2025-12-25T08:00 --target Tokyo to 2025-09-14T11:00
+copy events on 2025-06-10 --target Los_Angeles to 2025-06-10
+copy events between 2025-06-10 and 2025-06-24 --target Harare to 2025-06-20
 
 exit

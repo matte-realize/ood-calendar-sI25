@@ -9,8 +9,10 @@ import java.time.format.DateTimeParseException;
 import java.util.HashSet;
 import java.util.Set;
 
+import model.calendar.Calendar;
 import model.enums.Location;
 import model.enums.Status;
+import view.CalendarView;
 
 /**
  * Abstract class that represents AbstractCommands that implement
@@ -71,16 +73,6 @@ public abstract class AbstractCommand implements Command {
   }
 
   @Override
-  public boolean isValidTimezone(String timezone) {
-    try {
-      ZoneId zoneId = ZoneId.of(timezone);
-      return true;
-    } catch (DateTimeException e) {
-      return false;
-    }
-  }
-
-  @Override
   public boolean isValidNewValue(String property, String newValue) {
     switch (property) {
       case "subject":
@@ -115,6 +107,14 @@ public abstract class AbstractCommand implements Command {
         break;
     }
 
+    return true;
+  }
+
+  protected boolean checkCalendarSelected(Calendar selectedCalendar, CalendarView calendarView) {
+    if (selectedCalendar == null) {
+      calendarView.printError("No calendar selected.");
+      return false;
+    }
     return true;
   }
 }

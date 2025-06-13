@@ -56,14 +56,21 @@ public class QueryCommand extends AbstractCommand {
   public void execute() {
     Matcher m;
 
+    if ((m = UseCalendar.matcher(tokensString)).matches()) {
+      handelUseCalendar(m);
+      return;
+    }
+
+    if (!checkCalendarSelected(selectedCalendar, calendarView)) {
+      return;
+    }
+
     if ((m = PrintEvents.matcher(tokensString)).matches()) {
       handlePrintEventsOn(m);
     } else if ((m = PrintEventsWindow.matcher(tokensString)).matches()) {
       handlePrintEventsFromTo(m);
     } else if ((m = ShowStatus.matcher(tokensString)).matches()) {
       handleShowStatusOn(m);
-    } else if ((m = UseCalendar.matcher(tokensString)).matches()) {
-      handelUseCalendar(m);
     } else {
       calendarView.printError("Invalid query command: \"" + tokensString + "\"\n");
     }
@@ -77,9 +84,13 @@ public class QueryCommand extends AbstractCommand {
       return;
     }
 
-    calendarView.printEvents(
-            selectedCalendar.getEventsSingleDay(LocalDate.parse(date)),
-            date);
+    try {
+      calendarView.printEvents(
+              selectedCalendar.getEventsSingleDay(LocalDate.parse(date)),
+              date);
+    } catch (Exception e) {
+      calendarView.printError(e.getMessage());
+    }
   }
 
   private void handlePrintEventsFromTo(Matcher m) {
@@ -91,11 +102,15 @@ public class QueryCommand extends AbstractCommand {
       return;
     }
 
-    calendarView.printEvents(
-            selectedCalendar.getEventsWindow(
-                    LocalDateTime.parse(startDate), LocalDateTime.parse(endDate)
-            ),
-            startDate + " to " + endDate);
+    try {
+      calendarView.printEvents(
+              selectedCalendar.getEventsWindow(
+                      LocalDateTime.parse(startDate), LocalDateTime.parse(endDate)
+              ),
+              startDate + " to " + endDate);
+    } catch (Exception e) {
+      calendarView.printError(e.getMessage());
+    }
 
   }
 
@@ -120,6 +135,10 @@ public class QueryCommand extends AbstractCommand {
   private void handelUseCalendar(Matcher m) {
     String calendarName = m.group(1);
 
-    calendarModel.selectCalendar(calendarName);
+    try {
+      calendarModel.selectCalendar(calendarName);
+    } catch (Exception e) {
+      calendarView.printError(e.getMessage());
+    }
   }
 }

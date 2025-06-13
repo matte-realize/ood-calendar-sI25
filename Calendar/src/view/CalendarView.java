@@ -10,12 +10,6 @@ import model.event.Event;
  * calendar.
  */
 public class CalendarView implements CalendarViewInterface {
-  /**
-   * Simple constructor for the calendar view.
-   */
-  /*public CalendarView() {
-  }*/
-
   @Override
   public void printEvents(List<Event> events, String day) {
     if (events.isEmpty()) {

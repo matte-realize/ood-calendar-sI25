@@ -60,14 +60,21 @@ public class EditCommand extends AbstractCommand {
   public void execute() throws IllegalArgumentException {
     Matcher m;
 
+    if ((m = EditCalendar.matcher(tokensString)).matches()) {
+      handleEditCalendar(m);
+      return;
+    }
+
+    if (!checkCalendarSelected(selectedCalendar, calendarView)) {
+      return;
+    }
+
     if ((m = EditSingleEvent.matcher(tokensString)).matches()) {
       handleEditSingleEvent(m);
     } else if ((m = EditEvents.matcher(tokensString)).matches()) {
       handleEditEventsFrom(m);
     } else if ((m = EditEventSeries.matcher(tokensString)).matches()) {
       handleEditSeries(m);
-    } else if ((m = EditCalendar.matcher(tokensString)).matches()) {
-      handleEditCalendar(m);
     } else {
       calendarView.printError("Invalid edit command: \"" + tokensString + "\"\n");
     }
@@ -91,12 +98,16 @@ public class EditCommand extends AbstractCommand {
       return;
     }
 
-    selectedCalendar.editEvent(
-            subject,
-            LocalDateTime.parse(from),
-            editEventHelper(subject, from, to, property, newValue),
-            EditMode.SINGLE
-    );
+    try {
+      selectedCalendar.editEvent(
+              subject,
+              LocalDateTime.parse(from),
+              editEventHelper(subject, from, to, property, newValue),
+              EditMode.SINGLE
+      );
+    } catch (Exception e) {
+      calendarView.printError(e.getMessage());
+    }
   }
 
   private void handleEditEventsFrom(Matcher m) {
@@ -116,12 +127,16 @@ public class EditCommand extends AbstractCommand {
       return;
     }
 
-    selectedCalendar.editEvent(
-            subject,
-            LocalDateTime.parse(from),
-            editEventHelper(subject, from, null, property, newValue),
-            EditMode.FUTURE
-    );
+    try {
+      selectedCalendar.editEvent(
+              subject,
+              LocalDateTime.parse(from),
+              editEventHelper(subject, from, null, property, newValue),
+              EditMode.FUTURE
+      );
+    } catch (Exception e) {
+      calendarView.printError(e.getMessage());
+    }
   }
 
   private void handleEditSeries(Matcher m) {
@@ -141,12 +156,16 @@ public class EditCommand extends AbstractCommand {
       return;
     }
 
-    selectedCalendar.editEvent(
-            subject,
-            LocalDateTime.parse(from),
-            editEventHelper(subject, from, null, property, newValue),
-            EditMode.ALL
-    );
+    try {
+      selectedCalendar.editEvent(
+              subject,
+              LocalDateTime.parse(from),
+              editEventHelper(subject, from, null, property, newValue),
+              EditMode.ALL
+      );
+    } catch (Exception e) {
+      calendarView.printError(e.getMessage());
+    }
   }
 
   private void handleEditCalendar(Matcher m) {
@@ -160,7 +179,11 @@ public class EditCommand extends AbstractCommand {
       return;
     }
 
-    calendarModel.editCalendar(name, property, newValue);
+    try {
+      calendarModel.editCalendar(name, property, newValue);
+    } catch (Exception e) {
+      calendarView.printError(e.getMessage());
+    }
   }
 
   private EventInterface editEventHelper(

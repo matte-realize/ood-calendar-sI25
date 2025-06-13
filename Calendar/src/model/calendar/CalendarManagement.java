@@ -157,30 +157,29 @@ public class CalendarManagement {
         calendarModels.put(newValue, newCalendar);
         break;
       case "timezone":
-
         for (CalendarModel c : this.calendarModels.values()) {
           if (c.getName().equals(calendarName)) {
             found = true;
             calenderToUpdate = c;
           }
-
-          if (!found) {
-            throw new IllegalArgumentException(
-                    "There does not exist a calendar with the name "
-                            + calendarName
-            );
-          }
-
-          calendarModels.remove(calendarName);
-
-          newCalendar = new CalendarModel.CustomCalendarBuilder()
-                  .setName(calendarName)
-                  .setTimeZone(ZoneId.of(newValue))
-                  .setCalendar(calenderToUpdate.getCalendar())
-                  .build();
-
-          calendarModels.put(calendarName, newCalendar);
         }
+
+        if (!found) {
+          throw new IllegalArgumentException(
+                  "There does not exist a calendar with the name "
+                          + calendarName
+          );
+        }
+
+        calendarModels.remove(calendarName);
+
+        newCalendar = new CalendarModel.CustomCalendarBuilder()
+                .setName(calendarName)
+                .setTimeZone(ZoneId.of(newValue))
+                .setCalendar(calenderToUpdate.getCalendar())
+                .build();
+
+        calendarModels.put(calendarName, newCalendar);
         break;
       default:
         throw new IllegalArgumentException("Invalid property " + property);

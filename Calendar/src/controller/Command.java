@@ -53,11 +53,4 @@ public interface Command {
    * @return a boolean based on the validty of the given input.
    */
   boolean isValidNewValue(String property, String newValue);
-
-  /**
-   * Determines a boolean based on whether the timezone is a valid value.
-   *
-   * @param timezone the timezone to check
-   */
-  boolean isValidTimezone(String timezone);
 }
