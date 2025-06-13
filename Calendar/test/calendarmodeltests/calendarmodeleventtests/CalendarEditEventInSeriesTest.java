@@ -1,4 +1,4 @@
-package calendarmodeltests;
+package calendarmodeltests.calendarmodeleventtests;
 
 import org.junit.Test;
 
@@ -21,7 +21,7 @@ import static org.junit.Assert.assertNull;
  * A JUnit test that tests the edit methods of events in a series
  * within the Calendar class.
  */
-public class CalendarEditEventInSeriesTest extends AbstractCalendarTest {
+public class CalendarEditEventInSeriesTest extends AbstractCalendarEventTest {
   @Test
   public void testEditSingleEventInSeries() {
     EventSeries multiDaySeries = calendar.createEventSeries(

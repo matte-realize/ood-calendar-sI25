@@ -1,4 +1,4 @@
-package calendarmodeltests;
+package calendarmodeltests.calendarmodeleventtests;
 
 import org.junit.Test;
 
@@ -13,7 +13,21 @@ import static org.junit.Assert.assertThrows;
  * JUnit test for testing exceptions when creating events independently
  * or within a series.
  */
-public class CalendarExceptionCreationTest extends AbstractCalendarTest {
+public class CalendarExceptionCreationEventTest extends AbstractCalendarEventTest {
+  @Test
+  public void testEndDateIsBeforeStartDate() {
+    assertThrows(IllegalArgumentException.class, () -> {
+      calendar.createEvent(
+              "Over",
+              sampleEnd,
+              sampleStart,
+              null,
+              null,
+              null
+      );
+    });
+  }
+
   @Test
   public void testNullSubject() {
     assertThrows(IllegalArgumentException.class, () -> {
@@ -464,6 +478,33 @@ public class CalendarExceptionCreationTest extends AbstractCalendarTest {
               null,
               null,
               null
+      );
+    });
+  }
+
+  @Test
+  public void testSameSeriesIdentifiers() {
+    calendar.createEventSeries(
+            "Wedding",
+            sampleStart,
+            sampleEnd,
+            sampleRepeatDays,
+            0,
+            "Varsity practice",
+            Location.PHYSICAL,
+            Status.PRIVATE
+    );
+
+    assertThrows(IllegalArgumentException.class, () -> {
+      calendar.createEventSeries(
+              "Wedding",
+              sampleStart,
+              sampleEnd,
+              sampleRepeatDays,
+              0,
+              "Varsity practice",
+              Location.PHYSICAL,
+              Status.PRIVATE
       );
     });
   }

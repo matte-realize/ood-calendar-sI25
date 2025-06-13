@@ -1,4 +1,4 @@
-package calendarmodeltests;
+package calendarmodeltests.calendarmodeleventtests;
 
 import org.junit.Before;
 import org.junit.Test;

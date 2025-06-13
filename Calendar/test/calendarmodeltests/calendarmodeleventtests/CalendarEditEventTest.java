@@ -1,4 +1,4 @@
-package calendarmodeltests;
+package calendarmodeltests.calendarmodeleventtests;
 
 import org.junit.Test;
 
@@ -16,7 +16,7 @@ import static org.junit.Assert.assertEquals;
  * A JUnit test that tests the edit methods within the Calendar class within
  * events that are not part of the series.
  */
-public class CalendarEditEventTest extends AbstractCalendarTest {
+public class CalendarEditEventTest extends AbstractCalendarEventTest {
   @Test
   public void testEditEventOnlySubject() {
     LocalDateTime allDayTimeStart = LocalDateTime.of(2025, 6, 10, 8, 0);

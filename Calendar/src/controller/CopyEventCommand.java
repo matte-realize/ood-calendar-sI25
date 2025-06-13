@@ -63,6 +63,11 @@ public class CopyEventCommand extends AbstractCommand {
   @Override
   public void execute() throws IllegalArgumentException {
     Matcher m;
+
+    if (!checkCalendarSelected(selectedCalendar, calendarView)) {
+      return;
+    }
+
     if ((m = CopySingleEvent.matcher(tokensString)).matches()) {
       handleCopyEvent(m);
     } else if ((m = CopyDayEvents.matcher(tokensString)).matches()) {
@@ -85,10 +90,29 @@ public class CopyEventCommand extends AbstractCommand {
       return;
     }
 
-    calendarModel.copyEvent(selectedCalendar.getEvent(eventName,
-                    LocalDateTime.parse(eventDate), null),
-            targetCalendar,
-            LocalDateTime.parse(targetDate));
+    try {
+      EventInterface eventToCopy = selectedCalendar.getEvent(eventName,
+              LocalDateTime.parse(eventDate), null);
+
+      if (eventToCopy == null) {
+        calendarView.printError("Event \"" + eventName + "\" not found on " + eventDate);
+        return;
+      }
+
+      if (!validateTargetCalendar(targetCalendar)) {
+        return;
+      }
+
+      calendarModel.copyEvent(
+              selectedCalendar.getEvent(
+                      eventName,
+                      LocalDateTime.parse(eventDate), null),
+              targetCalendar,
+              LocalDateTime.parse(targetDate)
+      );
+    } catch (Exception e) {
+      calendarView.printError("Event \"" + eventName + "\" not found on " + eventDate);
+    }
   }
 
   private void handleCopyEventsDay(Matcher m) {
@@ -101,12 +125,27 @@ public class CopyEventCommand extends AbstractCommand {
       return;
     }
 
-    calendarModel.copyEvents(convertEvents(
-                    selectedCalendar.getEventsSingleDay(LocalDate.parse(eventsDate)),
-                    LocalDate.parse(targetDate),
-                    calendarModel.getCalendarTimezone(null),
-                    calendarModel.getCalendarTimezone(targetCalendar)),
-            targetCalendar);
+    if (!validateTargetCalendar(targetCalendar)) {
+      return;
+    }
+
+    try {
+      List<Event> eventsOnDay = selectedCalendar.getEventsSingleDay(LocalDate.parse(eventsDate));
+
+      if (eventsOnDay == null || eventsOnDay.isEmpty()) {
+        calendarView.printError("No events found on " + eventsDate);
+        return;
+      }
+
+      calendarModel.copyEvents(convertEvents(
+                      selectedCalendar.getEventsSingleDay(LocalDate.parse(eventsDate)),
+                      LocalDate.parse(targetDate),
+                      calendarModel.getCalendarTimezone(null),
+                      calendarModel.getCalendarTimezone(targetCalendar)),
+              targetCalendar);
+    } catch (Exception e) {
+      calendarView.printError("Calendar not found.");
+    }
   }
 
   private void handleCopyEventsWindow(Matcher m) {
@@ -120,23 +159,41 @@ public class CopyEventCommand extends AbstractCommand {
       return;
     }
 
-    calendarModel.copyEvents(convertEvents(
-                    selectedCalendar.getEventsWindow(
-                            LocalDateTime.parse(eventsStartDate + "T00:00"),
-                            LocalDateTime.parse(eventsEndDate + "T23:59")),
-                    LocalDate.parse(targetDate),
-                    calendarModel.getCalendarTimezone(null),
-                    calendarModel.getCalendarTimezone(targetCalendar)),
-            targetCalendar);
+    if (!validateTargetCalendar(targetCalendar)) {
+      return;
+    }
+
+    try {
+      List<Event> eventsInWindow = selectedCalendar.getEventsWindow(
+              LocalDateTime.parse(eventsStartDate + "T00:00"),
+              LocalDateTime.parse(eventsEndDate + "T23:59"));
+
+      if (eventsInWindow == null || eventsInWindow.isEmpty()) {
+        calendarView.printError("No events found between " + eventsStartDate + " and " + eventsEndDate);
+        return;
+      }
+
+      calendarModel.copyEvents(convertEvents(
+                      selectedCalendar.getEventsWindow(
+                              LocalDateTime.parse(eventsStartDate + "T00:00"),
+                              LocalDateTime.parse(eventsEndDate + "T23:59")),
+                      LocalDate.parse(targetDate),
+                      calendarModel.getCalendarTimezone(null),
+                      calendarModel.getCalendarTimezone(targetCalendar)),
+              targetCalendar);
+    } catch (Exception e) {
+      calendarView.printError("Calendar not found.");
+    }
   }
 
-  private List<EventInterface> convertEvents(List<Event> events, LocalDate targetDate, ZoneId oldZoneId, ZoneId newZoneId) {
+  private List<EventInterface> convertEvents(List<Event> events,
+                                             LocalDate targetDate,
+                                             ZoneId oldZoneId,
+                                             ZoneId newZoneId) {
 
     List<EventInterface> convertedEventList = new ArrayList<>(events.size());
 
     for (Event event : events) {
-
-      LocalDateTime test = event.getEndDateTime();
 
       LocalDateTime tempTargetDate = LocalDateTime.of(
               targetDate, event.getStartDateTime().toLocalTime());
@@ -162,6 +219,16 @@ public class CopyEventCommand extends AbstractCommand {
     }
 
     return convertedEventList;
+  }
+
+  private boolean validateTargetCalendar(String targetCalendar) {
+    try {
+      calendarModel.getCalendarTimezone(targetCalendar);
+      return true;
+    } catch (Exception e) {
+      calendarView.printError("Target calendar \"" + targetCalendar + "\" does not exist");
+      return false;
+    }
   }
 
 }

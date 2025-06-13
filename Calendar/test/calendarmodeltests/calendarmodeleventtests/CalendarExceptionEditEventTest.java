@@ -1,4 +1,4 @@
-package calendarmodeltests;
+package calendarmodeltests.calendarmodeleventtests;
 
 import org.junit.Test;
 
@@ -20,7 +20,7 @@ import static org.junit.Assert.fail;
  * JUnit test for testing exceptions when editing events independently
  * or within a series.
  */
-public class CalendarExceptionEditTest extends AbstractCalendarTest {
+public class CalendarExceptionEditEventTest extends AbstractCalendarEventTest {
   @Test
   public void testEditingSubjectToNull() {
     try {
@@ -57,7 +57,7 @@ public class CalendarExceptionEditTest extends AbstractCalendarTest {
       fail("StartDate cannot be null");
     } catch (IllegalArgumentException e) {
       // Should get here
-    };
+    }
   }
 
   @Test

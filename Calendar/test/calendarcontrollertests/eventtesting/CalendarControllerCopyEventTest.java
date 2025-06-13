@@ -36,6 +36,12 @@ public class CalendarControllerCopyEventTest extends AbstractControllerEventTest
 
     createCommand.execute();
 
+    createCalendar = " calendar --name dupeTimeZone --timezone America/New_York";
+    createCommand = new CreateCommand(createCalendar,
+            calendarManagement, calendarView);
+
+    createCommand.execute();
+
     String createEvent = " event \"Test Event 1\" on 2005-12-12";
     CreateCommand createEventCommand = new CreateCommand(createEvent,
             calendarManagement, calendarView);
@@ -57,8 +63,8 @@ public class CalendarControllerCopyEventTest extends AbstractControllerEventTest
 
   @Test
   public void testCopySingleEvent() {
-    String copyEvent = " event \"Test Event 1\" on 2005-12-12T08:00 " +
-            "--target emptyCalendar to 2005-12-14T10:00";
+    String copyEvent = " event \"Test Event 1\" on 2005-12-12T08:00 "
+            + "--target emptyCalendar to 2005-12-14T10:00";
     CopyEventCommand copyEventCommand = new CopyEventCommand(copyEvent,
             calendarManagement, calendarView);
 
@@ -84,7 +90,6 @@ public class CalendarControllerCopyEventTest extends AbstractControllerEventTest
 
   @Test
   public void testCopyEventsDifferentTimeZones() {
-
     String copyEvent = " events on 2005-10-17 --target newCalendar to 2005-11-17";
     CopyEventCommand copyEventCommand = new CopyEventCommand(copyEvent,
             calendarManagement, calendarView);
@@ -106,6 +111,32 @@ public class CalendarControllerCopyEventTest extends AbstractControllerEventTest
     assertEquals(1, testEvent.size());
     assertEquals("Test Event 3", testEvent.get(0).getSubject());
     assertEquals(LocalDateTime.parse("2005-11-17T14:00"),
+            testEvent.get(0).getStartDateTime());
+  }
+
+  @Test
+  public void testCopyEventsSameTimeZone() {
+    String copyEvent = " events on 2005-10-17 --target dupeTimeZone to 2005-11-17";
+    CopyEventCommand copyEventCommand = new CopyEventCommand(copyEvent,
+            calendarManagement, calendarView);
+
+    copyEventCommand.execute();
+
+    String selectCalendar = " calendar --name dupeTimeZone";
+    QueryCommand selectCalendarCommand = new QueryCommand(selectCalendar,
+            "use", calendarManagement, calendarView);
+
+    selectCalendarCommand.execute();
+
+    Calendar testCalendar = calendarManagement.getSelectedCalendar();
+
+    assertEquals(calendarManagement.getSelectedCalendar().toString(), testCalendar.toString());
+
+    List<Event> testEvent = testCalendar.getEventsSingleDay(LocalDate.parse("2005-11-17"));
+
+    assertEquals(1, testEvent.size());
+    assertEquals("Test Event 3", testEvent.get(0).getSubject());
+    assertEquals(LocalDateTime.parse("2005-11-17T08:00"),
             testEvent.get(0).getStartDateTime());
   }
 

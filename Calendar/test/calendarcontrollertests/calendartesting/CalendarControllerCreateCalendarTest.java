@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.time.ZoneId;
 import java.util.Scanner;
 
 import controller.CreateCommand;
@@ -22,6 +23,25 @@ public class CalendarControllerCreateCalendarTest extends AbstractControllerCale
             calendarManagement, calendarView);
 
     createCommand.execute();
+
+    // verifies the existence of the calendar
+    assertEquals(ZoneId.of("Europe/Paris"), calendarManagement.getCalendarTimezone("test"));
+  }
+
+  @Test
+  public void testCreateCalendarSameTimeZoneDifferentName() {
+    String createCalendar1 = " calendar --name test --timezone Europe/Paris";
+    String createCalendar2 = " calendar --name test2 --timezone Europe/Paris";
+    CreateCommand createCommand1 = new CreateCommand(createCalendar1,
+            calendarManagement, calendarView);
+    CreateCommand createCommand2 = new CreateCommand(createCalendar2,
+            calendarManagement, calendarView);
+
+    createCommand1.execute();
+    createCommand2.execute();
+
+    assertEquals(ZoneId.of("Europe/Paris"), calendarManagement.getCalendarTimezone("test"));
+    assertEquals(ZoneId.of("Europe/Paris"), calendarManagement.getCalendarTimezone("test2"));
   }
 
   @Test

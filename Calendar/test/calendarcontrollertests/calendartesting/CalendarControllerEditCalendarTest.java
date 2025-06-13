@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.time.ZoneId;
 import java.util.Scanner;
 
 import controller.CreateCommand;
@@ -24,10 +25,21 @@ public class CalendarControllerEditCalendarTest extends AbstractControllerCalend
             calendarManagement, calendarView);
     createCommand.execute();
 
-    String editCalendar = " calendar --name test --property name \"test_edit\"";
-    EditCommand editCommand = new EditCommand(editCalendar,
+    assertEquals(ZoneId.of("Europe/Paris"), calendarManagement.getCalendarTimezone("test"));
+
+    String editCalendarName = " calendar --name test --property name \"test_edit\"";
+    EditCommand editCommand1 = new EditCommand(editCalendarName,
             calendarManagement, calendarView);
-    editCommand.execute();
+    editCommand1.execute();
+
+    assertEquals(ZoneId.of("Europe/Paris"), calendarManagement.getCalendarTimezone("test_edit"));
+
+    String editCalendarTimeZone = " calendar --name test_edit --property timezone \"Africa/Harare\"";
+    EditCommand editCommand2 = new EditCommand(editCalendarTimeZone,
+            calendarManagement, calendarView);
+    editCommand2.execute();
+
+    assertEquals(ZoneId.of("Africa/Harare"), calendarManagement.getCalendarTimezone("test_edit"));
   }
 
   @Test

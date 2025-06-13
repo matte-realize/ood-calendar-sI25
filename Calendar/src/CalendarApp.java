@@ -1,5 +1,4 @@
 import controller.CalendarController;
-import model.calendar.Calendar;
 import model.calendar.CalendarManagement;
 import view.CalendarView;
 
@@ -12,7 +11,6 @@ public class CalendarApp {
    * @param args takes in string arguments to execute commands.
    */
   public static void main(String[] args) {
-
     if (args.length < 2 || !args[0].equalsIgnoreCase("--mode")) {
       System.err.println("Usage: java CalendarApp --mode [interactive|headless] [commands.txt]");
       return;
