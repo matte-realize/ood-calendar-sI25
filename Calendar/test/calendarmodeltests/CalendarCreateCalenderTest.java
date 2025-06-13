@@ -1,4 +1,4 @@
-package calendarModelTests;
+package calendarmodeltests;
 
 import org.junit.Test;
 
@@ -40,7 +40,7 @@ public class CalendarCreateCalenderTest {
       assertNull("Null name should be preserved", calendar.getName());
       assertEquals("Timezone should still be set", validTimeZone, calendar.getTimeZone());
     } catch (Exception e) {
-
+      // catches exception
     }
 
     String validName = "Test Calendar";
@@ -58,7 +58,7 @@ public class CalendarCreateCalenderTest {
       assertNull("Both values should be null", calendar.getName());
       assertNull("Both values should be null", calendar.getTimeZone());
     } catch (Exception e) {
-
+      // catches exception
     }
 
     String validName4 = "Test Calendar";
@@ -68,7 +68,7 @@ public class CalendarCreateCalenderTest {
       CalendarModel calendar = new CalendarModel(validName4, invalidZone);
       fail("Should not reach here with invalid timezone");
     } catch (Exception e) {
-      assertTrue( true);
+      // catches exception
     }
   }
 }

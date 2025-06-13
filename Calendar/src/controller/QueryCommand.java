@@ -107,7 +107,9 @@ public class QueryCommand extends AbstractCommand {
       return;
     }
 
-    List<Event> events = selectedCalendar.getEventsWindow(LocalDateTime.parse(dateTime), LocalDateTime.parse(dateTime));
+    List<Event> events = selectedCalendar.getEventsWindow(
+            LocalDateTime.parse(dateTime), LocalDateTime.parse(dateTime)
+    );
     if (events.isEmpty()) {
       calendarView.printStatus("Available", dateTime);
     } else {

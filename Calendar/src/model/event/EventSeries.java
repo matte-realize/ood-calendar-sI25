@@ -26,9 +26,15 @@ public class EventSeries extends Event {
     super(subject, startDateTime);
   }
 
+  /**
+   * Sets the subject for the event series.
+   *
+   * @param subject a string for the subject.
+   */
   public void setSubject(String subject) {
     this.subject = subject;
   }
+
   /**
    * Sets the days of the week which the event should repeat.
    *

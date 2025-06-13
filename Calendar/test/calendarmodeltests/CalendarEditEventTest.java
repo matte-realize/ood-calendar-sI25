@@ -1,4 +1,4 @@
-package calendarModelTests;
+package calendarmodeltests;
 
 import org.junit.Test;
 
@@ -49,7 +49,11 @@ public class CalendarEditEventTest extends AbstractCalendarTest {
             detailedEventEdit,
             EditMode.SINGLE
     );
-    EventInterface updatedDetailedEvent = calendar.getEvent("Meeting with Lawyers", detailedTimeStart, detailedTimeEnd);
+    EventInterface updatedDetailedEvent =
+            calendar.getEvent(
+                    "Meeting with Lawyers",
+                    detailedTimeStart,
+                    detailedTimeEnd);
     assertEquals("Meeting with Lawyers", updatedDetailedEvent.getSubject());
   }
 
@@ -93,7 +97,12 @@ public class CalendarEditEventTest extends AbstractCalendarTest {
     );
 
     String expectedMeetingStartDateTime = LocalDateTime.of(2025, 7, 14, 10, 0).toString();
-    EventInterface updatedDetailedEvent = calendar.getEvent("Meeting", detailedTimeStartUpdate, detailedTimeEnd);
+    EventInterface updatedDetailedEvent =
+            calendar.getEvent(
+                    "Meeting",
+                    detailedTimeStartUpdate,
+                    detailedTimeEnd
+            );
 
     assertEquals(expectedMeetingStartDateTime, updatedDetailedEvent.getStartDateTime().toString());
   }
@@ -213,7 +222,12 @@ public class CalendarEditEventTest extends AbstractCalendarTest {
             EditMode.SINGLE
     );
 
-    EventInterface updatedDetailedEvent = calendar.getEvent("Important Meeting", updateStartTime, updateEndTime);
+    EventInterface updatedDetailedEvent =
+            calendar.getEvent(
+                    "Important Meeting",
+                    updateStartTime,
+                    updateEndTime
+            );
 
     assertEquals("Important Meeting", updatedDetailedEvent.getSubject());
     assertEquals(updateStartTime.toString(), updatedDetailedEvent.getStartDateTime().toString());
@@ -256,7 +270,12 @@ public class CalendarEditEventTest extends AbstractCalendarTest {
             EditMode.SINGLE
     );
 
-    EventInterface updatedDetailedEvent2 = calendar.getEvent("Important Meeting", startTimeUpdate, endTime);
+    EventInterface updatedDetailedEvent2 =
+            calendar.getEvent(
+                    "Important Meeting",
+                    startTimeUpdate,
+                    endTime
+            );
 
     assertEquals("Important Meeting", updatedDetailedEvent2.getSubject());
   }

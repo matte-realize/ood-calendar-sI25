@@ -1,4 +1,4 @@
-package calendarModelTests;
+package calendarmodeltests;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -52,7 +52,7 @@ public class CalendarCreateEventTest {
     assertEquals(expectedWeddingDateEndTime, allDayEvent.getEndDateTime().toString());
 
     EventInterface detailedEvent = calendar.createEvent(
-      "Meeting",
+            "Meeting",
             LocalDateTime.of(2025, 7, 14, 9, 0),
             LocalDateTime.of(2025, 7, 14, 10, 0),
             "Discussion about ethics.",

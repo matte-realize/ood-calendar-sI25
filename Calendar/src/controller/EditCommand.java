@@ -47,7 +47,9 @@ public class EditCommand extends AbstractCommand {
    * @param calendarModel a calendar model.
    * @param calendarView  a calendar view.
    */
-  public EditCommand(String tokensString, CalendarManagement calendarModel, CalendarView calendarView) {
+  public EditCommand(String tokensString,
+                     CalendarManagement calendarModel,
+                     CalendarView calendarView) {
     this.tokensString = "edit" + tokensString;
     this.calendarModel = calendarModel;
     this.selectedCalendar = calendarModel.getSelectedCalendar();
@@ -89,7 +91,12 @@ public class EditCommand extends AbstractCommand {
       return;
     }
 
-    selectedCalendar.editEvent(subject, LocalDateTime.parse(from), editEventHelper(subject, from, to, property, newValue), EditMode.SINGLE);
+    selectedCalendar.editEvent(
+            subject,
+            LocalDateTime.parse(from),
+            editEventHelper(subject, from, to, property, newValue),
+            EditMode.SINGLE
+    );
   }
 
   private void handleEditEventsFrom(Matcher m) {
@@ -109,7 +116,12 @@ public class EditCommand extends AbstractCommand {
       return;
     }
 
-    selectedCalendar.editEvent(subject, LocalDateTime.parse(from), editEventHelper(subject, from, null, property, newValue), EditMode.FUTURE);
+    selectedCalendar.editEvent(
+            subject,
+            LocalDateTime.parse(from),
+            editEventHelper(subject, from, null, property, newValue),
+            EditMode.FUTURE
+    );
   }
 
   private void handleEditSeries(Matcher m) {
@@ -129,7 +141,12 @@ public class EditCommand extends AbstractCommand {
       return;
     }
 
-    selectedCalendar.editEvent(subject, LocalDateTime.parse(from), editEventHelper(subject, from, null, property, newValue), EditMode.ALL);
+    selectedCalendar.editEvent(
+            subject,
+            LocalDateTime.parse(from),
+            editEventHelper(subject, from, null, property, newValue),
+            EditMode.ALL
+    );
   }
 
   private void handleEditCalendar(Matcher m) {
@@ -146,7 +163,13 @@ public class EditCommand extends AbstractCommand {
     calendarModel.editCalendar(name, property, newValue);
   }
 
-  private EventInterface editEventHelper(String subject, String from, String to, String property, String newValue) {
+  private EventInterface editEventHelper(
+          String subject,
+          String from,
+          String to,
+          String property,
+          String newValue
+  ) {
     LocalDateTime startDateTime = LocalDateTime.parse(from);
     LocalDateTime endDateTime = null;
     if (to != null) {
@@ -162,16 +185,20 @@ public class EditCommand extends AbstractCommand {
     }
 
     try {
-      EventInterface oldEvent = selectedCalendar.getEvent(subject, LocalDateTime.parse(from), endDateTime);
+      EventInterface oldEvent = selectedCalendar.getEvent(
+              subject, LocalDateTime.parse(from), endDateTime
+      );
       if (oldEvent == null) {
         return null;
       }
-      Event.CustomEventBuilder newEventBuilder = new Event.CustomEventBuilder().setSubject(oldEvent.getSubject())
-              .setDescription(oldEvent.getDescription())
-              .setLocation(oldEvent.getLocation())
-              .setEndDateTime(oldEvent.getEndDateTime())
-              .setStartDateTime(oldEvent.getStartDateTime())
-              .setStatus(oldEvent.getStatus());
+      Event.CustomEventBuilder newEventBuilder =
+              new Event.CustomEventBuilder()
+                      .setSubject(oldEvent.getSubject())
+                      .setDescription(oldEvent.getDescription())
+                      .setLocation(oldEvent.getLocation())
+                      .setEndDateTime(oldEvent.getEndDateTime())
+                      .setStartDateTime(oldEvent.getStartDateTime())
+                      .setStatus(oldEvent.getStatus());
 
       switch (property) {
         case "subject":
