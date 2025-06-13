@@ -23,7 +23,6 @@ import static org.junit.Assert.fail;
 public class CalendarExceptionEditTest extends AbstractCalendarTest {
   @Test
   public void testEditingSubjectToNull() {
-
     try {
       EventInterface allDayEventEdit = new Event.CustomEventBuilder()
               .setSubject(null)

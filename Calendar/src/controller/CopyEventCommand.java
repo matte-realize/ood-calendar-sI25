@@ -51,7 +51,9 @@ public class CopyEventCommand extends AbstractCommand {
    * @param calendarModel a calendar model.
    * @param calendarView  a calendarView
    */
-  public CopyEventCommand(String tokensString, CalendarManagement calendarModel, CalendarView calendarView) {
+  public CopyEventCommand(String tokensString,
+                          CalendarManagement calendarModel,
+                          CalendarView calendarView) {
     this.tokensString = "copy" + tokensString;
     this.calendarModel = calendarModel;
     this.selectedCalendar = calendarModel.getSelectedCalendar();
@@ -83,7 +85,8 @@ public class CopyEventCommand extends AbstractCommand {
       return;
     }
 
-    calendarModel.copyEvent(selectedCalendar.getEvent(eventName, LocalDateTime.parse(eventDate), null),
+    calendarModel.copyEvent(selectedCalendar.getEvent(eventName,
+                    LocalDateTime.parse(eventDate), null),
             targetCalendar,
             LocalDateTime.parse(targetDate));
   }
@@ -98,7 +101,8 @@ public class CopyEventCommand extends AbstractCommand {
       return;
     }
 
-    calendarModel.copyEvents(convertEvents(selectedCalendar.getEventsSingleDay(LocalDate.parse(eventsDate)),
+    calendarModel.copyEvents(convertEvents(
+                    selectedCalendar.getEventsSingleDay(LocalDate.parse(eventsDate)),
                     LocalDate.parse(targetDate),
                     calendarModel.getCalendarTimezone(null),
                     calendarModel.getCalendarTimezone(targetCalendar)),
@@ -116,7 +120,9 @@ public class CopyEventCommand extends AbstractCommand {
       return;
     }
 
-    calendarModel.copyEvents(convertEvents(selectedCalendar.getEventsWindow(LocalDateTime.parse(eventsStartDate + "T00:00"),
+    calendarModel.copyEvents(convertEvents(
+                    selectedCalendar.getEventsWindow(
+                            LocalDateTime.parse(eventsStartDate + "T00:00"),
                             LocalDateTime.parse(eventsEndDate + "T23:59")),
                     LocalDate.parse(targetDate),
                     calendarModel.getCalendarTimezone(null),
@@ -132,12 +138,14 @@ public class CopyEventCommand extends AbstractCommand {
 
       LocalDateTime test = event.getEndDateTime();
 
-      LocalDateTime tempTargetDate = LocalDateTime.of(targetDate, event.getStartDateTime().toLocalTime());
+      LocalDateTime tempTargetDate = LocalDateTime.of(
+              targetDate, event.getStartDateTime().toLocalTime());
       ZonedDateTime sourceDateTime = tempTargetDate.atZone(oldZoneId);
       ZonedDateTime targetDateTime = sourceDateTime.withZoneSameInstant(newZoneId);
       LocalDateTime targetLocalDateTime = targetDateTime.toLocalDateTime();
 
-      LocalDateTime tempTargetEndDate = LocalDateTime.of(targetDate, event.getEndDateTime().toLocalTime());
+      LocalDateTime tempTargetEndDate = LocalDateTime.of(
+              targetDate, event.getEndDateTime().toLocalTime());
       ZonedDateTime sourceEndDateTime = tempTargetEndDate.atZone(oldZoneId);
       ZonedDateTime targetEndDateTime = sourceEndDateTime.withZoneSameInstant(newZoneId);
       LocalDateTime targetEndLocalDateTime = targetEndDateTime.toLocalDateTime();

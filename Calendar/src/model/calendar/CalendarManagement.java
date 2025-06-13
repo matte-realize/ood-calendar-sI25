@@ -36,6 +36,12 @@ public class CalendarManagement {
     return selectedCalendar;
   }
 
+  /**
+   * A getter for the calendar's time zone.
+   *
+   * @param calendarName the calendar name for retrieval.
+   * @return a zone id for the calendar's time zone.
+   */
   public ZoneId getCalendarTimezone(String calendarName) {
 
     for (CalendarModel calendarModel : calendarModels.values()) {
@@ -59,7 +65,10 @@ public class CalendarManagement {
 
     for (CalendarModel c : this.calendarModels.values()) {
       if (c.getName().equals(calendarName)) {
-        throw new IllegalArgumentException("There already exists a calendar with the name " + calendarName);
+        throw new IllegalArgumentException(
+                "There already exists a calendar with the name "
+                        + calendarName
+        );
       }
     }
 
@@ -82,7 +91,6 @@ public class CalendarManagement {
    * @param calendarName the name of the calendar to be selected.
    */
   public void selectCalendar(String calendarName) throws IllegalArgumentException {
-
     boolean found = false;
 
     for (CalendarModel c : this.calendarModels.values()) {
@@ -94,7 +102,10 @@ public class CalendarManagement {
     }
 
     if (!found) {
-      throw new IllegalArgumentException("There does not exist a calendar with the name " + calendarName);
+      throw new IllegalArgumentException(
+              "There does not exist a calendar with the name "
+                      + calendarName
+      );
     }
   }
 
@@ -102,11 +113,14 @@ public class CalendarManagement {
    * A method that utilizes the builder method to create a new calendar that will change the
    * calendar with the name being given.
    *
-   * @param calendarName        the name of the calendar to be edited.
-   * @param property the new calendar name the calendar will change into.
-   * @param newValue       the new zone id the calendar will change into.
+   * @param calendarName the name of the calendar to be edited.
+   * @param property     the new calendar name the calendar will change into.
+   * @param newValue     the new zone id the calendar will change into.
    */
-  public void editCalendar(String calendarName, String property, String newValue) throws IllegalArgumentException {
+  public void editCalendar(
+          String calendarName,
+          String property, String newValue
+  ) throws IllegalArgumentException {
 
     CalendarModel calenderToUpdate = null;
     boolean found = false;
@@ -116,7 +130,10 @@ public class CalendarManagement {
       case "name":
         for (CalendarModel c : this.calendarModels.values()) {
           if (c.getName().equals(newValue)) {
-            throw new IllegalArgumentException("There already exists a calendar with the name " + newValue);
+            throw new IllegalArgumentException(
+                    "There already exists a calendar with the name "
+                            + newValue
+            );
           } else if (c.getName().equals(calendarName)) {
             found = true;
             calenderToUpdate = c;
@@ -124,7 +141,10 @@ public class CalendarManagement {
         }
 
         if (!found) {
-          throw new IllegalArgumentException("There does not exist a calendar with the name " + calendarName);
+          throw new IllegalArgumentException(
+                  "There does not exist a calendar with the name "
+                          + calendarName
+          );
         }
 
         newCalendar = new CalendarModel.CustomCalendarBuilder()
@@ -145,7 +165,10 @@ public class CalendarManagement {
           }
 
           if (!found) {
-            throw new IllegalArgumentException("There does not exist a calendar with the name " + calendarName);
+            throw new IllegalArgumentException(
+                    "There does not exist a calendar with the name "
+                            + calendarName
+            );
           }
 
           calendarModels.remove(calendarName);
@@ -165,10 +188,15 @@ public class CalendarManagement {
 
   }
 
+  /**
+   * A method that allows for events to be copied.
+   *
+   * @param event          the event given for copying.
+   * @param targetCalendar the target calendar where it will be copied.
+   * @param targetDate     the local date time of the target date.
+   */
   public void copyEvent(EventInterface event, String targetCalendar, LocalDateTime targetDate) {
-
     for (CalendarModel c : this.calendarModels.values()) {
-
       if (c.getName().equals(targetCalendar)) {
         c.getCalendar().createEvent(event.getSubject(),
                 targetDate,
@@ -180,10 +208,14 @@ public class CalendarManagement {
     }
   }
 
+  /**
+   * A method that allows for copying multiple events.
+   *
+   * @param events         the events given for copying.
+   * @param targetCalendar the target calendar where it will be copied.
+   */
   public void copyEvents(List<EventInterface> events, String targetCalendar) {
-
     for (CalendarModel c : this.calendarModels.values()) {
-
       if (c.getName().equals(targetCalendar)) {
         for (EventInterface e : events) {
           c.getCalendar().createEvent(e.getSubject(),
@@ -198,7 +230,3 @@ public class CalendarManagement {
 
   }
 }
-
-
-// handle exceptions + name + ensure subjects != subject
-// syntax

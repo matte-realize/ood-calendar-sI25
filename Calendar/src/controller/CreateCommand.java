@@ -65,7 +65,9 @@ public class CreateCommand extends AbstractCommand {
    * @param calendarModel a calendar model.
    * @param calendarView  a calendar view.
    */
-  public CreateCommand(String tokensString, CalendarManagement calendarModel, CalendarView calendarView) {
+  public CreateCommand(String tokensString,
+                       CalendarManagement calendarModel,
+                       CalendarView calendarView) {
     this.tokensString = "create" + tokensString;
     this.calendarModel = calendarModel;
     this.selectedCalendar = calendarModel.getSelectedCalendar();

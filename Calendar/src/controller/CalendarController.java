@@ -89,7 +89,8 @@ public class CalendarController implements CalendarControllerInterface {
     }
   }
 
-  private boolean processCommand(String command, String tokensString) throws IllegalArgumentException {
+  private boolean processCommand(String command, String tokensString)
+          throws IllegalArgumentException {
     switch (command) {
       case "create":
         CreateCommand createEvent =
@@ -115,6 +116,7 @@ public class CalendarController implements CalendarControllerInterface {
         CopyEventCommand copyEvent =
                 new CopyEventCommand(tokensString, calendarModel, calendarView);
         copyEvent.execute();
+        break;
       case "use":
         QueryCommand useCalendar =
                 new QueryCommand(tokensString, "use", calendarModel, calendarView);
