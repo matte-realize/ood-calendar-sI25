@@ -78,4 +78,5 @@ Matthew - Created the model and tests for the Calendar
 
 - Changed Model from being just a Calendar to a CalendarManagement which holds a list of CalendarModels
 - - A Calendar model has a name, timezone, and Calendar - The reason for this change was so that it we could best use our existing Calendar class and just work with a list of them in the top level model
-- 
+- Since we changed the model, we had to change how the controller uses it slightly
+- - An example of this was adding a selected calendar variable to each command so it knows which calendar it is working with
