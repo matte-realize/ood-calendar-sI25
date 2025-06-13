@@ -1,8 +1,9 @@
 ## Instructions 
 
-The program runs through Intellij using the CalendarApp class. After the
-prompt "Type commands to view/edit calendar (type 'exit' to quit):" comes
-up, users will be able to create calendars using the following prompt:
+The program runs through Intellij using the CalendarApp class.
+It can also be run using the jar file by double-clicking it (without command line arguments)
+or through the terminal. After the prompt "Type commands to view/edit calendar
+(type 'exit' to quit):" comes up, users will be able to create calendars using the following prompt:
 
 - create calendar --name (name of the calendar) --timezone (valid time zone format)
 
@@ -62,6 +63,8 @@ To use query commands, the following commands are valid:
 - show status on (XXXX-XX-XX)T(XX:XX)
 
 To exit the program, the input is "exit."
+
+
 
 ## Features
 

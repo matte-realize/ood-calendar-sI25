@@ -1,6 +1,5 @@
 package calendarcontrollertests.calendartesting;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -18,28 +17,30 @@ import static org.junit.Assert.assertEquals;
  */
 public class CalendarControllerEditCalendarTest extends AbstractControllerCalendarTest {
 
-  @Before
+  @Test
   public void testEditCalendar() {
     String createCalendar = " calendar --name test --timezone Europe/Paris";
     CreateCommand createCommand = new CreateCommand(createCalendar,
             calendarManagement, calendarView);
     createCommand.execute();
 
+    calendarManagement.selectCalendar("test");
+
     assertEquals(ZoneId.of("Europe/Paris"), calendarManagement.getCalendarTimezone("test"));
 
-    String editCalendarName = " calendar --name test --property name \"test_edit\"";
+    String editCalendarName = " calendar --name test --property name testEdit";
     EditCommand editCommand1 = new EditCommand(editCalendarName,
             calendarManagement, calendarView);
     editCommand1.execute();
 
-    assertEquals(ZoneId.of("Europe/Paris"), calendarManagement.getCalendarTimezone("test_edit"));
+    assertEquals(ZoneId.of("Europe/Paris"), calendarManagement.getCalendarTimezone("testEdit"));
 
-    String editCalendarTimeZone = " calendar --name test_edit --property timezone \"Africa/Harare\"";
+    String editCalendarTimeZone = " calendar --name testEdit --property timezone Africa/Harare";
     EditCommand editCommand2 = new EditCommand(editCalendarTimeZone,
             calendarManagement, calendarView);
     editCommand2.execute();
 
-    assertEquals(ZoneId.of("Africa/Harare"), calendarManagement.getCalendarTimezone("test_edit"));
+    assertEquals(ZoneId.of("Africa/Harare"), calendarManagement.getCalendarTimezone("testEdit"));
   }
 
   @Test
@@ -48,6 +49,8 @@ public class CalendarControllerEditCalendarTest extends AbstractControllerCalend
     CreateCommand createCommand = new CreateCommand(createCalendar,
             calendarManagement, calendarView);
     createCommand.execute();
+
+    calendarManagement.selectCalendar("test");
 
     String editCalendar = " calendar --name test --property timezone \"test_edit\"";
     EditCommand editCommand = new EditCommand(editCalendar,

@@ -142,10 +142,8 @@ public class Calendar implements CalendarInterface {
         Event instance = (Event) builder.build();
 
         series.addInstance(instance);
-        eventsByDate.computeIfAbsent(
-                instanceStart.toLocalDate(),
-                d -> new ArrayList<>()
-        ).add(instance);
+        eventsByDate.computeIfAbsent(instanceStart.toLocalDate(),d -> new ArrayList<>())
+                .add(instance);
 
         count++;
 

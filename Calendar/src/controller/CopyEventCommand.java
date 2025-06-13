@@ -169,7 +169,8 @@ public class CopyEventCommand extends AbstractCommand {
               LocalDateTime.parse(eventsEndDate + "T23:59"));
 
       if (eventsInWindow == null || eventsInWindow.isEmpty()) {
-        calendarView.printError("No events found between " + eventsStartDate + " and " + eventsEndDate);
+        calendarView.printError("No events found between "
+                + eventsStartDate + " and " + eventsEndDate);
         return;
       }
 

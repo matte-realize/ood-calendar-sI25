@@ -48,7 +48,8 @@ public class CalendarControllerCreateEventTest extends AbstractControllerEventTe
     LocalDateTime start3 = LocalDateTime.of(2025, 6, 22, 8, 0);
     LocalDateTime end3 = LocalDateTime.of(2025, 6, 22, 9, 0);
 
-    String createEventSeriesByRange = " event \"Event Nine\" from 2025-06-08T08:00 to 2025-06-08T09:00"
+    String createEventSeriesByRange = " event \"Event Nine\"" +
+            " from 2025-06-08T08:00 to 2025-06-08T09:00"
             + " repeats U until 2025-06-22";
     CreateCommand createCommand = new CreateCommand(createEventSeriesByRange,
             calendarManagement, calendarView);
@@ -78,7 +79,8 @@ public class CalendarControllerCreateEventTest extends AbstractControllerEventTe
 
   @Test
   public void testCreateEventSeriesByInstances() {
-    String createEventSeriesByInstances = " event \"Event Twelve\" on 2025-06-10 repeats T for 4 times";
+    String createEventSeriesByInstances = " event \"Event Twelve\" on 2025-06-10" +
+            " repeats T for 4 times";
     CreateCommand createCommand = new CreateCommand(createEventSeriesByInstances,
             calendarManagement, calendarView);
     createCommand.execute();
@@ -89,20 +91,26 @@ public class CalendarControllerCreateEventTest extends AbstractControllerEventTe
     List<Event> testEvent1 = testCalendar.getEventsSingleDay(LocalDate.parse("2025-06-10"));
     assertEquals(1, testEvent1.size());
     assertEquals("Event Twelve", testEvent1.get(0).getSubject());
-    assertEquals(LocalDateTime.parse("2025-06-10T08:00"), testEvent1.get(0).getStartDateTime());
-    assertEquals(LocalDateTime.parse("2025-06-10T17:00"), testEvent1.get(0).getEndDateTime());
+    assertEquals(LocalDateTime.parse("2025-06-10T08:00"),
+            testEvent1.get(0).getStartDateTime());
+    assertEquals(LocalDateTime.parse("2025-06-10T17:00"),
+            testEvent1.get(0).getEndDateTime());
 
     List<Event> testEvent2 = testCalendar.getEventsSingleDay(LocalDate.parse("2025-06-17"));
     assertEquals(1, testEvent2.size());
     assertEquals("Event Twelve", testEvent2.get(0).getSubject());
-    assertEquals(LocalDateTime.parse("2025-06-17T08:00"), testEvent2.get(0).getStartDateTime());
-    assertEquals(LocalDateTime.parse("2025-06-17T17:00"), testEvent2.get(0).getEndDateTime());
+    assertEquals(LocalDateTime.parse("2025-06-17T08:00"),
+            testEvent2.get(0).getStartDateTime());
+    assertEquals(LocalDateTime.parse("2025-06-17T17:00"),
+            testEvent2.get(0).getEndDateTime());
 
     List<Event> testEvent3 = testCalendar.getEventsSingleDay(LocalDate.parse("2025-06-24"));
     assertEquals(1, testEvent3.size());
     assertEquals("Event Twelve", testEvent3.get(0).getSubject());
-    assertEquals(LocalDateTime.parse("2025-06-24T08:00"), testEvent3.get(0).getStartDateTime());
-    assertEquals(LocalDateTime.parse("2025-06-24T17:00"), testEvent3.get(0).getEndDateTime());
+    assertEquals(LocalDateTime.parse("2025-06-24T08:00"),
+            testEvent3.get(0).getStartDateTime());
+    assertEquals(LocalDateTime.parse("2025-06-24T17:00"),
+            testEvent3.get(0).getEndDateTime());
   }
 
   @Test
@@ -112,14 +120,16 @@ public class CalendarControllerCreateEventTest extends AbstractControllerEventTe
             calendarManagement, calendarView);
     createCommand.execute();
 
-    String simulatedInput = "An event with the same subject, start, and end time already exists.\n";
+    String simulatedInput = "An event with the same subject," +
+            " start, and end time already exists.\n";
     InputStream in = new ByteArrayInputStream(simulatedInput.getBytes());
     System.setIn(in);
     Scanner scanner = new Scanner(System.in);
     String line = scanner.nextLine();
     scanner.close();
 
-    assertEquals("An event with the same subject, start, and end time already exists.", line);
+    assertEquals("An event with the same subject, start," +
+            " and end time already exists.", line);
   }
 
   @Test
@@ -140,13 +150,15 @@ public class CalendarControllerCreateEventTest extends AbstractControllerEventTe
 
   @Test
   public void testInvalidCreateEventSeries() {
-    String createEventSeriesByRange = " event \"Event Nine\" from 2025-06-08T08:00 to 2025-06-08T09:00"
+    String createEventSeriesByRange = " event \"Event Nine\"" +
+            " from 2025-06-08T08:00 to 2025-06-08T09:00"
             + " repeats U until 2025-07-01";
     CreateCommand createCommand1 = new CreateCommand(createEventSeriesByRange,
             calendarManagement, calendarView);
     createCommand1.execute();
 
-    String createEventSeriesByInstances = " event \"Event Twelve\" on 2025-08-12 repeats T for 4 times";
+    String createEventSeriesByInstances = " event \"Event Twelve\"" +
+            " on 2025-08-12 repeats T for 4 times";
     CreateCommand createCommand2 = new CreateCommand(createEventSeriesByInstances,
             calendarManagement, calendarView);
     createCommand2.execute();
@@ -166,8 +178,10 @@ public class CalendarControllerCreateEventTest extends AbstractControllerEventTe
 
     scanner.close();
 
-    assertEquals("Subject and start time cannot be the same as an existing series!", allLines.get(0));
-    assertEquals("Subject and start time cannot be the same as an existing series!", allLines.get(1));
+    assertEquals("Subject and start time cannot be the same as an existing series!",
+            allLines.get(0));
+    assertEquals("Subject and start time cannot be the same as an existing series!",
+            allLines.get(1));
   }
 
   @Test

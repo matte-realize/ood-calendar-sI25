@@ -8,7 +8,6 @@ import controller.CreateCommand;
 import controller.QueryCommand;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 /**
  * A JUnit test that tests for the controller being able to query calendars.

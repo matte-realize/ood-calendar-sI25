@@ -7,7 +7,6 @@ import controller.CalendarController;
 import model.calendar.CalendarManagement;
 import view.CalendarView;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
@@ -20,11 +19,11 @@ import java.nio.file.Path;
  */
 public class CalendarControllerTest {
   private CalendarController controller;
-  private CalendarManagement management;
-  private CalendarView view;
 
   @Before
   public void setup() {
+    CalendarManagement management;
+    CalendarView view;
     management = new CalendarManagement();
     view = new CalendarView();
     controller = new CalendarController(management, view);
@@ -45,7 +44,7 @@ public class CalendarControllerTest {
 
       try {
         controller.play(args);
-        assertTrue("Script parsed successfully", true);
+        // Should continue
       } catch (Exception e) {
         fail("Valid script should parse without exceptions: " + e.getMessage());
       }
@@ -70,7 +69,7 @@ public class CalendarControllerTest {
 
       try {
         controller.play(args);
-        assertTrue("Script parsed successfully", true);
+        // Should continue
       } catch (Exception e) {
         fail("Valid script should parse without exceptions: " + e.getMessage());
       }
@@ -96,7 +95,7 @@ public class CalendarControllerTest {
 
       try {
         controller.play(args);
-        assertTrue("Script parsed successfully", true);
+        // Should continue
       } catch (Exception e) {
         fail("Valid script should parse without exceptions: " + e.getMessage());
       }

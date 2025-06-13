@@ -33,7 +33,7 @@ public class EditCommand extends AbstractCommand {
 
   private static final Pattern EditCalendar = Pattern.compile(
           "^edit calendar --name ([^\"]+) --property "
-                  + "(name|timezone) \"([^\"]+)\"$");
+                  + "(name|timezone) ([^\"]+)$");
 
   private final String tokensString;
   private final CalendarManagement calendarModel;
