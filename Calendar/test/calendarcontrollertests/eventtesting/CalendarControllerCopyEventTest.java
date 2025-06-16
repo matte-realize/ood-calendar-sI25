@@ -117,14 +117,21 @@ public class CalendarControllerCopyEventTest extends AbstractControllerEventTest
   @Test
   public void testCopyEventsSameTimeZone() {
     String copyEvent = " events on 2005-10-17 --target dupeTimeZone to 2005-11-17";
-    CopyEventCommand copyEventCommand = new CopyEventCommand(copyEvent,
-            calendarManagement, calendarView);
+    CopyEventCommand copyEventCommand = new CopyEventCommand(
+            copyEvent,
+            calendarManagement,
+            calendarView
+    );
 
     copyEventCommand.execute();
 
     String selectCalendar = " calendar --name dupeTimeZone";
-    QueryCommand selectCalendarCommand = new QueryCommand(selectCalendar,
-            "use", calendarManagement, calendarView);
+    QueryCommand selectCalendarCommand = new QueryCommand(
+            selectCalendar,
+            "use",
+            calendarManagement,
+            calendarView
+    );
 
     selectCalendarCommand.execute();
 
@@ -137,6 +144,39 @@ public class CalendarControllerCopyEventTest extends AbstractControllerEventTest
     assertEquals(1, testEvent.size());
     assertEquals("Test Event 3", testEvent.get(0).getSubject());
     assertEquals(LocalDateTime.parse("2005-11-17T08:00"),
+            testEvent.get(0).getStartDateTime());
+  }
+
+  @Test
+  public void testCopyEventsInRange() {
+    String copyEvent = " events between 2005-10-17 and 2005-10-31 --target newCalendar to 2005-12-20";
+    CopyEventCommand copyEventCommand = new CopyEventCommand(
+            copyEvent,
+            calendarManagement,
+            calendarView
+    );
+
+    copyEventCommand.execute();
+
+    String selectCalendar = " calendar --name newCalendar";
+    QueryCommand selectCalendarCommand = new QueryCommand(
+            selectCalendar,
+            "use",
+            calendarManagement,
+            calendarView
+    );
+
+    selectCalendarCommand.execute();
+
+    Calendar testCalendar = calendarManagement.getSelectedCalendar();
+
+    assertEquals(calendarManagement.getSelectedCalendar().toString(), testCalendar.toString());
+
+    List<Event> testEvent = testCalendar.getEventsSingleDay(LocalDate.parse("2005-12-20"));
+
+    assertEquals(1, testEvent.size());
+    assertEquals("Test Event 3", testEvent.get(0).getSubject());
+    assertEquals(LocalDateTime.parse("2005-12-20T08:00"),
             testEvent.get(0).getStartDateTime());
   }
 

@@ -190,4 +190,10 @@ public class CalendarControllerQueryEventTest extends AbstractControllerEventTes
 
     assertEquals("Busy on 2025-08-10T09:00", busy);
   }
+
+  @Test
+  public void testDisplayChangedTimesFromTimezoneChange() {
+  // Do you have a test to verify that events are printed with the
+    // correct dates and times *after* the timezone of the calendar has been changed?
+  }
 }
