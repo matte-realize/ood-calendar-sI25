@@ -8,6 +8,8 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Time;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -63,6 +65,14 @@ public class JFrameCalendarView extends JFrame implements CalendarViewInterface 
   private List<Event> currentEvents;
   private List<String> availableCalendars = new ArrayList<>();
   private String currentSelectedCalendarName = null;
+
+  private JCheckBox repeatCheckBox;
+  private JPanel repeatOptionsPanel;
+  private JCheckBox[] dayCheckboxes;
+  private JRadioButton repeatForWeeksRadio;
+  private JRadioButton repeatUntilDateRadio;
+  private JSpinner weeksSpinner;
+  private JSpinner untilDateSpinner;
 
   public JFrameCalendarView() {
     initializeGUI();
@@ -302,10 +312,57 @@ public class JFrameCalendarView extends JFrame implements CalendarViewInterface 
     buttonPanel.add(createEventButton);
     buttonPanel.add(cancelEditButton);
 
+
+    repeatCheckBox = new JCheckBox("Repeat Event");
+    repeatCheckBox.addActionListener(e -> repeatOptionsPanel.setVisible(repeatCheckBox.isSelected()));
+    eventManagementPanel.add(repeatCheckBox);
+
+    repeatOptionsPanel = new JPanel();
+    repeatOptionsPanel.setLayout(new BoxLayout(repeatOptionsPanel, BoxLayout.Y_AXIS));
+    repeatOptionsPanel.setBorder(BorderFactory.createTitledBorder("Repeat Options"));
+    repeatOptionsPanel.setVisible(false);
+
+    String[] days = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
+    dayCheckboxes = new JCheckBox[days.length];
+    JPanel daysPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    daysPanel.add(new JLabel("Repeat on:"));
+    for (int i = 0; i < days.length; i++) {
+      dayCheckboxes[i] = new JCheckBox(days[i]);
+      daysPanel.add(dayCheckboxes[i]);
+    }
+    repeatOptionsPanel.add(daysPanel);
+
+    repeatForWeeksRadio = new JRadioButton("Repeat for");
+    repeatUntilDateRadio = new JRadioButton("Repeat until");
+    ButtonGroup repeatGroup = new ButtonGroup();
+    repeatGroup.add(repeatForWeeksRadio);
+    repeatGroup.add(repeatUntilDateRadio);
+
+    weeksSpinner = new JSpinner(new SpinnerNumberModel(1, 1, 52, 1));
+    JPanel weeksPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    weeksPanel.add(repeatForWeeksRadio);
+    weeksPanel.add(weeksSpinner);
+    weeksPanel.add(new JLabel("weeks"));
+
+    untilDateSpinner = new JSpinner(new SpinnerDateModel());
+    JSpinner.DateEditor untilDateEditor = new JSpinner.DateEditor(untilDateSpinner, "yyyy-MM-dd");
+    untilDateSpinner.setEditor(untilDateEditor);
+    untilDateSpinner.setValue(java.sql.Date.valueOf(LocalDate.now().plusWeeks(1)));
+
+
+    JPanel untilDatePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    untilDatePanel.add(repeatUntilDateRadio);
+    untilDatePanel.add(untilDateSpinner);
+
+    repeatOptionsPanel.add(weeksPanel);
+    repeatOptionsPanel.add(untilDatePanel);
+
     eventManagementPanel.add(titlePanel);
     eventManagementPanel.add(startPanel);
     eventManagementPanel.add(endPanel);
+    eventManagementPanel.add(repeatOptionsPanel);
     eventManagementPanel.add(buttonPanel);
+
   }
 
   private void createStatusPanel() {
@@ -364,6 +421,50 @@ public class JFrameCalendarView extends JFrame implements CalendarViewInterface 
           return;
         }
 
+        boolean isRepeating = repeatCheckBox.isSelected();
+        StringBuilder repeatDays = new StringBuilder();
+        int weeks = 0;
+        java.util.Date until;
+        LocalDate untilDate = null;
+        if (isRepeating) {
+          for (int i = 0; i < dayCheckboxes.length; i++) {
+            if (dayCheckboxes[i].isSelected()) {
+              switch (i + 1) {
+                case 1:
+                  repeatDays.append("M");
+                  break;
+                case 2:
+                  repeatDays.append("T");
+                  break;
+                case 3:
+                  repeatDays.append("W");
+                  break;
+                case 4:
+                  repeatDays.append("R");
+                  break;
+                case 5:
+                  repeatDays.append("F");
+                  break;
+                case 6:
+                  repeatDays.append("S");
+                  break;
+                case 7:
+                  repeatDays.append("U");
+                  break;
+              }
+            }
+          }
+
+
+
+          if (repeatForWeeksRadio.isSelected()) {
+            weeks = (Integer) weeksSpinner.getValue();
+          } else if (repeatUntilDateRadio.isSelected()) {
+            until = (java.util.Date) untilDateSpinner.getValue();
+            untilDate = until.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+          }
+        }
+
         if (calendarModel != null) {
           if (isEditingMode && currentEditingEvent != null) {
             String commandString = String.format(" \"%s\" \"%s\" %s %s %s %s",
@@ -379,7 +480,7 @@ public class JFrameCalendarView extends JFrame implements CalendarViewInterface 
             editCommand.execute();
             setStatus("Event updated successfully: " + title);
             cancelEdit();
-          } else {
+          } else if (!isRepeating) {
 
             String commandString = String.format(" event \"%s\" from %sT%s to %sT%s",
                     title,
@@ -388,6 +489,36 @@ public class JFrameCalendarView extends JFrame implements CalendarViewInterface 
                     endDateTime.toLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
                     endDateTime.toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm"))
             );
+
+            controller.CreateCommand createCommand = new controller.CreateCommand(commandString, calendarModel, consoleView);
+            createCommand.execute();
+            setStatus("Event created successfully: " + title);
+            clearEventForm();
+          } else {
+
+            String commandString = "";
+            if (repeatForWeeksRadio.isSelected()) {
+              commandString = String.format(" event \"%s\" from %sT%s to %sT%s repeats %s for %s times",
+                      title,
+                      startDateTime.toLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                      startDateTime.toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm")),
+                      endDateTime.toLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                      endDateTime.toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm")),
+                      repeatDays,
+                      weeks
+
+              );
+            } else {
+              commandString = String.format(" event \"%s\" from %sT%s to %sT%s repeats %s until %s",
+                      title,
+                      startDateTime.toLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                      startDateTime.toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm")),
+                      endDateTime.toLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                      endDateTime.toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm")),
+                      repeatDays,
+                      untilDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+              );
+            }
 
             controller.CreateCommand createCommand = new controller.CreateCommand(commandString, calendarModel, consoleView);
             createCommand.execute();
@@ -480,15 +611,21 @@ public class JFrameCalendarView extends JFrame implements CalendarViewInterface 
     GridBagConstraints gbc = new GridBagConstraints();
     gbc.insets = new Insets(5, 5, 5, 5);
 
-    gbc.gridx = 0; gbc.gridy = 0; gbc.anchor = GridBagConstraints.WEST;
+    gbc.gridx = 0;
+    gbc.gridy = 0;
+    gbc.anchor = GridBagConstraints.WEST;
     formPanel.add(new JLabel("Calendar Name:"), gbc);
-    gbc.gridx = 1; gbc.fill = GridBagConstraints.HORIZONTAL;
+    gbc.gridx = 1;
+    gbc.fill = GridBagConstraints.HORIZONTAL;
     JTextField nameField = new JTextField(currentCalendar, 20);
     formPanel.add(nameField, gbc);
 
-    gbc.gridx = 0; gbc.gridy = 1; gbc.fill = GridBagConstraints.NONE;
+    gbc.gridx = 0;
+    gbc.gridy = 1;
+    gbc.fill = GridBagConstraints.NONE;
     formPanel.add(new JLabel("Timezone:"), gbc);
-    gbc.gridx = 1; gbc.fill = GridBagConstraints.HORIZONTAL;
+    gbc.gridx = 1;
+    gbc.fill = GridBagConstraints.HORIZONTAL;
     JComboBox<String> timezoneCombo = new JComboBox<>(TimeZone.getAvailableIDs());
 
     ZoneId currentTimezone = calendarModel.getCalendarTimezone(currentCalendar);
