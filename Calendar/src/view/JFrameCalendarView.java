@@ -342,7 +342,7 @@ public class JFrameCalendarView extends JFrame implements CalendarViewInterface 
     JPanel weeksPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
     weeksPanel.add(repeatForWeeksRadio);
     weeksPanel.add(weeksSpinner);
-    weeksPanel.add(new JLabel("weeks"));
+    weeksPanel.add(new JLabel("times"));
 
     untilDateSpinner = new JSpinner(new SpinnerDateModel());
     JSpinner.DateEditor untilDateEditor = new JSpinner.DateEditor(untilDateSpinner, "yyyy-MM-dd");
@@ -498,6 +498,7 @@ public class JFrameCalendarView extends JFrame implements CalendarViewInterface 
 
             String commandString = "";
             if (repeatForWeeksRadio.isSelected()) {
+              System.out.println(weeks);
               commandString = String.format(" event \"%s\" from %sT%s to %sT%s repeats %s for %s times",
                       title,
                       startDateTime.toLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
