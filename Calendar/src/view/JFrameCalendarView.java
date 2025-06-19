@@ -467,17 +467,38 @@ public class JFrameCalendarView extends JFrame implements CalendarViewInterface 
 
         if (calendarModel != null) {
           if (isEditingMode && currentEditingEvent != null) {
-            String commandString = String.format(" \"%s\" \"%s\" %s %s %s %s",
-                    currentEditingEvent.getSubject(),
-                    title,
-                    startDateTime.toLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-                    startDateTime.toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm")),
-                    endDateTime.toLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-                    endDateTime.toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm"))
-            );
+            String editSubjectCommandString = "";
+            String editStartDateCommandString = "";
+            String editEndDateCommandString = "";
 
-            controller.EditCommand editCommand = new controller.EditCommand(commandString, calendarModel, consoleView);
-            editCommand.execute();
+            editSubjectCommandString =
+                    createCommand(" events subject \"%s\" from %sT%s with %s",
+                            currentEditingEvent.getSubject(),
+                            currentEditingEvent.getStartDateTime(),
+                            title);
+            editStartDateCommandString =
+                    createCommand(" events start \"%s\" from %sT%s with %s",
+                            title,
+                            currentEditingEvent.getStartDateTime(),
+                            startDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm")));
+            editEndDateCommandString =
+                    createCommand(" events end \"%s\" from %sT%s with %s",
+                            title,
+                            startDateTime,
+                            endDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm")));
+
+            controller.EditCommand editSubjectCommand =
+                    new controller.EditCommand(editSubjectCommandString,
+                            calendarModel, consoleView);
+            editSubjectCommand.execute();
+            controller.EditCommand editStartCommand =
+                    new controller.EditCommand(editStartDateCommandString,
+                            calendarModel, consoleView);
+            editStartCommand.execute();
+            controller.EditCommand editEndCommand =
+                    new controller.EditCommand(editEndDateCommandString,
+                            calendarModel, consoleView);
+            editEndCommand.execute();
             setStatus("Event updated successfully: " + title);
             cancelEdit();
           } else if (!isRepeating) {
@@ -498,7 +519,7 @@ public class JFrameCalendarView extends JFrame implements CalendarViewInterface 
 
             String commandString = "";
             if (repeatForWeeksRadio.isSelected()) {
-              System.out.println(weeks);
+
               commandString = String.format(" event \"%s\" from %sT%s to %sT%s repeats %s for %s times",
                       title,
                       startDateTime.toLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
@@ -916,6 +937,14 @@ public class JFrameCalendarView extends JFrame implements CalendarViewInterface 
     if (isError) {
       JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
+  }
+
+  private String createCommand(String format, String title, LocalDateTime startDate, String newValue) {
+    return String.format(format,
+            title,
+            startDate.toLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+            startDate.toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm")),
+            newValue);
   }
 
   private void initialize() {
