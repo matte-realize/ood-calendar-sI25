@@ -64,6 +64,10 @@ To use query commands, the following commands are valid:
 
 To exit the program, the input is "exit."
 
+The User can also run the program through the GUI by not specifying a run mode. Here they can work
+with the default calendar or create a new one to work with. They can create single events or series and also
+view all the events they have on each day. They can also edit events as well as the calendar itslef.
+
 
 
 ## Features
@@ -80,11 +84,11 @@ Matthew - Created the model and tests for the Calendar
 
 ## Changes:
 
-- Changed Model from being just a Calendar to a CalendarManagement which holds a list of CalendarModels
-- - A Calendar model has a name, timezone, and Calendar - The reason for this change was so that it we could best use our existing Calendar class and just work with a list of them in the top level model
-- Since we changed the model, we had to change how the controller uses it slightly
-- - An example of this was adding a selected calendar variable to each command so it knows which calendar it is working with
-- The program will terminate on some edge cases but has soft handling unlike before.
+- Added the GUI to allow for working with a calendar
+- User can add single and series events
+- They can also edit single events and series events, however editing the times for a series doesn't currently work
+- One change to the existing design was the controller, all we added was for it to be able to handle running
+  - the program in the GUI mode. It was implemented by adding a single method.
 
 ## Additional:
 
