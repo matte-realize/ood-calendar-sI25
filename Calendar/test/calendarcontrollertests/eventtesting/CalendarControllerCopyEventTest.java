@@ -215,7 +215,8 @@ public class CalendarControllerCopyEventTest extends AbstractControllerEventTest
 
     createEventCommand3.execute();
 
-    String copyEvent = " events between 2025-12-12 and 2025-12-17 --target dupeTimeZone to 2025-12-20";
+    String copyEvent = " events between 2025-12-12 and 2025-12-17 "
+            + "--target dupeTimeZone to 2025-12-20";
     CopyEventCommand copyEventCommand = new CopyEventCommand(
             copyEvent,
             calendarManagement,
@@ -295,7 +296,8 @@ public class CalendarControllerCopyEventTest extends AbstractControllerEventTest
 
     createEventCommand3.execute();
 
-    String copyEvent = " events between 2025-12-12 and 2025-12-17 --target newCalendar to 2025-12-20";
+    String copyEvent = " events between 2025-12-12 and 2025-12-17 "
+            + "--target newCalendar to 2025-12-20";
     CopyEventCommand copyEventCommand = new CopyEventCommand(
             copyEvent,
             calendarManagement,

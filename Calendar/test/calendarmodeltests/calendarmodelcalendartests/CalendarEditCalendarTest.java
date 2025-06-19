@@ -32,7 +32,7 @@ public class CalendarEditCalendarTest {
     String editName = "NY";
 
     calendarManagement.editCalendar(calendarName, "name", editName);
-    calendarManagement.selectCalendar(editName); // verifies the name exists
+    calendarManagement.selectCalendar(editName); // verifies the name exist
 
     assertThrows(IllegalArgumentException.class, () -> {
       calendarManagement.createCalendar(editName, ZoneId.of("America/New_York"));

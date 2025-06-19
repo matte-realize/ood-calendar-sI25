@@ -68,7 +68,6 @@ The User can also run the program through the GUI by not specifying a run mode. 
 with the default calendar or create a new one to work with. They can create single events or series and also
 view all the events they have on each day. They can also edit events as well as the calendar itself.
 
-
 ## Features
 
 The calendar is able to create and edit a calendar before being able to access the calendar to individually create event

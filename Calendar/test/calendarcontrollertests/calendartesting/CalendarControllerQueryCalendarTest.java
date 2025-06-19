@@ -27,7 +27,7 @@ public class CalendarControllerQueryCalendarTest extends AbstractControllerCalen
     useCommand.execute();
 
     assertEquals(ZoneId.of("Europe/Paris"),
-            calendarManagement.getCalendarTimezone(null)); // shows selection
+            calendarManagement.getCalendarTimezone(null));
   }
 
   @Test

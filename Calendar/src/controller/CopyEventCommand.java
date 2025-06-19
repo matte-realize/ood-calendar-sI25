@@ -195,7 +195,6 @@ public class CopyEventCommand extends AbstractCommand {
     }
 
     try {
-      // Call getEventsWindow only once and reuse the result
       List<Event> eventsInWindow = selectedCalendar.getEventsWindow(
               LocalDateTime.parse(eventsStartDate + "T00:00"),
               LocalDateTime.parse(eventsEndDate + "T23:59"));
@@ -206,9 +205,8 @@ public class CopyEventCommand extends AbstractCommand {
         return;
       }
 
-      // Use the already retrieved eventsInWindow instead of calling getEventsWindow again
       calendarModel.copyEvents(convertEvents(
-                      eventsInWindow, // Use the variable instead of calling the method again
+                      eventsInWindow,
                       LocalDate.parse(targetDate),
                       calendarModel.getCalendarTimezone(null),
                       calendarModel.getCalendarTimezone(targetCalendar)),

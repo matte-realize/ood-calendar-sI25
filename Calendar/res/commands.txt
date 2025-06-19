@@ -9,7 +9,7 @@ create event "Event One" from 2025-08-10T09:00 to 2025-08-10T10:00
 print events on 2025-08-10
 show status on 2025-08-10T09:00
 
-edit calendar --name EventCalendar --property name "NY"
+edit calendar --name EventCalendar --property name NY
 
 use calendar --name NY
 
@@ -49,7 +49,15 @@ print events on 2025-08-10
 show status on 2025-08-10T09:00
 
 copy event "Event Ten" on 2025-12-25T08:00 --target Tokyo to 2025-09-14T11:00
-copy events on 2025-06-10 --target Los_Angeles to 2025-06-10
+copy events on 2025-08-10 --target Los_Angeles to 2025-08-10
+
+use calendar --name Paris
+
+create event "Event Two" from 2025-06-10T09:30 to 2025-06-10T11:00
+create event "Event Four" from 2025-06-12T06:00 to 2025-06-13T07:00
+create event "Event Seven" from 2025-06-14T06:00 to 2025-06-14T07:00
+create event "Event Nine" from 2025-06-24T06:00 to 2025-06-24T07:00
+
 copy events between 2025-06-10 and 2025-06-24 --target Harare to 2025-06-20
 
 exit

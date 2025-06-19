@@ -16,7 +16,6 @@ import model.enums.Location;
 import model.enums.Status;
 import model.event.Event;
 import model.event.EventInterface;
-import model.event.EventSeries;
 import view.CalendarView;
 
 /**
