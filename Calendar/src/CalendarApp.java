@@ -11,19 +11,24 @@ public class CalendarApp {
    * @param args takes in string arguments to execute commands.
    */
   public static void main(String[] args) {
-    if (args.length < 2 || !args[0].equalsIgnoreCase("--mode")) {
-      System.err.println("Usage: java CalendarApp --mode [interactive|headless] [commands.txt]");
-      return;
-    }
-
-    if (args[1].equalsIgnoreCase("headless") && args.length != 3) {
-      System.err.println("Missing file for headless mode");
-      return;
-    }
-
     CalendarManagement model = new CalendarManagement();
     CalendarView view = new CalendarView();
     CalendarController calendarController = new CalendarController(model, view);
+
+    if (args.length == 0) {
+      args = new String[] {"program", "gui"};
+    } else {
+      if (args.length < 2 || !args[0].equalsIgnoreCase("--mode")) {
+        System.err.println("Usage: java CalendarApp --mode [interactive|headless] [commands.txt]");
+        return;
+      }
+
+      if (args[1].equalsIgnoreCase("headless") && args.length != 3) {
+        System.err.println("Missing file for headless mode");
+        return;
+      }
+    }
+
     calendarController.play(args);
   }
 }

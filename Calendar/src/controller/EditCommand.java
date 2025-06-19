@@ -187,7 +187,6 @@ public class EditCommand extends AbstractCommand {
     }
 
     try {
-      // Special handling for timezone changes
       if ("timezone".equals(property)) {
         handleTimezoneChange(name, newValue);
       } else {
@@ -207,13 +206,11 @@ public class EditCommand extends AbstractCommand {
    */
   private void handleTimezoneChange(String calendarName, String newTimezone) {
     try {
-      // Validate the new timezone first (Controller responsibility - input validation)
       if (!isValidTimezone(newTimezone)) {
         calendarView.printError("Invalid timezone: " + newTimezone);
         return;
       }
 
-      // Get the old timezone before making changes (using existing CalendarManagement method)
       ZoneId oldTimezoneId = calendarModel.getCalendarTimezone(calendarName);
       if (oldTimezoneId == null) {
         calendarView.printError("Calendar not found: " + calendarName);
@@ -222,19 +219,16 @@ public class EditCommand extends AbstractCommand {
 
       String oldTimezone = oldTimezoneId.getId();
 
-      // If timezone is the same, no need to update events
       if (oldTimezone.equals(newTimezone)) {
         calendarModel.editCalendar(calendarName, "timezone", newTimezone);
         return;
       }
 
-      // Get the calendar and update all its events
       Calendar calendarToUpdate = getCalendarByName(calendarName);
       if (calendarToUpdate != null) {
         updateAllEventsForTimezoneChange(calendarToUpdate, oldTimezone, newTimezone);
       }
 
-      // Finally, update the calendar's timezone in the model
       calendarModel.editCalendar(calendarName, "timezone", newTimezone);
 
     } catch (Exception e) {
@@ -247,24 +241,16 @@ public class EditCommand extends AbstractCommand {
    * This works around the lack of a direct getCalendar method.
    */
   private Calendar getCalendarByName(String calendarName) {
-    // If it's the selected calendar and names match
     if (selectedCalendar != null) {
-      // We need to check if this is the calendar we're looking for
-      // Since we can get timezone by name, we can verify it's the right calendar
       ZoneId calendarTimezone = calendarModel.getCalendarTimezone(calendarName);
       if (calendarTimezone != null) {
-        // If the name exists in CalendarManagement, and we have a selected calendar,
-        // we can assume it's accessible. For proper implementation, you might want
-        // to add a getCalendar method to CalendarManagement.
-
-        // For now, if we're editing the selected calendar, use it
-        ZoneId selectedTimezone = calendarModel.getCalendarTimezone(null); // null gets selected calendar timezone
+        ZoneId selectedTimezone = calendarModel.getCalendarTimezone(null);
         if (selectedTimezone != null && selectedTimezone.equals(calendarTimezone)) {
           return selectedCalendar;
         }
       }
     }
-    return null; // In a full implementation, CalendarManagement should have getCalendar(name)
+    return null;
   }
 
   /**
@@ -281,23 +267,18 @@ public class EditCommand extends AbstractCommand {
       ZoneId oldZone = ZoneId.of(oldTimezone);
       ZoneId newZone = ZoneId.of(newTimezone);
 
-      // Get all events from the calendar
       List<EventInterface> allEvents = getAllEventsFromCalendar(calendar);
 
       for (EventInterface event : allEvents) {
-        // Convert the event times from old timezone to new timezone
         LocalDateTime oldStart = event.getStartDateTime();
         LocalDateTime oldEnd = event.getEndDateTime();
 
-        // Convert to ZonedDateTime in old timezone, then to new timezone
         ZonedDateTime zonedStart = oldStart.atZone(oldZone);
         ZonedDateTime zonedEnd = oldEnd.atZone(oldZone);
 
-        // Convert to new timezone and back to LocalDateTime
         LocalDateTime newStart = zonedStart.withZoneSameInstant(newZone).toLocalDateTime();
         LocalDateTime newEnd = zonedEnd.withZoneSameInstant(newZone).toLocalDateTime();
 
-        // Create updated event with new times
         Event.CustomEventBuilder updatedEventBuilder = new Event.CustomEventBuilder()
                 .setSubject(event.getSubject())
                 .setDescription(event.getDescription())
@@ -308,10 +289,9 @@ public class EditCommand extends AbstractCommand {
 
         EventInterface updatedEvent = updatedEventBuilder.build();
 
-        // Update the event in the calendar
         calendar.editEvent(
                 event.getSubject(),
-                event.getStartDateTime(), // Use original start time as identifier
+                event.getStartDateTime(),
                 updatedEvent,
                 EditMode.SINGLE
         );
@@ -330,24 +310,13 @@ public class EditCommand extends AbstractCommand {
     List<EventInterface> allEvents = new ArrayList<>();
 
     try {
-      // Get all individual events from eventsByDate map
-      // Since eventsByDate is private, we need to use the existing public methods
-
-      // Strategy 1: Use a wide date range to get all events via getEventsWindow
-      // Find the earliest and latest dates by checking a reasonable range
-      LocalDateTime start = LocalDateTime.now().minusYears(10); // 10 years ago
-      LocalDateTime end = LocalDateTime.now().plusYears(10);   // 10 years from now
+      LocalDateTime start = LocalDateTime.now().minusYears(10);
+      LocalDateTime end = LocalDateTime.now().plusYears(10);
 
       List<Event> windowEvents = calendar.getEventsWindow(start, end);
       allEvents.addAll(windowEvents);
 
-      // Strategy 2: Also get events from series instances directly
-      // Since mapSeries is public final, we can access it if needed
-      // But the getEventsWindow should already include series instances
-      // as they are added to eventsByDate when the series is created
-
     } catch (Exception e) {
-      // Fallback: try to get events day by day for a reasonable range
       LocalDate startDate = LocalDate.now().minusYears(5);
       LocalDate endDate = LocalDate.now().plusYears(5);
 
@@ -355,13 +324,11 @@ public class EditCommand extends AbstractCommand {
         try {
           List<Event> dayEvents = calendar.getEventsSingleDay(date);
           for (Event event : dayEvents) {
-            // Avoid duplicates
             if (!allEvents.contains(event)) {
               allEvents.add(event);
             }
           }
         } catch (Exception dayException) {
-          // Continue with next day if this day fails
           continue;
         }
       }

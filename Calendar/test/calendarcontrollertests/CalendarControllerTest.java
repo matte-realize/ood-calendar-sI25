@@ -105,4 +105,14 @@ public class CalendarControllerTest {
       fail("Test setup failed: " + e.getMessage());
     }
   }
+
+  @Test
+  public void testGUIStart() {
+    try {
+      String[] args = {"program", "gui"};
+      controller.play(args);
+    } catch (Exception e) {
+      fail("GUI mode should start without exceptions: " + e.getMessage());
+    }
+  }
 }

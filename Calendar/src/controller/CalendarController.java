@@ -2,6 +2,9 @@ package controller;
 
 import model.calendar.CalendarManagement;
 import view.CalendarView;
+import view.JFrameCalendarView;
+
+import javax.swing.SwingUtilities;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -44,7 +47,8 @@ public class CalendarController implements CalendarControllerInterface {
         this.runHeadlessMode(args[2]);
         break;
       default:
-        System.err.println("Invalid mode. Use 'interactive' or 'headless'.");
+        this.runGUIMode();
+        break;
     }
   }
 
@@ -87,6 +91,14 @@ public class CalendarController implements CalendarControllerInterface {
     } catch (IOException e) {
       System.err.println("Failed to read command file: " + e.getMessage());
     }
+  }
+
+  private void runGUIMode() {
+    SwingUtilities.invokeLater(() -> {
+      JFrameCalendarView guiView = new JFrameCalendarView();
+      guiView.setModel(calendarModel, calendarView);
+      guiView.setVisible(true);
+    });
   }
 
   private boolean processCommand(String command, String tokensString)
