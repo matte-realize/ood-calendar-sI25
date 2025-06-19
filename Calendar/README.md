@@ -66,8 +66,7 @@ To exit the program, the input is "exit."
 
 The User can also run the program through the GUI by not specifying a run mode. Here they can work
 with the default calendar or create a new one to work with. They can create single events or series and also
-view all the events they have on each day. They can also edit events as well as the calendar itslef.
-
+view all the events they have on each day. They can also edit events as well as the calendar itself.
 
 
 ## Features
@@ -78,9 +77,9 @@ able to be displayed on screen.
 
 ## Work Distribution: 
 
-Paul - Created the controller/Command Parsing and started the view
+Paul - Created the controller/Command Parsing, GUI, and started the view
 
-Matthew - Created the model and tests for the Calendar
+Matthew - Created the model, GUI, and tests for the Calendar
 
 ## Changes:
 

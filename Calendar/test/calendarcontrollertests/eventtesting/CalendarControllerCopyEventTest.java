@@ -186,6 +186,17 @@ public class CalendarControllerCopyEventTest extends AbstractControllerEventTest
 
   @Test
   public void testCopyEventsInSameTimeZone() {
+    String selectCalendar = " calendar --name emptyCalendar";
+    QueryCommand selectCalendarCommand = new QueryCommand(
+            selectCalendar,
+            "use",
+            calendarManagement,
+            calendarView
+    );
+
+    selectCalendarCommand.execute();
+
+
     String createEvent = " event \"Event One\" from 2025-12-12T09:00 to 2025-12-12T10:00";
     CreateCommand createEventCommand = new CreateCommand(createEvent,
             calendarManagement, calendarView);
@@ -213,15 +224,15 @@ public class CalendarControllerCopyEventTest extends AbstractControllerEventTest
 
     copyEventCommand.execute();
 
-    String selectCalendar = " calendar --name dupeTimeZone";
-    QueryCommand selectCalendarCommand = new QueryCommand(
-            selectCalendar,
+    String selectCalendarDupe = " calendar --name dupeTimeZone";
+    QueryCommand selectCalendarCommandDupe = new QueryCommand(
+            selectCalendarDupe,
             "use",
             calendarManagement,
             calendarView
     );
 
-    selectCalendarCommand.execute();
+    selectCalendarCommandDupe.execute();
 
     Calendar testCalendar = calendarManagement.getSelectedCalendar();
 
@@ -242,9 +253,9 @@ public class CalendarControllerCopyEventTest extends AbstractControllerEventTest
 
     String simulatedInput =
             "Events found on 2025-12-20:\n"
-                    + "* Event Two from 2025-12-20T17:00 to 2025-12-20T21:00\n"
-                    + "* Event One from 2025-12-20T15:00 to 2025-12-20T16:00\n"
-                    + "* Event Three from 2025-12-20T18:00 to 2025-12-20T20:00";
+                    + "* Event Two from 2025-12-20T11:00 to 2025-12-20T15:00\n"
+                    + "* Event One from 2025-12-20T09:00 to 2025-12-20T10:00\n"
+                    + "* Event Three from 2025-12-20T12:00 to 2025-12-20T14:00";
 
 
     InputStream in = new ByteArrayInputStream(simulatedInput.getBytes());
@@ -259,9 +270,9 @@ public class CalendarControllerCopyEventTest extends AbstractControllerEventTest
 
     scanner.close();
 
-    assertEquals("* Event Two from 2025-12-20T17:00 to 2025-12-20T21:00", allLines.get(1));
-    assertEquals("* Event One from 2025-12-20T15:00 to 2025-12-20T16:00", allLines.get(2));
-    assertEquals("* Event Three from 2025-12-20T18:00 to 2025-12-20T20:00", allLines.get(3));
+    assertEquals("* Event Two from 2025-12-20T11:00 to 2025-12-20T15:00", allLines.get(1));
+    assertEquals("* Event One from 2025-12-20T09:00 to 2025-12-20T10:00", allLines.get(2));
+    assertEquals("* Event Three from 2025-12-20T12:00 to 2025-12-20T14:00", allLines.get(3));
   }
 
   @Test
