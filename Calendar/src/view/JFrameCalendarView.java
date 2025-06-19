@@ -8,12 +8,11 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Time;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,8 +80,26 @@ public class JFrameCalendarView extends JFrame implements CalendarViewInterface 
   public void setModel(CalendarManagement calendarModel, CalendarView consoleView) {
     this.calendarModel = calendarModel;
     this.consoleView = consoleView;
+
+    if (availableCalendars.isEmpty()) {
+      createDefaultCalendar();
+    }
+
     refreshCalendarList();
     refreshScheduleView();
+  }
+
+  private void createDefaultCalendar() {
+    try {
+      String defaultName = "My Calendar";
+      calendarModel.createCalendar(defaultName, ZoneId.systemDefault());
+      addCalendarToGUIList(defaultName);
+      calendarModel.selectCalendar(defaultName);
+      currentSelectedCalendarName = defaultName;
+      setStatus("Created default calendar: " + defaultName);
+    } catch (Exception e) {
+      showError("Failed to create default calendar: " + e.getMessage());
+    }
   }
 
   private void initializeGUI() {
@@ -120,8 +137,8 @@ public class JFrameCalendarView extends JFrame implements CalendarViewInterface 
     schedulePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     eventManagementPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-    tabbedPane.addTab("📅 Schedule View", schedulePanel);
-    tabbedPane.addTab("✏️ Create/Edit Events", eventManagementPanel);
+    tabbedPane.addTab("Schedule View", schedulePanel);
+    tabbedPane.addTab("Create/Edit Events", eventManagementPanel);
 
     tabbedPane.setTabPlacement(JTabbedPane.TOP);
     tabbedPane.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 12));
@@ -590,14 +607,6 @@ public class JFrameCalendarView extends JFrame implements CalendarViewInterface 
     }
   }
 
-  public void addInitialCalendar(String calendarName) {
-    if (!availableCalendars.contains(calendarName)) {
-      availableCalendars.add(calendarName);
-      currentSelectedCalendarName = calendarName;
-      refreshCalendarList();
-    }
-  }
-
   private void showEditCalendarDialog() {
     String currentCalendar = currentSelectedCalendarName;
     if (currentCalendar == null) {
@@ -651,6 +660,9 @@ public class JFrameCalendarView extends JFrame implements CalendarViewInterface 
           return;
         }
 
+        boolean nameChanged = false;
+        boolean timezoneChanged = false;
+
         if (!newName.equals(currentCalendar)) {
           calendarModel.editCalendar(currentCalendar, "name", newName);
           removeCalendarFromGUIList(currentCalendar);
@@ -661,10 +673,18 @@ public class JFrameCalendarView extends JFrame implements CalendarViewInterface 
         ZoneId oldTimezone = calendarModel.getCalendarTimezone(currentSelectedCalendarName);
         if (oldTimezone == null || !oldTimezone.getId().equals(newTimezone)) {
           calendarModel.editCalendar(currentSelectedCalendarName, "timezone", newTimezone);
+          timezoneChanged = true;
         }
 
-        refreshCalendarList();
-        setStatus("Calendar updated: " + currentSelectedCalendarName);
+        if (timezoneChanged) {
+          refreshScheduleView();
+          setStatus("Calendar updated and events refreshed for new timezone: " + currentSelectedCalendarName);
+        } else if (nameChanged) {
+          setStatus("Calendar updated: " + currentSelectedCalendarName);
+        } else {
+          setStatus("No changes made to calendar: " + currentSelectedCalendarName);
+        }
+
         editDialog.dispose();
       } catch (Exception ex) {
         showError("Failed to update calendar: " + ex.getMessage());
@@ -766,13 +786,24 @@ public class JFrameCalendarView extends JFrame implements CalendarViewInterface 
             SwingUtilities.invokeLater(() -> {
               eventsListModel.clear();
 
+              ZoneId tz = calendarModel.getCalendarTimezone(currentSelectedCalendarName);
+              DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
               if (events.isEmpty()) {
                 eventsListModel.addElement("No events found for " + day);
               } else {
                 int count = 0;
                 for (Event event : events) {
                   if (count >= 10) break;
-                  eventsListModel.addElement(event.printEvent());
+                  ZonedDateTime startZ = event.getStartDateTime().atZone(ZoneId.systemDefault()).withZoneSameInstant(tz);
+                  ZonedDateTime endZ = event.getEndDateTime().atZone(ZoneId.systemDefault()).withZoneSameInstant(tz);
+
+                  String display = String.format("\"%s\" from %s to %s",
+                          event.getSubject(),
+                          startZ.format(fmt),
+                          endZ.format(fmt));
+
+                  eventsListModel.addElement(display);
                   count++;
                 }
               }
@@ -916,22 +947,5 @@ public class JFrameCalendarView extends JFrame implements CalendarViewInterface 
     if (isError) {
       JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
-  }
-
-  private void initialize() {
-    setTitle("Calendar Application");
-    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    setLayout(new BorderLayout());
-
-    currentViewDate = LocalDate.now();
-
-    createMainPanel();
-    createMenuBar();
-
-    add(mainPanel, BorderLayout.CENTER);
-
-    setSize(1200, 800);
-    setLocationRelativeTo(null);
-    setVisible(true);
   }
 }

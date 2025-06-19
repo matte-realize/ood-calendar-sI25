@@ -45,7 +45,6 @@ public class CalendarGUIApp {
 
         try {
           calendarModel.createCalendar("Default Calendar", ZoneId.systemDefault());
-          gui.addInitialCalendar("Default Calendar");
           
           calendarModel.selectCalendar("Default Calendar");
 

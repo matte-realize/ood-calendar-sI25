@@ -11,6 +11,7 @@ import controller.CreateCommand;
 import controller.EditCommand;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 
 /**
  * A JUnit test that tests for the controller being able to edit calendars.
@@ -41,6 +42,11 @@ public class CalendarControllerEditCalendarTest extends AbstractControllerCalend
     editCommand2.execute();
 
     assertEquals(ZoneId.of("Africa/Harare"), calendarManagement.getCalendarTimezone("testEdit"));
+
+    // determines nonexistent calendar due to edit
+    assertThrows(IllegalArgumentException.class, () -> {
+      calendarManagement.selectCalendar("test");
+    });
   }
 
   @Test

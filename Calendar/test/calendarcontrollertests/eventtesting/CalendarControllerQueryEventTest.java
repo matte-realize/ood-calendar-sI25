@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import controller.CreateCommand;
+import controller.EditCommand;
 import controller.QueryCommand;
 
 import static org.junit.Assert.assertEquals;
@@ -193,7 +194,45 @@ public class CalendarControllerQueryEventTest extends AbstractControllerEventTes
 
   @Test
   public void testDisplayChangedTimesFromTimezoneChange() {
-  // Do you have a test to verify that events are printed with the
-    // correct dates and times *after* the timezone of the calendar has been changed?
+    String createEvent = " event \"Event One\" from 2025-08-10T09:00 to 2025-08-10T10:00";
+    CreateCommand createCommand = new CreateCommand(createEvent, calendarManagement, calendarView);
+    createCommand.execute();
+
+    String printEvent = " events on 2025-08-10";
+    QueryCommand printCommand = new QueryCommand(
+            printEvent,
+            "print",
+            calendarManagement,
+            calendarView
+    );
+    printCommand.execute();
+
+    String editCalendarTimeZone = " calendar --name test --property timezone America/Los_Angeles";
+    EditCommand editCommand2 = new EditCommand(editCalendarTimeZone,
+            calendarManagement, calendarView);
+    editCommand2.execute();
+
+    printCommand.execute();
+
+    String simulatedInput =
+            "Events found on 2025-08-10:\n"
+                    + "* Event One from 2025-08-10T09:00 to 2025-08-10T10:00\n"
+                    + "Events found on 2025-08-10:\n"
+                    + "* Event One from 2025-08-10T06:00 to 2025-08-10T7:00";
+
+    InputStream in = new ByteArrayInputStream(simulatedInput.getBytes());
+    System.setIn(in);
+    Scanner scanner = new Scanner(System.in);
+
+    List<String> allLines = new ArrayList<>();
+
+    while (scanner.hasNextLine()) {
+      allLines.add(scanner.nextLine());
+    }
+
+    scanner.close();
+
+    assertEquals("* Event One from 2025-08-10T09:00 to 2025-08-10T10:00", allLines.get(1));
+    assertEquals("* Event One from 2025-08-10T06:00 to 2025-08-10T7:00", allLines.get(3));
   }
 }

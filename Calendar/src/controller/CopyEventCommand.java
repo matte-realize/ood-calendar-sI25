@@ -103,15 +103,46 @@ public class CopyEventCommand extends AbstractCommand {
         return;
       }
 
-      calendarModel.copyEvent(
-              selectedCalendar.getEvent(
-                      eventName,
-                      LocalDateTime.parse(eventDate), null),
-              targetCalendar,
-              LocalDateTime.parse(targetDate)
-      );
+      copySingleEvent(eventToCopy, targetCalendar, LocalDateTime.parse(targetDate));
+
     } catch (Exception e) {
       calendarView.printError("Event \"" + eventName + "\" not found on " + eventDate);
+    }
+  }
+
+  private void copySingleEvent(EventInterface originalEvent, String targetCalendar, LocalDateTime targetStartTime) {
+    try {
+      long durationMinutes = java.time.Duration.between(
+              originalEvent.getStartDateTime(),
+              originalEvent.getEndDateTime()
+      ).toMinutes();
+
+      LocalDateTime targetEndTime = targetStartTime.plusMinutes(durationMinutes);
+
+      ZoneId sourceZoneId = calendarModel.getCalendarTimezone(null);
+      ZoneId targetZoneId = calendarModel.getCalendarTimezone(targetCalendar);
+
+      LocalDateTime finalStartTime = targetStartTime;
+      LocalDateTime finalEndTime = targetEndTime;
+
+      if (!sourceZoneId.equals(targetZoneId)) {
+        finalStartTime = targetStartTime;
+        finalEndTime = targetStartTime.plusMinutes(durationMinutes);
+      }
+
+      EventInterface newCopiedEvent = new Event.CustomEventBuilder()
+              .setSubject(originalEvent.getSubject())
+              .setStartDateTime(finalStartTime)
+              .setEndDateTime(finalEndTime)
+              .setDescription(originalEvent.getDescription())
+              .setLocation(originalEvent.getLocation())
+              .setStatus(originalEvent.getStatus())
+              .build();
+
+      calendarModel.copyEvent(newCopiedEvent, targetCalendar, finalStartTime);
+
+    } catch (Exception e) {
+      calendarView.printError("Failed to copy event: " + e.getMessage());
     }
   }
 
@@ -164,6 +195,7 @@ public class CopyEventCommand extends AbstractCommand {
     }
 
     try {
+      // Call getEventsWindow only once and reuse the result
       List<Event> eventsInWindow = selectedCalendar.getEventsWindow(
               LocalDateTime.parse(eventsStartDate + "T00:00"),
               LocalDateTime.parse(eventsEndDate + "T23:59"));
@@ -174,16 +206,15 @@ public class CopyEventCommand extends AbstractCommand {
         return;
       }
 
+      // Use the already retrieved eventsInWindow instead of calling getEventsWindow again
       calendarModel.copyEvents(convertEvents(
-                      selectedCalendar.getEventsWindow(
-                              LocalDateTime.parse(eventsStartDate + "T00:00"),
-                              LocalDateTime.parse(eventsEndDate + "T23:59")),
+                      eventsInWindow, // Use the variable instead of calling the method again
                       LocalDate.parse(targetDate),
                       calendarModel.getCalendarTimezone(null),
                       calendarModel.getCalendarTimezone(targetCalendar)),
               targetCalendar);
     } catch (Exception e) {
-      calendarView.printError("Calendar not found.");
+      calendarView.printError("Failed to copy events: " + e.getMessage());
     }
   }
 
